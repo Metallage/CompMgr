@@ -8,12 +8,12 @@ using System.IO;
 
 namespace CompMgr
 {
-    class SettingsHelper
+    public class SettingsHelper
     {
 
         private Dictionary<string, string> bases = new Dictionary<string, string>();
       
-        private XmlDocument settings = new XmlDocument();
+
 
         private string softwareBase;
 
@@ -29,6 +29,9 @@ namespace CompMgr
             }
         }
 
+        /// <summary>
+        /// Создаёт новый файл настроек
+        /// </summary>
         private void GenerateNewSettins()
         {
             XElement rootSettings = new XElement("settings");
@@ -50,15 +53,19 @@ namespace CompMgr
         }
 
 
-
+        /// <summary>
+        /// Читаем настройки из XML
+        /// </summary>
         private void ParseSettings()
         {
+            XmlDocument settings = new XmlDocument();
             settings.Load("settings.xml");
             XmlNode rootSettings = settings.DocumentElement;
+
             XmlNode xmlSoftWare = rootSettings.SelectSingleNode("//software");
             softwareBase = xmlSoftWare.Attributes["SoftwareDBPath"].Value;
-            XmlNodeList bases = rootSettings.SelectNodes("//dataBases/base");
 
+            XmlNodeList bases = rootSettings.SelectNodes("//dataBases/base");
             foreach(XmlNode xmlBase in bases)
             {
                 this.bases.Add(xmlBase.Attributes["BaseName"].Value, xmlBase.Attributes["BasePath"].Value);
@@ -66,9 +73,40 @@ namespace CompMgr
 
         }
 
+        /// <summary>
+        /// Добавляем базу поста к настройкам
+        /// </summary>
+        /// <param name="newBaseName">Название базы</param>
+        /// <param name="newBasePath">Путь к базе</param>
         public void AddBase(string newBaseName, string newBasePath)
         {
             bases.Add(newBaseName, newBasePath);
+        }
+
+        /// <summary>
+        /// Пишет текущие настройки в файл
+        /// </summary>
+        public void WriteSettings()
+        {
+            XElement rootSettings = new XElement("settings");
+            XElement bases = new XElement("dataBases");
+            for(int i =0; i< this.bases.Count; i++)
+            {
+                XElement testBase = new XElement("base");
+                XAttribute testBaseName = new XAttribute("BaseName",this.bases.ElementAt(i).Key);
+                XAttribute testBasePath = new XAttribute("BasePath", this.bases.ElementAt(i).Value);
+                testBase.Add(testBaseName);
+                testBase.Add(testBasePath);
+                bases.Add(testBase);
+            }
+            rootSettings.Add(bases);
+
+            XElement softwareBase = new XElement("software");
+            XAttribute softDBPath = new XAttribute("SoftwareDBPath", this.softwareBase);
+            softwareBase.Add(softDBPath);
+            rootSettings.Add(softwareBase);
+
+            rootSettings.Save("settings.xml");
         }
 
         public string SoftwareBase

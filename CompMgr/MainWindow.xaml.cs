@@ -36,9 +36,16 @@ namespace CompMgr
 
         private void TestButton_Click(object sender, RoutedEventArgs e)
         {
-            baseLogic = new Logica(settings);
+            //baseLogic = new Logica(settings);
 
-            gridField.ItemsSource = baseLogic.LogicDataSet.Tables["Software"].DefaultView;
+            //gridField.ItemsSource = baseLogic.LogicDataSet.Tables["Software"].DefaultView;
+            //settings.AddBase("РТП(ЦЭД)","RTPCED.sqlite");
+            //settings.AddBase("МТП", "MTP.sqlite");
+            //settings.AddBase("РТП", "RTP.sqlite");
+            //settings.WriteSettings();
+            SettingsWindow settings = new SettingsWindow();
+            settings.CurrentSettings = this.settings;
+            settings.Show();
         }
     }
 }
