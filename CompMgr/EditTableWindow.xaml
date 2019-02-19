@@ -36,11 +36,11 @@
             <ColumnDefinition MinWidth="100" MaxWidth="200"/>
             <ColumnDefinition MinWidth="2" MaxWidth="5"/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="EditDG" AutoGenerateColumns="False" IsEnabled="False" Grid.Row="1" Grid.RowSpan="18" Grid.Column="1" RowEditEnding="EditDG_RowEditEnding">
+        <DataGrid x:Name="EditDG" AutoGenerateColumns="False" IsEnabled="False" Grid.Row="1" Grid.RowSpan="18" Grid.Column="1" RowEditEnding="EditDG_RowEditEnding" BeginningEdit="EditDG_BeginningEdit">
             
         </DataGrid>
         <TextBlock x:Name="SelectDBTextBlock" Text="Выбор таблицы для редактирования" TextWrapping="Wrap" Grid.Row="1" Grid.RowSpan="2" Grid.Column="3" TextAlignment="Center" VerticalAlignment="Center"/>
-        <ComboBox x:Name="BaseSelect" Grid.Row="3" Grid.Column="3" SelectionChanged="BaseSelect_SelectionChanged">
+        <ComboBox x:Name="BaseSelect" Grid.Row="3" Grid.Column="3" SelectionChanged="BaseSelect_SelectionChanged" DropDownOpened="BaseSelect_DropDownOpened" >
             <ComboBoxItem x:Name="SoftItem" Content="ПО"/>
             <ComboBoxItem x:Name="UserItem" Content="Пользователи"/>
             <ComboBoxItem x:Name="DivItem" Content="Подразделение"/>

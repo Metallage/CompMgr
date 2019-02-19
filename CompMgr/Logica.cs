@@ -107,11 +107,13 @@ namespace CompMgr
             //Название ПО
             DataColumn nameSoftware = new DataColumn("name", typeof(string));
             nameSoftware.Caption = "Название ПО";
+            nameSoftware.AllowDBNull = false;
             softwareTable.Columns.Add(nameSoftware);
             
             //Версия ПО
             DataColumn currentVersion = new DataColumn("version", typeof(string));
             currentVersion.Caption = "Текущая версия";
+            currentVersion.AllowDBNull = false;
             softwareTable.Columns.Add(currentVersion);
             
             

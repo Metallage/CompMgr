@@ -99,11 +99,67 @@ namespace CompMgr
             logic.UpdateTable(tableName, localDS.Tables[$"{tableName}"]); //Сохраняем в основной базе
         }
 
-        private void Update()
+        #region Привязываем таблицы к DataGrid
+
+        /// <summary>
+        /// Настраивает DataGrid на отображение таблицы Software 
+        /// </summary>
+        private void BindSoft()
         {
-            
+            //удаляем все предыдущие столбцы и запрещаем из автогенерацию
+            EditDG.Columns.Clear();
+            EditDG.AutoGenerateColumns = false;
+
+            //Создаём текстовый столбец с заголовком "Название ПО"
+            DataGridTextColumn nameColumn = new DataGridTextColumn();
+            nameColumn.Header = "Название ПО";
+            //Привязываем его к источнику данных с полем name
+            Binding softName = new Binding("name");
+            nameColumn.Binding = softName;
+
+            //Создаём текстовый столбец с заголовком "Текущая версия ПО"
+            DataGridTextColumn verColumn = new DataGridTextColumn();
+            verColumn.Header = "Текущая версия ПО";
+            //Привязываем его к источнику данных с полем version
+            Binding softVer = new Binding("version");
+            verColumn.Binding = softVer;
+
+            //Добавляем таблички к DataGrid
+            EditDG.Columns.Add(nameColumn);
+            EditDG.Columns.Add(verColumn);
+
+            //Источник таблица Software
+            EditDG.ItemsSource = software.DefaultView;
+
+            EditDG.IsEnabled = true;
         }
 
+
+        private void BindUsers()
+        {
+            EditDG.AutoGenerateColumns = false;
+            EditDG.Columns.Clear();
+
+            DataGridTextColumn fioCol = new DataGridTextColumn();
+            fioCol.Header = "Фамилия и инициалы";
+            Binding fioBind = new Binding("fio");
+            fioCol.Binding = fioBind;
+
+            DataGridTextColumn telCol = new DataGridTextColumn();
+            telCol.Header = "Рабочий телефон";
+            Binding telBind = new Binding("tel");
+            telCol.Binding = telBind;
+
+            EditDG.Columns.Add(fioCol);
+            EditDG.Columns.Add(telCol);
+
+            EditDG.ItemsSource = users.DefaultView;
+
+            EditDG.IsEnabled = true;
+        }
+
+
+        #endregion
 
         private void BaseSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -116,26 +172,25 @@ namespace CompMgr
                 switch (BaseSelect.SelectedIndex)
                 {
                     case 0:
-                        EditDG.ItemsSource = software.DefaultView;
-                        EditDG.AutoGenerateColumns = true;
-                        EditDG.IsEnabled = true;
+                        BindSoft();
                         break;
                     case 1:
-                        EditDG.ItemsSource = users.DefaultView;
-                        EditDG.AutoGenerateColumns = true;
-                        EditDG.IsEnabled = true;
+                        BindUsers();
                         break;
                     case 2:
+                        EditDG.Columns.Clear();
                         EditDG.ItemsSource = division.DefaultView;
                         EditDG.AutoGenerateColumns = true;
                         EditDG.IsEnabled = true;
                         break;
                     case 3:
+                        EditDG.Columns.Clear();
                         EditDG.ItemsSource = computer.DefaultView;
                         EditDG.AutoGenerateColumns = true;
                         EditDG.IsEnabled = true;
                         break;
                     case 4:
+                        EditDG.Columns.Clear();
                         EditDG.ItemsSource = install.DefaultView;
                         EditDG.AutoGenerateColumns = true;
                         EditDG.IsEnabled = true;
@@ -156,6 +211,8 @@ namespace CompMgr
             changed = true;
             RollbackButton.IsEnabled = true;
             SaveButton.IsEnabled = true;
+
+
         }
 
         private void RollbackButton_Click(object sender, RoutedEventArgs e)
@@ -194,5 +251,25 @@ namespace CompMgr
                     break;
             }
         }
+
+
+        private void BaseSelect_DropDownOpened(object sender, EventArgs e)
+        {
+            if (changed)
+            {
+
+                MessageBox.Show("Необходимо сохранить или откатить изменения", "Таблица изменена");
+
+            }
+        }
+
+        private void EditDG_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        {
+            changed = true;
+            RollbackButton.IsEnabled = true;
+            SaveButton.IsEnabled = true;
+        }
+
+
     }
 }
