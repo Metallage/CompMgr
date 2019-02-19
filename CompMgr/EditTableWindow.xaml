@@ -1,0 +1,54 @@
+﻿<Window x:Class="CompMgr.EditTableWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CompMgr"
+        mc:Ignorable="d"
+        Title="Редактирование таблиц" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="10"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="2" MaxWidth="5"/>
+            <ColumnDefinition/>
+            <ColumnDefinition MinWidth="2" MaxWidth="10"/>
+            <ColumnDefinition MinWidth="100" MaxWidth="200"/>
+            <ColumnDefinition MinWidth="2" MaxWidth="5"/>
+        </Grid.ColumnDefinitions>
+        <DataGrid x:Name="EditDG" AutoGenerateColumns="False" IsEnabled="False" Grid.Row="1" Grid.RowSpan="18" Grid.Column="1">
+            
+        </DataGrid>
+        <TextBlock x:Name="SelectDBTextBlock" Text="Выбор таблицы для редактирования" TextWrapping="Wrap" Grid.Row="1" Grid.RowSpan="2" Grid.Column="3" TextAlignment="Center" VerticalAlignment="Center"/>
+        <ComboBox x:Name="BaseSelect" Grid.Row="3" Grid.Column="3" SelectionChanged="BaseSelect_SelectionChanged">
+            <ComboBoxItem x:Name="SoftItem" Content="ПО"/>
+            <ComboBoxItem x:Name="UserItem" Content="Пользователи"/>
+            <ComboBoxItem x:Name="DivItem" Content="Подразделение"/>
+            <ComboBoxItem x:Name="CompItem" Content="Компьютеры"/>
+            <ComboBoxItem x:Name="InstallItem" Content="Установленное ПО"/>
+        </ComboBox>
+        <Button x:Name="ExitButton" Grid.Row="17" Grid.RowSpan="2" Grid.Column="3" Content="Выход"/>
+        <Button x:Name="SaveButton" Grid.Row="14" Grid.RowSpan="2" Grid.Column="3" Content="Сохранить изменения" IsEnabled="False"/>
+        <Button x:Name="RollbackButton" Grid.Row="11" Grid.RowSpan="2" Grid.Column="3" Content="Откатить изменения" IsEnabled="False"/>
+    </Grid>
+</Window>

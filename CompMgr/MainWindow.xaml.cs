@@ -43,9 +43,21 @@ namespace CompMgr
             //settings.AddBase("МТП", "MTP.sqlite");
             //settings.AddBase("РТП", "RTP.sqlite");
             //settings.WriteSettings();
-            SettingsWindow settings = new SettingsWindow();
-            settings.CurrentSettings = this.settings;
-            settings.Show();
+            //SettingsWindow settings = new SettingsWindow();
+            //settings.CurrentSettings = this.settings;
+            //settings.Show();
+
+            baseLogic = new Logica();
+            ErrorMessageHelper initialDB = baseLogic.InitialDB();
+            if(initialDB.HasErrors)
+            {
+                MessageBox.Show(initialDB.ErrorText);
+            }
+            gridField.ItemsSource = baseLogic.LogicDataSet.Tables["Software"].DefaultView;
+
+            EditTableWindow editSoft = new EditTableWindow();
+            editSoft.TableSet = baseLogic.LogicDataSet;
+            editSoft.Show();
         }
     }
 }
