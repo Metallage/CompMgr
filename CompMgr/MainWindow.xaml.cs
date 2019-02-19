@@ -55,8 +55,8 @@ namespace CompMgr
             }
             gridField.ItemsSource = baseLogic.LogicDataSet.Tables["Software"].DefaultView;
 
-            EditTableWindow editSoft = new EditTableWindow();
-            editSoft.TableSet = baseLogic.LogicDataSet;
+            EditTableWindow editSoft = new EditTableWindow(this.baseLogic);
+            editSoft.FormDataTables(baseLogic.LogicDataSet);
             editSoft.Show();
         }
     }

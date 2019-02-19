@@ -8,13 +8,11 @@ using System.Data;
 
 namespace CompMgr
 {
-    class Logica
+    public class Logica
     {
         string dataBaseName = "compMgr.sqlite";
 
         private SettingsHelper settings;
-
-        private DataSet logicDataSet = new DataSet();
 
         SQLiteConnection dbCon;
 
@@ -58,6 +56,31 @@ namespace CompMgr
             }
         }
 
+        public ErrorMessageHelper UpdateTable(string tableName, DataTable newTable)
+        {
+            try
+            {
+                if (newTable != null)
+                {
+
+                    using (DataTableReader newReader = newTable.CreateDataReader())
+                    {
+                        LogicDataSet.Tables[$"{tableName}"].Clear();
+                        LogicDataSet.Tables[$"{tableName}"].Load(newReader);
+                    }
+
+                    return new ErrorMessageHelper();
+                }
+                else
+                {
+                    throw new NullReferenceException("Переданной таблицы не существует");
+                }
+            }
+            catch (Exception e)
+            {
+                return new ErrorMessageHelper(e.Message);
+            }
+        }
 
         #region Первичное создание таблиц
 
@@ -98,7 +121,7 @@ namespace CompMgr
             orderRow["version"] = "000";
             softwareTable.Rows.Add(orderRow);
 
-            logicDataSet.Tables.Add(softwareTable);
+            LogicDataSet.Tables.Add(softwareTable);
         }
 
         /// <summary>
@@ -141,7 +164,7 @@ namespace CompMgr
             user.Caption = "Пользователь";
             compTable.Columns.Add(user);
 
-            logicDataSet.Tables.Add(compTable);
+            LogicDataSet.Tables.Add(compTable);
 
             //Для тестов
             DataRow local1 = compTable.NewRow();
@@ -182,7 +205,7 @@ namespace CompMgr
             telNum.Caption = "Телефон пользователя";
             users.Columns.Add(telNum);
 
-            logicDataSet.Tables.Add(users);
+            LogicDataSet.Tables.Add(users);
 
             //Для тестов
             DataRow user1 = users.NewRow();
@@ -216,7 +239,7 @@ namespace CompMgr
             name.AllowDBNull = false;
             division.Columns.Add(name);
 
-            logicDataSet.Tables.Add(division);
+            LogicDataSet.Tables.Add(division);
 
             //Для тестов
             DataRow div1 = division.NewRow();
@@ -260,7 +283,7 @@ namespace CompMgr
             version.Caption = "Версия ПО";
             install.Columns.Add(version);
 
-            logicDataSet.Tables.Add(install);
+            LogicDataSet.Tables.Add(install);
 
         }
 
@@ -278,8 +301,8 @@ namespace CompMgr
                 //Загружаем табличку из БД
                 using (SQLiteDataAdapter softAdapter = new SQLiteDataAdapter("SELECT * FROM Software", softwareConnection))
                 {
-                    softAdapter.FillSchema(logicDataSet, SchemaType.Source, "Software");
-                    softAdapter.Fill(logicDataSet, "Software");
+                    softAdapter.FillSchema(LogicDataSet, SchemaType.Source, "Software");
+                    softAdapter.Fill(LogicDataSet, "Software");
                 }
             }
         }
@@ -332,21 +355,15 @@ namespace CompMgr
                 orderRow["version"] = "000";
                 softwareTable.Rows.Add(orderRow);
 
-                logicDataSet.Tables.Add(softwareTable);
+                LogicDataSet.Tables.Add(softwareTable);
 
                 //Пишем таблицу в БД
-                softwareAdapter.Update(logicDataSet, "Software");
+                softwareAdapter.Update(LogicDataSet, "Software");
                 createSoftwareConnection.Close();
             }
         }
 
-        public DataSet LogicDataSet
-        {
-            get
-            {
-                return logicDataSet;
-            }
-        }
+        public DataSet LogicDataSet { get; set; } = new DataSet();
 
     }
 }

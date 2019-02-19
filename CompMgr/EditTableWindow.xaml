@@ -36,7 +36,7 @@
             <ColumnDefinition MinWidth="100" MaxWidth="200"/>
             <ColumnDefinition MinWidth="2" MaxWidth="5"/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="EditDG" AutoGenerateColumns="False" IsEnabled="False" Grid.Row="1" Grid.RowSpan="18" Grid.Column="1">
+        <DataGrid x:Name="EditDG" AutoGenerateColumns="False" IsEnabled="False" Grid.Row="1" Grid.RowSpan="18" Grid.Column="1" RowEditEnding="EditDG_RowEditEnding">
             
         </DataGrid>
         <TextBlock x:Name="SelectDBTextBlock" Text="Выбор таблицы для редактирования" TextWrapping="Wrap" Grid.Row="1" Grid.RowSpan="2" Grid.Column="3" TextAlignment="Center" VerticalAlignment="Center"/>
@@ -49,6 +49,6 @@
         </ComboBox>
         <Button x:Name="ExitButton" Grid.Row="17" Grid.RowSpan="2" Grid.Column="3" Content="Выход"/>
         <Button x:Name="SaveButton" Grid.Row="14" Grid.RowSpan="2" Grid.Column="3" Content="Сохранить изменения" IsEnabled="False"/>
-        <Button x:Name="RollbackButton" Grid.Row="11" Grid.RowSpan="2" Grid.Column="3" Content="Откатить изменения" IsEnabled="False"/>
+        <Button x:Name="RollbackButton" Grid.Row="11" Grid.RowSpan="2" Grid.Column="3" Content="Откатить изменения" IsEnabled="False" Click="RollbackButton_Click"/>
     </Grid>
 </Window>

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CompMgr
 {
-    class ErrorMessageHelper
+    public class ErrorMessageHelper
     {
         public ErrorMessageHelper(string error)
         {
