@@ -140,7 +140,8 @@ namespace CompMgr
 
                 //Создаём таблицу Software
                 SQLiteCommand createDb = new SQLiteCommand(createSoftwareConnection);
-                string createSoftDB = "CREATE TABLE IF NOT EXISTS Software (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, version TEXT NOT NULL)";
+                string createSoftDB = "CREATE TABLE IF NOT EXISTS Software (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "name TEXT NOT NULL, version TEXT NOT NULL)";
                 createDb.CommandText = createSoftDB;
                 createDb.ExecuteNonQuery();
 
@@ -236,6 +237,36 @@ namespace CompMgr
             local2["nsName"] = "localhost2";
             local2["ip"] = "127.0.0.2";
             compTable.Rows.Add(local2);
+
+            //Создаём и открываем соединение с БД
+            using (SQLiteConnection createCompConnection = new SQLiteConnection($"DataSource={dataBaseName};Version=3;"))
+            {
+                createCompConnection.Open();
+                //Включаем поддержку внешних ключей
+                SQLiteCommand enFk = new SQLiteCommand(createCompConnection);
+                enFk.CommandText = enableFK;
+                enFk.ExecuteNonQuery();
+
+                //Создаём таблицу Computer
+                SQLiteCommand createDb = new SQLiteCommand(createCompConnection);
+                string createCompDB = "CREATE TABLE IF NOT EXISTS Computer (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "nsName TEXT NOT NULL, ip TEXT, divID INTEGER, userID INTEGER, " +
+                    "FOREIGN KEY (divId) REFERENCES Division(id), FOREIGN KEY (userID) REFERENCES Users(id));";
+                createDb.CommandText = createCompDB;
+                createDb.ExecuteNonQuery();
+
+                //Синхронизируем таблицы в датасете и БД (потом перенести в обновление бд)
+                using (SQLiteDataAdapter compAdapter = new SQLiteDataAdapter("SELECT * FROM Computer", createCompConnection))
+                {
+                    SQLiteCommandBuilder compUpd = new SQLiteCommandBuilder(compAdapter);
+                    compAdapter.Update(LogicDataSet, "Computer");
+
+                }
+
+                createCompConnection.Close();
+            }
+
+
         }
 
         /// <summary>
@@ -286,7 +317,7 @@ namespace CompMgr
 
                 //Создаём таблицу Users
                 SQLiteCommand createDb = new SQLiteCommand(createUserConnection);
-                string createSoftDB = "CREATE TABLE IF NOT EXISTS Users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, fio TEXT NOT NULL, tel INTEGER )";
+                string createSoftDB = "CREATE TABLE IF NOT EXISTS Users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, fio TEXT NOT NULL, tel INTEGER );";
                 createDb.CommandText = createSoftDB;
                 createDb.ExecuteNonQuery();
 
@@ -346,7 +377,7 @@ namespace CompMgr
 
                 //Создаём таблицу Division
                 SQLiteCommand createDb = new SQLiteCommand(createDivConnection);
-                string createDivDB = "CREATE TABLE IF NOT EXISTS Division (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL )";
+                string createDivDB = "CREATE TABLE IF NOT EXISTS Division (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL );";
                 createDb.CommandText = createDivDB;
                 createDb.ExecuteNonQuery();
 
@@ -422,6 +453,37 @@ namespace CompMgr
             install.Constraints.Add(compInstallFK);
             LogicDataSet.Relations.Add("comp-install", LogicDataSet.Tables["Computer"].Columns["id"], LogicDataSet.Tables["Install"].Columns["computerID"]);
             LogicDataSet.EnforceConstraints = true;
+
+
+            //Создаём и открываем соединение с БД
+            using (SQLiteConnection createInstConnection = new SQLiteConnection($"DataSource={dataBaseName};Version=3;"))
+            {
+                createInstConnection.Open();
+                //Включаем поддержку внешних ключей
+                SQLiteCommand enFk = new SQLiteCommand(createInstConnection);
+                enFk.CommandText = enableFK;
+                enFk.ExecuteNonQuery();
+
+                //Создаём таблицу Computer
+                SQLiteCommand createDb = new SQLiteCommand(createInstConnection);
+                string createInstDB = "CREATE TABLE IF NOT EXISTS Install (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "computerID INTEGER, softID INTEGER, version TEXT NOT NULL, " +
+                    "FOREIGN KEY (computerId) REFERENCES Computer(id) , FOREIGN KEY (softID) REFERENCES Software(id));";
+                createDb.CommandText = createInstDB;
+                createDb.ExecuteNonQuery();
+
+                //Синхронизируем таблицы в датасете и БД (потом перенести в обновление бд)
+                using (SQLiteDataAdapter instAdapter = new SQLiteDataAdapter("SELECT * FROM Install", createInstConnection))
+                {
+                    SQLiteCommandBuilder instUpd = new SQLiteCommandBuilder(instAdapter);
+                    instAdapter.Update(LogicDataSet, "Install");
+
+                }
+
+                createInstConnection.Close();
+            }
+
+
         }
 
 
