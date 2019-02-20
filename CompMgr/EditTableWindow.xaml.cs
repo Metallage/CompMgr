@@ -34,7 +34,7 @@ namespace CompMgr
         private DataTable division;
         private DataTable computer;
         private DataTable install;
-        private List<Computer> compList;
+        private List<Computer> compList = new List<Computer>();
 
 
 
@@ -55,22 +55,43 @@ namespace CompMgr
             InitializeComponent();
         }
 
-       private List<Computer> FormComp()
+       private void FormComp()
         {
-            List<Computer> compOut = new List<Computer>();
+            compList.Clear();
             Dictionary<int, string> userNames = new Dictionary<int, string>();
             Dictionary<int, string> divNames = new Dictionary<int, string>();
 
+
             var queryUser = from user in users.AsEnumerable()
-                            select new { id = user.Field<int>("id"), fio = user.Field<string>("fio") };
+                            select new { Id = user.Field<int>("id"), Fio = user.Field<string>("fio") };
             foreach(var user in queryUser)
             {
-                userNames.Add(user.id, user.fio);
+                userNames.Add(user.Id, user.Fio);
             }
 
             userNames.Add(-1,"не закреплён");
-            
-            return compOut;
+
+
+            var queryDiv = from div in division.AsEnumerable()
+                            select new { Id = div.Field<int>("id"), Fio = div.Field<string>("fio") };
+            foreach (var div in queryDiv)
+            {
+                divNames.Add(div.Id, div.Fio);
+            }
+
+            divNames.Add(-1, "не закреплён");
+
+            foreach (DataRow dr in computer.Select())
+            {
+                Computer comp = new Computer();
+                comp.NsName = dr.Field<string>("nsName");
+                comp.Ip = dr.Field<string>("ip");
+                comp.User = userNames;
+                comp.Division = divNames;
+                compList.Add(comp);
+            }
+
+
         }
 
         ///// <summary>
