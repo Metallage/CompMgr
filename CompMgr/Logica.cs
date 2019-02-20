@@ -12,6 +12,8 @@ namespace CompMgr
     {
         string dataBaseName = "compMgr.sqlite";
 
+        string enableFK = "PRAGMA foreign_keys=on;";
+
         private SettingsHelper settings;
 
         SQLiteConnection dbCon;
@@ -23,6 +25,7 @@ namespace CompMgr
             this.settings = settings;
             if (!File.Exists(settings.SoftwareBase))
             {
+
                 CreateSettingsBase();
             }
             softwareConnection = new SQLiteConnection($"DataSource={settings.SoftwareBase};Version=3;");
@@ -32,10 +35,7 @@ namespace CompMgr
 
         public Logica()
         {
-            //if(!File.Exists(dataBaseName))
-            //{
-            //    SQLiteConnection.CreateFile(dataBaseName);
-            //}
+          
             //dbCon = new SQLiteConnection($"DataSource={dataBaseName};Version=3;");
         }
 
@@ -43,11 +43,15 @@ namespace CompMgr
         {
             try
             {
-                CreateCompBase();
-                CreateDivisionBase();
-                CreateInstallBase();
-                CreateSoftBase();
-                CreateUserBase();
+                if (!File.Exists(dataBaseName))
+                {
+                    SQLiteConnection.CreateFile(dataBaseName);
+                    CreateDivisionBase();
+                    CreateSoftBase();
+                    CreateUserBase();
+                    CreateCompBase();
+                    CreateInstallBase();
+                }
                 return new ErrorMessageHelper();
             }
             catch(Exception e)
@@ -124,6 +128,32 @@ namespace CompMgr
             softwareTable.Rows.Add(orderRow);
 
             LogicDataSet.Tables.Add(softwareTable);
+
+            //Создаём и открываем соединение с БД
+            using (SQLiteConnection createSoftwareConnection = new SQLiteConnection($"DataSource={dataBaseName};Version=3;"))
+            {
+                createSoftwareConnection.Open();
+                //Включаем поддержку внешних ключей
+                SQLiteCommand enFk = new SQLiteCommand(createSoftwareConnection);
+                enFk.CommandText = enableFK;
+                enFk.ExecuteNonQuery();
+
+                //Создаём таблицу Software
+                SQLiteCommand createDb = new SQLiteCommand(createSoftwareConnection);
+                string createSoftDB = "CREATE TABLE IF NOT EXISTS Software (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, version TEXT NOT NULL)";
+                createDb.CommandText = createSoftDB;
+                createDb.ExecuteNonQuery();
+
+                //Синхронизируем таблицы в датасете и БД (потом перенести в обновление бд)
+                using (SQLiteDataAdapter softAdapter = new SQLiteDataAdapter("SELECT * FROM Software", createSoftwareConnection))
+                {
+                    SQLiteCommandBuilder softUpd = new SQLiteCommandBuilder(softAdapter);
+                    softAdapter.Update(LogicDataSet, "Software");
+
+                }
+
+                createSoftwareConnection.Close();
+            }
         }
 
         /// <summary>
@@ -168,6 +198,34 @@ namespace CompMgr
 
             LogicDataSet.Tables.Add(compTable);
 
+            //Создаём внешний ключ на users.id computer.userID
+            ForeignKeyConstraint userCompFK = new ForeignKeyConstraint("user-compFK", LogicDataSet.Tables["Users"].Columns["id"], LogicDataSet.Tables["Computer"].Columns["userID"])
+            {
+                DeleteRule = Rule.SetNull, //при удалении в таблицу вбивать null
+                UpdateRule = Rule.Cascade //при изменении каскадно обновлять
+
+            };
+
+            //Привязываем ключ к таблице и создаём отношения между таблицами в датасете
+            LogicDataSet.Tables["Computer"].Constraints.Add(userCompFK);
+            LogicDataSet.EnforceConstraints = true;
+            LogicDataSet.Relations.Add("user-comp", LogicDataSet.Tables["Users"].Columns["id"], LogicDataSet.Tables["Computer"].Columns["userID"]);
+
+
+            //Создаём внешний ключ на division.id computer.divID
+            ForeignKeyConstraint divCompFK = new ForeignKeyConstraint("div-compFK", LogicDataSet.Tables["Division"].Columns["id"], LogicDataSet.Tables["Computer"].Columns["divID"])
+            {
+                DeleteRule = Rule.SetNull, //при удалении в таблицу вбивать null
+                UpdateRule = Rule.Cascade //при изменении каскадно обновлять
+
+            };
+
+            //Привязываем ключ к таблице и создаём отношения между таблицами в датасете
+            LogicDataSet.Tables["Computer"].Constraints.Add(divCompFK);
+            LogicDataSet.EnforceConstraints = true;
+            LogicDataSet.Relations.Add("div-comp", LogicDataSet.Tables["Division"].Columns["id"], LogicDataSet.Tables["Computer"].Columns["divID"]);
+
+
             //Для тестов
             DataRow local1 = compTable.NewRow();
             local1["nsName"] = "localhost1"; 
@@ -180,6 +238,9 @@ namespace CompMgr
             compTable.Rows.Add(local2);
         }
 
+        /// <summary>
+        /// Создание таблицы пользователей
+        /// </summary>
         private void CreateUserBase()
         {
             DataTable users = new DataTable();
@@ -214,6 +275,32 @@ namespace CompMgr
             user1["fio"] = "Тестов Т.Т.";
             users.Rows.Add(user1);
 
+            //Создаём и открываем соединение с БД
+            using (SQLiteConnection createUserConnection = new SQLiteConnection($"DataSource={dataBaseName};Version=3;"))
+            {
+                createUserConnection.Open();
+                //Включаем поддержку внешних ключей
+                SQLiteCommand enFk = new SQLiteCommand(createUserConnection);
+                enFk.CommandText = enableFK;
+                enFk.ExecuteNonQuery();
+
+                //Создаём таблицу Users
+                SQLiteCommand createDb = new SQLiteCommand(createUserConnection);
+                string createSoftDB = "CREATE TABLE IF NOT EXISTS Users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, fio TEXT NOT NULL, tel INTEGER )";
+                createDb.CommandText = createSoftDB;
+                createDb.ExecuteNonQuery();
+
+                //Синхронизируем таблицы в датасете и БД (потом перенести в обновление бд)
+                using (SQLiteDataAdapter usersAdapter = new SQLiteDataAdapter("SELECT * FROM Users", createUserConnection))
+                {
+                    SQLiteCommandBuilder usersUpd = new SQLiteCommandBuilder(usersAdapter);
+                    usersAdapter.Update(LogicDataSet, "Users");
+
+                }
+
+                createUserConnection.Close();
+            }
+
         }
 
         /// <summary>
@@ -229,7 +316,7 @@ namespace CompMgr
             idDiv.AutoIncrement = true;
             idDiv.AllowDBNull = false;
             idDiv.Unique = true;
-            idDiv.Caption = "Computer ID";
+            idDiv.Caption = "Division ID";
             idDiv.ReadOnly = true;
             idDiv.AutoIncrementSeed = 1;
             division.Columns.Add(idDiv);
@@ -247,6 +334,32 @@ namespace CompMgr
             DataRow div1 = division.NewRow();
             div1["name"] = "Просто пост";
             division.Rows.Add(div1);
+
+            //Создаём и открываем соединение с БД
+            using (SQLiteConnection createDivConnection = new SQLiteConnection($"DataSource={dataBaseName};Version=3;"))
+            {
+                createDivConnection.Open();
+                //Включаем поддержку внешних ключей
+                SQLiteCommand enFk = new SQLiteCommand(createDivConnection);
+                enFk.CommandText = enableFK;
+                enFk.ExecuteNonQuery();
+
+                //Создаём таблицу Division
+                SQLiteCommand createDb = new SQLiteCommand(createDivConnection);
+                string createDivDB = "CREATE TABLE IF NOT EXISTS Division (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL )";
+                createDb.CommandText = createDivDB;
+                createDb.ExecuteNonQuery();
+
+                //Синхронизируем таблицы в датасете и БД (потом перенести в обновление бд)
+                using (SQLiteDataAdapter divAdapter = new SQLiteDataAdapter("SELECT * FROM Division", createDivConnection))
+                {
+                    SQLiteCommandBuilder divUpd = new SQLiteCommandBuilder(divAdapter);
+                    divAdapter.Update(LogicDataSet, "Division");
+
+                }
+
+                createDivConnection.Close();
+            }
 
         }
 
@@ -272,11 +385,13 @@ namespace CompMgr
             //ID компьютера
             DataColumn computer = new DataColumn("computerID", typeof(int));
             computer.Caption = "Компьютер";
+            computer.AllowDBNull = false;
             install.Columns.Add(computer);
 
             //ID ПО
             DataColumn soft = new DataColumn("softID", typeof(int));
-            computer.Caption = "ПО";
+            soft.Caption = "ПО";
+            soft.AllowDBNull = false;
             install.Columns.Add(soft);
 
 
@@ -287,6 +402,26 @@ namespace CompMgr
 
             LogicDataSet.Tables.Add(install);
 
+            //Создаём ключ и оношения между таблицами ПО и установок
+            ForeignKeyConstraint softInstallFK = new ForeignKeyConstraint("soft-installFK", LogicDataSet.Tables["Software"].Columns["id"], LogicDataSet.Tables["Install"].Columns["softID"])
+            {
+                UpdateRule = Rule.Cascade,
+                DeleteRule = Rule.SetNull
+            };
+
+            install.Constraints.Add(softInstallFK);
+            LogicDataSet.Relations.Add("soft-install", LogicDataSet.Tables["Software"].Columns["id"], LogicDataSet.Tables["Install"].Columns["softID"]);
+
+            //Создаём ключ и оношения между таблицами компьютеров и установок
+            ForeignKeyConstraint compInstallFK = new ForeignKeyConstraint("comp-installFK", LogicDataSet.Tables["Computer"].Columns["id"], LogicDataSet.Tables["Install"].Columns["computerID"])
+            {
+                UpdateRule = Rule.Cascade,
+                DeleteRule = Rule.SetNull
+            };
+
+            install.Constraints.Add(compInstallFK);
+            LogicDataSet.Relations.Add("comp-install", LogicDataSet.Tables["Computer"].Columns["id"], LogicDataSet.Tables["Install"].Columns["computerID"]);
+            LogicDataSet.EnforceConstraints = true;
         }
 
 
