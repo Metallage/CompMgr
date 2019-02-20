@@ -36,17 +36,6 @@ namespace CompMgr
 
         private void TestButton_Click(object sender, RoutedEventArgs e)
         {
-            //baseLogic = new Logica(settings);
-
-            //gridField.ItemsSource = baseLogic.LogicDataSet.Tables["Software"].DefaultView;
-            //settings.AddBase("РТП(ЦЭД)","RTPCED.sqlite");
-            //settings.AddBase("МТП", "MTP.sqlite");
-            //settings.AddBase("РТП", "RTP.sqlite");
-            //settings.WriteSettings();
-            //SettingsWindow settings = new SettingsWindow();
-            //settings.CurrentSettings = this.settings;
-            //settings.Show();
-
             baseLogic = new Logica();
             ErrorMessageHelper initialDB = baseLogic.InitialDB();
             if(initialDB.HasErrors)
@@ -56,7 +45,7 @@ namespace CompMgr
             gridField.ItemsSource = baseLogic.LogicDataSet.Tables["Software"].DefaultView;
 
             EditTableWindow editSoft = new EditTableWindow(this.baseLogic);
-            editSoft.FormDataTables(baseLogic.LogicDataSet);
+
             editSoft.Show();
         }
     }

@@ -16,7 +16,6 @@ namespace CompMgr
         public Logica()
         {
             connectionString = $"DataSource={dataBaseName};Version=3;";
-
         }
 
 
@@ -47,7 +46,19 @@ namespace CompMgr
             }
         }
 
-
+        /// <summary>
+        /// Включает поддержку внешних ключей для установленного соединения
+        /// </summary>
+        /// <param name="connection">Установленное соединение</param>
+        private void EnableForeignKeys(SQLiteConnection connection)
+        {
+            if (connection.State == ConnectionState.Open)
+            {
+                SQLiteCommand enFk = new SQLiteCommand(connection);
+                enFk.CommandText = enableFK;
+                enFk.ExecuteNonQuery();
+            }
+        }
 
         /// <summary>
         /// Создаёт таблички в БД
@@ -58,10 +69,7 @@ namespace CompMgr
             {
                 createConnection.Open();
 
-                //Включаем поддержку внешних ключей
-                SQLiteCommand enFk = new SQLiteCommand(createConnection);
-                enFk.CommandText = enableFK;
-                enFk.ExecuteNonQuery();
+                EnableForeignKeys(createConnection);
 
                 SQLiteCommand transaction = new SQLiteCommand(createConnection);
                 transaction.CommandText = "BEGIN TRANSACTION";
@@ -156,14 +164,11 @@ namespace CompMgr
         {
             try
             {
-                using (SQLiteConnection saveConnect = new SQLiteConnection($"DataSource={dataBaseName};Version=3;"))
+                using (SQLiteConnection saveConnect = new SQLiteConnection(connectionString))
                 {
                     saveConnect.Open();
 
-                    //Поддержка внешних ключей
-                    SQLiteCommand enFk = new SQLiteCommand(saveConnect);
-                    enFk.CommandText = enableFK;
-                    enFk.ExecuteNonQuery();
+                    EnableForeignKeys(saveConnect);
 
                     SaveTable(saveConnect, "Software");
                     SaveTable(saveConnect, "Users");
@@ -202,10 +207,7 @@ namespace CompMgr
                 {
                     loadCon.Open();
 
-                    //Включаем поддержку внешних ключей
-                    SQLiteCommand enFk = new SQLiteCommand(loadCon);
-                    enFk.CommandText = enableFK;
-                    enFk.ExecuteNonQuery();
+                    EnableForeignKeys(loadCon);
 
                     LoadTable(loadCon, "Software");
                     LoadTable(loadCon, "Users");

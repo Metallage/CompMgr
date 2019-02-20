@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
 
+
 namespace CompMgr
 {
     /// <summary>
@@ -28,12 +29,14 @@ namespace CompMgr
             Install = 4
         }
 
-        private DataTable software = new DataTable("Software");
-        private DataTable users = new DataTable("Users");
-        private DataTable division = new DataTable("Division");
-        private DataTable computer = new DataTable("Computer");
-        private DataTable install = new DataTable("Install");
-        private DataSet localDS = new DataSet();
+        private DataTable software;
+        private DataTable users;
+        private DataTable division;
+        private DataTable computer;
+        private DataTable install;
+        private List<Computer> compList;
+
+
 
         private bool changed = false;
 
@@ -42,62 +45,44 @@ namespace CompMgr
         public EditTableWindow(Logica logic)
         {
             this.logic = logic;
+
+            software = logic.LogicDataSet.Tables["Software"];
+            users = logic.LogicDataSet.Tables["Users"];
+            division = logic.LogicDataSet.Tables["Division"];
+            computer = logic.LogicDataSet.Tables["Computer"];
+            install = logic.LogicDataSet.Tables["Install"];
+
             InitializeComponent();
         }
 
-        /// <summary>
-        /// Заполняем таблички из переданного DataSet
-        /// </summary>
-        /// <param name="source">Источник для заполнения</param>
-        public void FormDataTables(DataSet source)
+       private List<Computer> FormComp()
         {
-            using (DataTableReader softReader = source.Tables["Software"].CreateDataReader())
+            List<Computer> compOut = new List<Computer>();
+            Dictionary<int, string> userNames = new Dictionary<int, string>();
+            Dictionary<int, string> divNames = new Dictionary<int, string>();
+
+            var queryUser = from user in users.AsEnumerable()
+                            select new { id = user.Field<int>("id"), fio = user.Field<string>("fio") };
+            foreach(var user in queryUser)
             {
-                software.Load(softReader);
-                software.AcceptChanges();
-                localDS.Tables.Add(software);
+                userNames.Add(user.id, user.fio);
             }
 
-            using (DataTableReader userReader = source.Tables["Users"].CreateDataReader())
-            {
-                users.Load(userReader);
-                users.AcceptChanges();
-                localDS.Tables.Add(users);
-            }
-
-            using (DataTableReader divReader = source.Tables["Division"].CreateDataReader())
-            {
-                division.Load(divReader);
-                division.AcceptChanges();
-                localDS.Tables.Add(division);
-            }
-
-
-            using (DataTableReader compReader = source.Tables["Computer"].CreateDataReader())
-            {
-                computer.Load(compReader);
-                computer.AcceptChanges();
-                localDS.Tables.Add(computer);
-            }
-
-            using (DataTableReader instReader = source.Tables["Install"].CreateDataReader())
-            {
-                install.Load(instReader);
-                install.AcceptChanges();
-                localDS.Tables.Add(install);
-            }
+            userNames.Add(-1,"не закреплён");
+            
+            return compOut;
         }
 
-        /// <summary>
-        /// Сохраняет изменения в тавлице
-        /// </summary>
-        /// <param name="tableName">Имя таблицы</param>
-        private void SaveChanges(string tableName)
-        {
-            changed = false;
-            localDS.Tables[$"{tableName}"].AcceptChanges(); //Сохраняем локальную копию формы
-            logic.UpdateTable(tableName, localDS.Tables[$"{tableName}"]); //Сохраняем в основной базе
-        }
+        ///// <summary>
+        ///// Сохраняет изменения в тавлице
+        ///// </summary>
+        ///// <param name="tableName">Имя таблицы</param>
+        //private void SaveChanges(string tableName)
+        //{
+        //    changed = false;
+        //    localDS.Tables[$"{tableName}"].AcceptChanges(); //Сохраняем локальную копию формы
+        //    logic.UpdateTable(tableName, localDS.Tables[$"{tableName}"]); //Сохраняем в основной базе
+        //}
 
         #region Привязываем таблицы к DataGrid
 
@@ -158,6 +143,66 @@ namespace CompMgr
             EditDG.IsEnabled = true;
         }
 
+        private void BindComp()
+        {
+            EditDG.AutoGenerateColumns = false;
+            EditDG.Columns.Clear();
+
+            DataGridTextColumn nsName = new DataGridTextColumn();
+            nsName.Header = "Имя компьютера";
+            Binding nsBind = new Binding("nsName");
+            nsName.Binding = nsBind;
+
+            DataGridTextColumn ipAdr = new DataGridTextColumn();
+            ipAdr.Header = "IP адрес";
+            Binding ipBind = new Binding("ip");
+            ipAdr.Binding = ipBind;
+
+            DataGridTemplateColumn userCol = new DataGridTemplateColumn();
+            userCol.Header = "Пользователь";
+            DataTemplate cellTemplate = (DataTemplate)EditTableMainGrid.Resources["UserNamesEdit"];
+
+            
+           // ComboBox namesBox = (ComboBox)cellTemplate.FindName("UserNamesComboBox",(FrameworkElement)EditDG);
+            userCol.CellTemplate = cellTemplate;
+           // ComboBox namesBox = (ComboBox)userCol.CellTemplate.FindName("UserNamesComboBox", (FrameworkElement)EditDG);
+
+
+
+            var userNamesVal = from fio in users.AsEnumerable()
+                               select fio.Field<string>("fio");
+
+            //namesBox.ItemsSource = userNamesVal;
+
+
+
+            EditDG.Columns.Add(nsName);
+            EditDG.Columns.Add(ipAdr);
+            EditDG.Columns.Add(userCol);
+
+            EditDG.ItemsSource = computer.DefaultView;
+
+
+            EditDG.IsEnabled = true;
+        }
+
+        private void BindDivision()
+        {
+            EditDG.AutoGenerateColumns = false;
+            EditDG.Columns.Clear();
+
+            DataGridTextColumn divNameCol = new DataGridTextColumn();
+            divNameCol.Header = "Наименование подразделения";
+            Binding nameBind = new Binding("name");
+            divNameCol.Binding = nameBind;
+
+            EditDG.Columns.Add(divNameCol);
+
+            EditDG.ItemsSource = division.DefaultView;
+
+            EditDG.IsEnabled = true;
+
+        }
 
         #endregion
 
@@ -178,16 +223,10 @@ namespace CompMgr
                         BindUsers();
                         break;
                     case 2:
-                        EditDG.Columns.Clear();
-                        EditDG.ItemsSource = division.DefaultView;
-                        EditDG.AutoGenerateColumns = true;
-                        EditDG.IsEnabled = true;
+                        BindDivision();
                         break;
                     case 3:
-                        EditDG.Columns.Clear();
-                        EditDG.ItemsSource = computer.DefaultView;
-                        EditDG.AutoGenerateColumns = true;
-                        EditDG.IsEnabled = true;
+                        BindComp();
                         break;
                     case 4:
                         EditDG.Columns.Clear();
@@ -270,6 +309,15 @@ namespace CompMgr
             SaveButton.IsEnabled = true;
         }
 
-
+        private void EditDG_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            //if (BaseSelect.SelectedIndex == 3)
+            //{
+            //    DataRow comp = (DataRow)e.Row.DataContext;
+            //    var usr = from user in users.AsEnumerable()
+            //              select new {userID = user.Field<int>("userID"), name = user.Field<string>("fio") };
+            //   // if(comp.Field<int>)
+            //}
+        }
     }
 }
