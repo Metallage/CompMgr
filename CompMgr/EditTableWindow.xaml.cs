@@ -35,6 +35,8 @@ namespace CompMgr
         private DataTable computer;
         private DataTable install;
         private List<Computer> compList = new List<Computer>();
+        Dictionary<long, string> userNames = new Dictionary<long, string>();
+        Dictionary<long, string> divNames = new Dictionary<long, string>();
 
 
 
@@ -58,25 +60,25 @@ namespace CompMgr
        private void FormComp()
         {
             compList.Clear();
-            Dictionary<int, string> userNames = new Dictionary<int, string>();
-            Dictionary<int, string> divNames = new Dictionary<int, string>();
+            userNames.Clear();
+            divNames.Clear();
 
 
             var queryUser = from user in users.AsEnumerable()
-                            select new { Id = user.Field<int>("id"), Fio = user.Field<string>("fio") };
-            foreach(var user in queryUser)
+                            select new { Id = user.Field<long>("id"), Fio = user.Field<string>("fio") };
+            foreach(dynamic us in queryUser)
             {
-                userNames.Add(user.Id, user.Fio);
+                userNames.Add(us.Id, us.Fio);
             }
 
             userNames.Add(-1,"не закреплён");
 
 
             var queryDiv = from div in division.AsEnumerable()
-                            select new { Id = div.Field<int>("id"), Fio = div.Field<string>("fio") };
+                            select new { Id = div.Field<long>("id"), Name = div.Field<string>("name") };
             foreach (var div in queryDiv)
             {
-                divNames.Add(div.Id, div.Fio);
+                divNames.Add(div.Id, div.Name);
             }
 
             divNames.Add(-1, "не закреплён");
@@ -86,9 +88,19 @@ namespace CompMgr
                 Computer comp = new Computer();
                 comp.NsName = dr.Field<string>("nsName");
                 comp.Ip = dr.Field<string>("ip");
-                comp.User = userNames;
-                comp.Division = divNames;
+                comp.Id = dr.Field<long>("id");
+
+                if (dr.Field<string>("userID") == null)
+                    comp.UserID = -1;
+                else
+                    comp.UserID = dr.Field<long>("userID");
+                if (dr.Field<string>("divID") == null)
+                    comp.DivisionId = -1;
+                else
+                    comp.DivisionId = dr.Field<long>("divID");
+
                 compList.Add(comp);
+
             }
 
 
@@ -166,28 +178,33 @@ namespace CompMgr
 
         private void BindComp()
         {
+            FormComp();
             EditDG.AutoGenerateColumns = false;
             EditDG.Columns.Clear();
 
             DataGridTextColumn nsName = new DataGridTextColumn();
             nsName.Header = "Имя компьютера";
-            Binding nsBind = new Binding("nsName");
+            Binding nsBind = new Binding("NsName");
             nsName.Binding = nsBind;
 
             DataGridTextColumn ipAdr = new DataGridTextColumn();
             ipAdr.Header = "IP адрес";
-            Binding ipBind = new Binding("ip");
+            Binding ipBind = new Binding("Ip");
             ipAdr.Binding = ipBind;
 
-            DataGridTemplateColumn userCol = new DataGridTemplateColumn();
+            //DataGridTemplateColumn userCol = new DataGridTemplateColumn();
+            DataGridComboBoxColumn userCol = new DataGridComboBoxColumn();
             userCol.Header = "Пользователь";
-            DataTemplate cellTemplate = (DataTemplate)EditTableMainGrid.Resources["UserNamesEdit"];
+            // DataTemplate cellTemplate = (DataTemplate)EditTableMainGrid.Resources["UserNamesEdit"];
 
-            
-           // ComboBox namesBox = (ComboBox)cellTemplate.FindName("UserNamesComboBox",(FrameworkElement)EditDG);
-            userCol.CellTemplate = cellTemplate;
-           // ComboBox namesBox = (ComboBox)userCol.CellTemplate.FindName("UserNamesComboBox", (FrameworkElement)EditDG);
 
+            // ComboBox namesBox = (ComboBox)cellTemplate.FindName("UserNamesComboBox",(FrameworkElement)EditDG);
+            //userCol.CellTemplate = cellTemplate;
+            // ComboBox namesBox = (ComboBox)userCol.CellTemplate.FindName("UserNamesComboBox", (FrameworkElement)EditDG);
+
+            userCol.ItemsSource = userNames;
+            Binding usrBind = new Binding("UserID");
+            userCol.SelectedItemBinding = usrBind;
 
 
             var userNamesVal = from fio in users.AsEnumerable()
@@ -201,7 +218,7 @@ namespace CompMgr
             EditDG.Columns.Add(ipAdr);
             EditDG.Columns.Add(userCol);
 
-            EditDG.ItemsSource = computer.DefaultView;
+            EditDG.ItemsSource = compList;
 
 
             EditDG.IsEnabled = true;

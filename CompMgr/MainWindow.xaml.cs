@@ -31,22 +31,33 @@ namespace CompMgr
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
+            baseLogic = new Logica();
+            ErrorMessageHelper initialDB = baseLogic.InitialDB();
+            if (initialDB.HasErrors)
+            {
+                MessageBox.Show(initialDB.ErrorText);
+            }
         }
 
         private void TestButton_Click(object sender, RoutedEventArgs e)
         {
-            baseLogic = new Logica();
-            ErrorMessageHelper initialDB = baseLogic.InitialDB();
-            if(initialDB.HasErrors)
-            {
-                MessageBox.Show(initialDB.ErrorText);
-            }
+
             gridField.ItemsSource = baseLogic.LogicDataSet.Tables["Software"].DefaultView;
 
             EditTableWindow editSoft = new EditTableWindow(this.baseLogic);
 
             editSoft.Show();
+        }
+
+        private void UpdButton_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateWindow upd = new UpdateWindow(baseLogic);
+            upd.Show();
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            baseLogic.AddSomeData();
         }
     }
 }

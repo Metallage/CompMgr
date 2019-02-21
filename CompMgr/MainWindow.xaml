@@ -33,5 +33,7 @@
         </Grid.ColumnDefinitions>
         <DataGrid x:Name="gridField" AutoGenerateColumns="True" Grid.Row="1" Grid.RowSpan="13" Grid.Column="0" Grid.ColumnSpan="4"/>
         <Button x:Name="TestButton" Content="Проверка" Grid.Column="4" Grid.Row="0" Click="TestButton_Click"/>
+        <Button x:Name="UpdButton" Content="Обновление" Grid.Column="4" Grid.Row="2" Click="UpdButton_Click"/>
+        <Button x:Name="AddButton" Content="Добавить" Grid.Column="4" Grid.Row="4" Click="AddButton_Click"/>
     </Grid>
 </Window>

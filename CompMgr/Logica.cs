@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SQLite;
 using System.IO;
+using System.Collections.Generic;
 
 namespace CompMgr
 {
@@ -12,6 +13,12 @@ namespace CompMgr
         string enableFK = "PRAGMA foreign_keys=on;";
 
         string connectionString;
+
+        DataTable users;
+        DataTable division;
+        DataTable software;
+        DataTable computer;
+        DataTable install;
 
         public Logica()
         {
@@ -45,6 +52,16 @@ namespace CompMgr
                 return new ErrorMessageHelper(e.Message);
             }
         }
+
+        public List<Updates> GetUpdates()
+        {
+            List<Updates> updateList = new List<Updates>();
+
+           // var updates = from dr in 
+
+            return updateList;
+        }
+
 
         /// <summary>
         /// Включает поддержку внешних ключей для установленного соединения
@@ -115,6 +132,54 @@ namespace CompMgr
             }
         }
 
+        /// <summary>
+        /// Создаём внешние улючи в датасете
+        /// </summary>
+        private void CreateFK()
+        {
+            ForeignKeyConstraint userComp = new ForeignKeyConstraint(users.Columns["id"], computer.Columns["userID"])
+            {
+                ConstraintName = "user-comp",
+                UpdateRule = Rule.Cascade,
+                DeleteRule = Rule.SetNull
+            };
+            computer.Constraints.Add(userComp);
+
+            LogicDataSet.Relations.Add("user-comp", users.Columns["id"], computer.Columns["userID"]);
+
+            ForeignKeyConstraint divComp = new ForeignKeyConstraint(division.Columns["id"], computer.Columns["divID"])
+            {
+                ConstraintName = "division-comp",
+                UpdateRule = Rule.Cascade,
+                DeleteRule = Rule.SetNull
+            };
+            computer.Constraints.Add(divComp);
+
+            LogicDataSet.Relations.Add("division-comp", division.Columns["id"], computer.Columns["divID"]);
+
+            ForeignKeyConstraint compInst = new ForeignKeyConstraint(computer.Columns["id"], install.Columns["computerID"])
+            {
+                ConstraintName = "comp-install",
+                UpdateRule = Rule.Cascade,
+                DeleteRule = Rule.Cascade
+            };
+            install.Constraints.Add(compInst);
+
+            LogicDataSet.Relations.Add("comp-install", computer.Columns["id"], install.Columns["computerID"]);
+
+            ForeignKeyConstraint softInst = new ForeignKeyConstraint(software.Columns["id"], install.Columns["softID"])
+            {
+                ConstraintName = "soft-install",
+                UpdateRule = Rule.Cascade,
+                DeleteRule = Rule.Cascade
+            };
+
+            install.Constraints.Add(softInst);
+
+            LogicDataSet.Relations.Add("soft-install", software.Columns["id"], install.Columns["softID"]);
+
+            LogicDataSet.EnforceConstraints = true;
+        }
 
         /// <summary>
         /// Загружает таблица из базы данных
@@ -137,7 +202,7 @@ namespace CompMgr
 
 
         /// <summary>
-        /// Сохраняем таблицу Software в БД
+        /// Сохраняем таблицу в БД
         /// </summary>
         /// <param name="connection">Открытое соединение с БД</param>
         /// <param name="tableName">Сохраняемая таблица</param>
@@ -150,7 +215,6 @@ namespace CompMgr
                 {
                     SQLiteCommandBuilder commands = new SQLiteCommandBuilder(adapter);
                     adapter.Update(LogicDataSet, tableName);
-
                 }
             }
         }
@@ -216,7 +280,16 @@ namespace CompMgr
                     LoadTable(loadCon, "Install");
 
                     loadCon.Close();
+
                 }
+
+                software = LogicDataSet.Tables["Software"];
+                users = LogicDataSet.Tables["Users"];
+                division = LogicDataSet.Tables["Division"];
+                computer = LogicDataSet.Tables["Computer"];
+                install = LogicDataSet.Tables["Install"];
+
+                CreateFK();
 
                 return new ErrorMessageHelper();
             }
@@ -225,6 +298,16 @@ namespace CompMgr
                 return new ErrorMessageHelper(e.Message);
             }
         }
+
+        public void AddSomeData()
+        {
+            DataRow inst = install.NewRow();
+            inst["softID"] = 1;
+            inst["computerID"] = 1;
+            inst["version"] = "000";
+            install.Rows.Add(inst);
+        }
+
 
         public DataSet LogicDataSet { get; set; } = new DataSet();
 
