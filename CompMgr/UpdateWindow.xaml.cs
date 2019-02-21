@@ -62,6 +62,7 @@ namespace CompMgr
             Binding upBind = new Binding("IsUp");
             isUp.Binding = upBind;
             UpdGrid.Columns.Add(isUp);
+            
 
             Updates up = new Updates();
             up.NsName = "localhost";
