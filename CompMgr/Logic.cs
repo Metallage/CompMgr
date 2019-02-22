@@ -70,6 +70,11 @@ namespace CompMgr
             return updateList;
         }
 
+        public DataTable GetDiv()
+        {
+            return division;
+        }
+
 
     }
 }

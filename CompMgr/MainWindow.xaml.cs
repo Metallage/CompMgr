@@ -43,7 +43,8 @@ namespace CompMgr
         private void TestButton_Click(object sender, RoutedEventArgs e)
         {
 
-            //gridField.ItemsSource = baseLogic.LogicDataSet.Tables["Software"].DefaultView;
+
+            gridField.ItemsSource = core.GetDiv().DefaultView;
 
             //EditTableWindow editSoft = new EditTableWindow(this.baseLogic);
 
