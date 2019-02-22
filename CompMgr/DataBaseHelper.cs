@@ -93,7 +93,7 @@ namespace CompMgr
                 //Создаём таблицу Software
                 SQLiteCommand createDb = new SQLiteCommand(createConnection);
                 string createSoftDB = "CREATE TABLE IF NOT EXISTS Software (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "name TEXT NOT NULL, version TEXT NOT NULL)";
+                    "name TEXT NOT NULL UNIQUE, version TEXT NOT NULL)";
                 createDb.CommandText = createSoftDB;
                 createDb.ExecuteNonQuery();
 
@@ -105,7 +105,7 @@ namespace CompMgr
 
                 //Создаём таблицу Division
                 string createDivDB = "CREATE TABLE IF NOT EXISTS Division (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "name TEXT NOT NULL )";
+                    "name TEXT NOT NULL UNIQUE )";
                 createDb.CommandText = createDivDB;
                 createDb.ExecuteNonQuery();
 
@@ -115,7 +115,7 @@ namespace CompMgr
 
                 //Создаём таблицу Computer
                 string createCompDB = "CREATE TABLE IF NOT EXISTS Computer (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "nsName TEXT NOT NULL, ip TEXT, divisionID INTEGER NOT NULL DEFAULT 1, " +
+                    "nsName TEXT NOT NULL UNIQUE, ip TEXT, divisionID INTEGER NOT NULL DEFAULT 1, " +
                     "FOREIGN KEY (divisionID) REFERENCES Division(id))";
                 createDb.CommandText = createCompDB;
                 createDb.ExecuteNonQuery();
@@ -310,23 +310,14 @@ namespace CompMgr
             user = LogicDataSet.Tables["User"];
             division = LogicDataSet.Tables["Division"];
             computer = LogicDataSet.Tables["Computer"];
+            computer.Columns["divisionID"].DefaultValue = 1;
             install = LogicDataSet.Tables["Install"];
             distribution = LogicDataSet.Tables["Distribution"];
 
             CreateFK();   //Создаем внешние ключи в датасете
         }
 
-        //Для тестов
-        public void AddSomeData()
-        {
-            
-
-            //DataRow inst = install.NewRow();
-            //inst["softID"] = 1;
-            //inst["computerID"] = 1;
-            //inst["version"] = "002";
-            //install.Rows.Add(inst);
-        }
+        
 
         /// <summary>
         /// Датасет с таблицами связями и ключами

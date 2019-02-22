@@ -16,7 +16,7 @@ namespace CompMgr
         {
             NsName = nsName;
             Ip = ip;
-            User = User;
+            User = user;
             IsUp = false;
         }
 

@@ -43,8 +43,10 @@ namespace CompMgr
         private void TestButton_Click(object sender, RoutedEventArgs e)
         {
 
+            Dictionary<string, string> distr = core.GetDistr();
 
-            gridField.ItemsSource = core.GetDiv().DefaultView;
+
+            gridField.ItemsSource = distr;
 
             //EditTableWindow editSoft = new EditTableWindow(this.baseLogic);
 
