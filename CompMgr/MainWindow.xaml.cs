@@ -20,9 +20,10 @@ namespace CompMgr
     /// </summary>
     public partial class MainWindow : Window
     {
-        private SettingsHelper settings = new SettingsHelper();
-        private Logica baseLogic;
+        // private SettingsHelper settings = new SettingsHelper();
+        //private DataBaseHelper baseLogic;
 
+        Logic core = new Logic();
 
         public MainWindow()
         {
@@ -31,33 +32,33 @@ namespace CompMgr
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            baseLogic = new Logica();
-            ErrorMessageHelper initialDB = baseLogic.InitialDB();
-            if (initialDB.HasErrors)
+
+            ErrorMessageHelper start = core.Start();
+            if (start.HasErrors)
             {
-                MessageBox.Show(initialDB.ErrorText);
+                MessageBox.Show(start.ErrorText);
             }
         }
 
         private void TestButton_Click(object sender, RoutedEventArgs e)
         {
 
-            gridField.ItemsSource = baseLogic.LogicDataSet.Tables["Software"].DefaultView;
+            //gridField.ItemsSource = baseLogic.LogicDataSet.Tables["Software"].DefaultView;
 
-            EditTableWindow editSoft = new EditTableWindow(this.baseLogic);
+            //EditTableWindow editSoft = new EditTableWindow(this.baseLogic);
 
-            editSoft.Show();
+            //editSoft.Show();
         }
 
         private void UpdButton_Click(object sender, RoutedEventArgs e)
         {
-            UpdateWindow upd = new UpdateWindow(baseLogic);
+            UpdateWindow upd = new UpdateWindow(core);
             upd.Show();
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            baseLogic.AddSomeData();
+           // baseLogic.AddSomeData();
         }
     }
 }

@@ -42,9 +42,9 @@ namespace CompMgr
 
         private bool changed = false;
 
-        private Logica logic;
+        private DataBaseHelper logic;
 
-        public EditTableWindow(Logica logic)
+        public EditTableWindow(DataBaseHelper logic)
         {
             this.logic = logic;
 
@@ -280,7 +280,7 @@ namespace CompMgr
         public DataSet TableSet
         { get; set; }
 
-        public Logica logica
+        public DataBaseHelper logica
         { get; set; }
 
         private void EditDG_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)

@@ -19,14 +19,14 @@ namespace CompMgr
     /// </summary>
     public partial class UpdateWindow : Window
     {
-        private Logica logic;
+        private Logic core;
 
         public List<Updates> gridSource;
 
-        public UpdateWindow(Logica logic)
+        public UpdateWindow(Logic core)
         {
-            this.logic = logic;
-            gridSource = logic.GetUpdates();
+            this.core = core;
+            gridSource = core.GetUpdates("Ордер");
 
             InitializeComponent();
         }
@@ -64,11 +64,8 @@ namespace CompMgr
             UpdGrid.Columns.Add(isUp);
             
 
-            Updates up = new Updates();
-            up.NsName = "localhost";
-            up.Ip = "127.0.0.100";
-            up.User = "Админов А.А.";
-            gridSource.Add(up);
+
+
             UpdGrid.ItemsSource = gridSource;
         }
     }

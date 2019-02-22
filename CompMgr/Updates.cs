@@ -7,10 +7,18 @@ namespace CompMgr
 {
     public class Updates
     {
-        public string NsName { get; set; }
-        public string Ip { get; set; }
-        public string User { get; set; }
+        public string NsName { get; }
+        public string Ip { get; }
+        public string User { get; }
         public bool IsUp { get; set; }
+
+        public Updates(string nsName, string ip, string user)
+        {
+            NsName = nsName;
+            Ip = ip;
+            User = User;
+            IsUp = false;
+        }
 
         public override string ToString()
         {

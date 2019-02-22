@@ -6,13 +6,20 @@ using System.Collections.Generic;
 
 namespace CompMgr
 {
-    public class Logica
+    /// <summary>
+    /// Класс для обмена с sqlite БД
+    /// </summary>
+    public class DataBaseHelper
     {
+        //Путь к БД
         string dataBaseName = "compMgr.sqlite";
 
+        //Строка подключения поддержки внешних ключей
         string enableFK = "PRAGMA foreign_keys=on;";
 
+        //Строка соединения с БД
         string connectionString;
+
 
         DataTable users;
         DataTable division;
@@ -20,13 +27,13 @@ namespace CompMgr
         DataTable computer;
         DataTable install;
 
-        public Logica()
+        public DataBaseHelper()
         {
             connectionString = $"DataSource={dataBaseName};Version=3;";
         }
 
 
-
+        //TODO перенести или убрать
         public ErrorMessageHelper UpdateTable(string tableName, DataTable newTable)
         {
             try
@@ -51,15 +58,6 @@ namespace CompMgr
             {
                 return new ErrorMessageHelper(e.Message);
             }
-        }
-
-        public List<Updates> GetUpdates()
-        {
-            List<Updates> updateList = new List<Updates>();
-
-           // var updates = from dr in 
-
-            return updateList;
         }
 
 
@@ -221,7 +219,7 @@ namespace CompMgr
 
 
         /// <summary>
-        /// Сохраняем таблицы в БД
+        /// Сохраняем таблицы в БД TODO переписать под новое ядро логики
         /// </summary>
         /// <returns>Отчёт об ошибках</returns>
         public ErrorMessageHelper Save()
@@ -257,58 +255,55 @@ namespace CompMgr
         /// Инизиализация и загрузка таблиц
         /// </summary>
         /// <returns>отчёт об ошибках</returns>
-        public ErrorMessageHelper InitialDB()
+        public void InitialDB()
         {
-            try
+            //Если файла бд нет, то создаём его и создаём в нем нужные таблицы
+            if (!File.Exists(dataBaseName))
             {
-                if (!File.Exists(dataBaseName))
-                {
-                    SQLiteConnection.CreateFile(dataBaseName);
-                    CreateTables();
-                }
-
-                using (SQLiteConnection loadCon = new SQLiteConnection(connectionString))
-                {
-                    loadCon.Open();
-
-                    EnableForeignKeys(loadCon);
-
-                    LoadTable(loadCon, "Software");
-                    LoadTable(loadCon, "Users");
-                    LoadTable(loadCon, "Division");
-                    LoadTable(loadCon, "Computer");
-                    LoadTable(loadCon, "Install");
-
-                    loadCon.Close();
-
-                }
-
-                software = LogicDataSet.Tables["Software"];
-                users = LogicDataSet.Tables["Users"];
-                division = LogicDataSet.Tables["Division"];
-                computer = LogicDataSet.Tables["Computer"];
-                install = LogicDataSet.Tables["Install"];
-
-                CreateFK();
-
-                return new ErrorMessageHelper();
+                SQLiteConnection.CreateFile(dataBaseName);
+                CreateTables();
             }
-            catch (Exception e)
+
+            //Загружаем таблицы из файла БД
+            using (SQLiteConnection loadCon = new SQLiteConnection(connectionString))
             {
-                return new ErrorMessageHelper(e.Message);
+                loadCon.Open();
+
+                EnableForeignKeys(loadCon); //Включаем поддержку внешних ключей
+
+                //Загружаем таблицы
+                LoadTable(loadCon, "Software");
+                LoadTable(loadCon, "Users");
+                LoadTable(loadCon, "Division");
+                LoadTable(loadCon, "Computer");
+                LoadTable(loadCon, "Install");
+
+                loadCon.Close();
             }
+
+            //TODO возможно стоит это убрать, а возможно нет (разобраться)
+            software = LogicDataSet.Tables["Software"];
+            users = LogicDataSet.Tables["Users"];
+            division = LogicDataSet.Tables["Division"];
+            computer = LogicDataSet.Tables["Computer"];
+            install = LogicDataSet.Tables["Install"];
+
+            CreateFK();   //Создаем внешние ключи в датасете
         }
 
+        //Для тестов
         public void AddSomeData()
         {
             DataRow inst = install.NewRow();
             inst["softID"] = 1;
             inst["computerID"] = 1;
-            inst["version"] = "000";
+            inst["version"] = "002";
             install.Rows.Add(inst);
         }
 
-
+        /// <summary>
+        /// Датасет с таблицами связями и ключами
+        /// </summary>
         public DataSet LogicDataSet { get; set; } = new DataSet();
 
     }

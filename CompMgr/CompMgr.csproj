@@ -73,7 +73,8 @@
     </ApplicationDefinition>
     <Compile Include="Computer.cs" />
     <Compile Include="ErrorMessageHelper.cs" />
-    <Compile Include="Logica.cs" />
+    <Compile Include="DataBaseHelper.cs" />
+    <Compile Include="Logic.cs" />
     <Compile Include="SettingsHelper.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
