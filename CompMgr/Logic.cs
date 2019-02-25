@@ -96,6 +96,106 @@ namespace CompMgr
         }
 
 
+        public List<CompleteTableHelper> GetCompleteTable()
+        {
+            List<CompleteTableHelper> compData = new List<CompleteTableHelper>();
+
+            foreach(DataRow softdr in software.Select())
+            {
+                string softName = softdr.Field<string>("name");
+                string currentversion = softdr.Field<string>("version");
+
+                CompleteTableHelper cth = new CompleteTableHelper(softName,currentversion);
+                cth.CompNames = GetCompIsUp(softName, currentversion);
+                compData.Add(cth);
+
+            }
+            return compData;
+        }
+
+
+
+        public void ParseComp(string data)
+        {
+
+            char[] paramSeparators = { ';', ',' };
+            string[] comps =  data.Split('\n');
+            foreach (string comp in comps)
+            {
+                string[] param = comp.Split(paramSeparators);
+
+
+                DataRow newComp = computer.NewRow();
+                newComp["nsName"] = param[0];
+                newComp["ip"] = param[1];
+                if(param.Count() > 2)
+                {
+                    long div = FindDivisionID(param[2]);
+                    if (div >= 0)
+                        newComp["divID"] = div;
+                    long usr = FindUserID(param[3]);
+                    if (usr >= 0)
+                        newComp["userID"] = usr;
+                    computer.Rows.Add(newComp);
+                }
+
+            }
+        }
+
+        //Поиск ID пользователя по имени
+        private long FindUserID(string userName)
+        {
+            var idsQuer = from ids in user.Select($"fio LIKE %{userName}%").CopyToDataTable().AsEnumerable()
+                          select ids.Field<long>("id");
+            if (idsQuer.Count() == 1)
+            {
+                return (long)idsQuer.First();
+            }
+            else
+                return -1;                   
+        }
+
+        //Поиск ID подразделения по части названия
+        private long FindDivisionID(string divisionName)
+        {
+            var divQuer = from div in division.Select($"name LIKE %{divisionName}").CopyToDataTable().AsEnumerable()
+                          select div.Field<long>("id");
+            if (divQuer.Count() == 1)
+                return (long)divQuer.First();
+            else
+                return -1;
+        }
+
+        private Dictionary<string,bool> GetCompIsUp(string software, string version)
+        {
+            Dictionary<string, bool> comps = new Dictionary<string, bool>();
+
+            var compQuery = from comp in computer.AsEnumerable()
+                           join ins in install.AsEnumerable() on comp.Field<long>("id") equals ins.Field<long>("computerID")
+                           join soft in this.software.AsEnumerable() on ins.Field<long>("softID") equals soft.Field<long>("id")
+                           where (soft.Field<string>("name") == software) && (ins.Field<string>("version") == version)
+                           select comp.Field<string>("nsName");
+
+            foreach(dynamic comp in compQuery)
+            {
+                comps.Add(comp.ToString(), true);
+            }
+
+            var compNotUp = from comp in computer.AsEnumerable()
+                            join ins in install.AsEnumerable() on comp.Field<long>("id") equals ins.Field<long>("computerID")
+                            join soft in this.software.AsEnumerable() on ins.Field<long>("softID") equals soft.Field<long>("id")
+                            where (soft.Field<string>("name") == software) && (ins.Field<string>("version") != version)
+                            select comp.Field<string>("nsName");
+
+            foreach (dynamic comp in compNotUp)
+            {
+                comps.Add(comp.ToString(), false);
+            }
+
+            return comps;
+        }
+
+
         //Для тестов
         private void AddSomeData()
         {

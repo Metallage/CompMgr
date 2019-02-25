@@ -71,6 +71,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CompleteData.cs" />
+    <Compile Include="CompleteTableHelper.cs" />
     <Compile Include="Computer.cs" />
     <Compile Include="ErrorMessageHelper.cs" />
     <Compile Include="DataBaseHelper.cs" />

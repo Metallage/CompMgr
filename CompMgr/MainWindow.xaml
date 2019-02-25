@@ -6,6 +6,9 @@
         xmlns:local="clr-namespace:CompMgr"
         mc:Ignorable="d"
         Title="MainWindow" Height="768" Width="1024">
+    <Window.Resources>
+        <local:CompleteData x:Key="completeData"/>
+    </Window.Resources>
     <Grid x:Name="rootGrid">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -31,7 +34,14 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="gridField" AutoGenerateColumns="True" Grid.Row="1" Grid.RowSpan="13" Grid.Column="0" Grid.ColumnSpan="4"/>
+        <DataGrid x:Name="gridField" AutoGenerateColumns="False" Grid.Row="1" Grid.RowSpan="13" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{StaticResource completeData}">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="SoftName" Header="Название ПО" Binding="{Binding Path=SoftName}" />
+                <DataGridTextColumn x:Name="CurrVersion" Header="Актуальная версия" Binding="{Binding Path=SoftVersion}" />
+                <DataGridTextColumn x:Name="Comps" Header="Список рабочих станций"/>
+
+            </DataGrid.Columns>
+        </DataGrid>
         <Button x:Name="TestButton" Content="Проверка" Grid.Column="4" Grid.Row="0" Click="TestButton_Click"/>
         <Button x:Name="UpdButton" Content="Обновление" Grid.Column="4" Grid.Row="2" Click="UpdButton_Click"/>
         <Button x:Name="AddButton" Content="Добавить" Grid.Column="4" Grid.Row="4" Click="AddButton_Click"/>
