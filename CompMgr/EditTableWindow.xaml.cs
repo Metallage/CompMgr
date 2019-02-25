@@ -42,69 +42,63 @@ namespace CompMgr
 
         private bool changed = false;
 
-        private DataBaseHelper logic;
 
-        public EditTableWindow(DataBaseHelper logic)
+        private Logic logic;
+
+        public EditTableWindow(Logic logic)
         {
             this.logic = logic;
-
-            software = logic.LogicDataSet.Tables["Software"];
-            users = logic.LogicDataSet.Tables["Users"];
-            division = logic.LogicDataSet.Tables["Division"];
-            computer = logic.LogicDataSet.Tables["Computer"];
-            install = logic.LogicDataSet.Tables["Install"];
-
             InitializeComponent();
         }
 
-       private void FormComp()
-        {
-            compList.Clear();
-            userNames.Clear();
-            divNames.Clear();
+       //private void FormComp()
+       // {
+       //     compList.Clear();
+       //     userNames.Clear();
+       //     divNames.Clear();
 
 
-            var queryUser = from user in users.AsEnumerable()
-                            select new { Id = user.Field<long>("id"), Fio = user.Field<string>("fio") };
-            foreach(dynamic us in queryUser)
-            {
-                userNames.Add(us.Id, us.Fio);
-            }
+       //     var queryUser = from user in users.AsEnumerable()
+       //                     select new { Id = user.Field<long>("id"), Fio = user.Field<string>("fio") };
+       //     foreach(dynamic us in queryUser)
+       //     {
+       //         userNames.Add(us.Id, us.Fio);
+       //     }
 
-            userNames.Add(-1,"не закреплён");
-
-
-            var queryDiv = from div in division.AsEnumerable()
-                            select new { Id = div.Field<long>("id"), Name = div.Field<string>("name") };
-            foreach (var div in queryDiv)
-            {
-                divNames.Add(div.Id, div.Name);
-            }
-
-            divNames.Add(-1, "не закреплён");
-
-            foreach (DataRow dr in computer.Select())
-            {
-                Computer comp = new Computer();
-                comp.NsName = dr.Field<string>("nsName");
-                comp.Ip = dr.Field<string>("ip");
-                comp.Id = dr.Field<long>("id");
-
-                if (dr.Field<string>("userID") == null)
-                    comp.UserID = -1;
-                else
-                    comp.UserID = dr.Field<long>("userID");
-                if (dr.Field<string>("divID") == null)
-                    comp.DivisionId = -1;
-                else
-                    comp.DivisionId = dr.Field<long>("divID");
-
-                compList.Add(comp);
-
-            }
+       //     userNames.Add(-1,"не закреплён");
 
 
-        }
+       //     var queryDiv = from div in division.AsEnumerable()
+       //                     select new { Id = div.Field<long>("id"), Name = div.Field<string>("name") };
+       //     foreach (var div in queryDiv)
+       //     {
+       //         divNames.Add(div.Id, div.Name);
+       //     }
+
+       //     divNames.Add(-1, "не закреплён");
+
+       //     foreach (DataRow dr in computer.Select())
+       //     {
+       //         Computer comp = new Computer();
+       //         comp.NsName = dr.Field<string>("nsName");
+       //         comp.Ip = dr.Field<string>("ip");
+       //         comp.Id = dr.Field<long>("id");
+
+       //         if (dr.Field<string>("userID") == null)
+       //             comp.UserID = -1;
+       //         else
+       //             comp.UserID = dr.Field<long>("userID");
+       //         if (dr.Field<string>("divID") == null)
+       //             comp.DivisionId = -1;
+       //         else
+       //             comp.DivisionId = dr.Field<long>("divID");
+
+       //         compList.Add(comp);
+
+       //     }
+
+
+       // }
 
         ///// <summary>
         ///// Сохраняет изменения в тавлице
@@ -118,6 +112,12 @@ namespace CompMgr
         //}
 
         #region Привязываем таблицы к DataGrid
+
+        private void CollapseColumns()
+        {
+            foreach (DataGridColumn dc in EditDG.Columns)
+                dc.Visibility = Visibility.Collapsed;    
+        }
 
         /// <summary>
         /// Настраивает DataGrid на отображение таблицы Software 
@@ -176,52 +176,38 @@ namespace CompMgr
             EditDG.IsEnabled = true;
         }
 
+
+
         private void BindComp()
         {
-            FormComp();
-            EditDG.AutoGenerateColumns = false;
-            EditDG.Columns.Clear();
+            CollapseColumns();
 
-            DataGridTextColumn nsName = new DataGridTextColumn();
-            nsName.Header = "Имя компьютера";
-            Binding nsBind = new Binding("NsName");
-            nsName.Binding = nsBind;
+            foreach (DataGridColumn dc in EditDG.Columns)
+            {
+                switch(dc.Header.ToString().ToLower())
+                {
+                    case "имя компьютера":
+                        dc.Visibility = Visibility.Visible;
+                        continue;
+                    case "ip адрес":
+                        dc.Visibility = Visibility.Visible;
+                        continue;
+                    case "подразделение":
+                        dc.Visibility = Visibility.Visible;
+                        continue;
+                    case "пользователь":
+                        dc.Visibility = Visibility.Visible;
+                        continue;
+                }
+            }
 
-            DataGridTextColumn ipAdr = new DataGridTextColumn();
-            ipAdr.Header = "IP адрес";
-            Binding ipBind = new Binding("Ip");
-            ipAdr.Binding = ipBind;
-
-            //DataGridTemplateColumn userCol = new DataGridTemplateColumn();
-            DataGridComboBoxColumn userCol = new DataGridComboBoxColumn();
-            userCol.Header = "Пользователь";
-            // DataTemplate cellTemplate = (DataTemplate)EditTableMainGrid.Resources["UserNamesEdit"];
-
-
-            // ComboBox namesBox = (ComboBox)cellTemplate.FindName("UserNamesComboBox",(FrameworkElement)EditDG);
-            //userCol.CellTemplate = cellTemplate;
-            // ComboBox namesBox = (ComboBox)userCol.CellTemplate.FindName("UserNamesComboBox", (FrameworkElement)EditDG);
-
-            userCol.ItemsSource = userNames;
-            Binding usrBind = new Binding("UserID");
-            userCol.SelectedItemBinding = usrBind;
-
-
-            var userNamesVal = from fio in users.AsEnumerable()
-                               select fio.Field<string>("fio");
-
-            //namesBox.ItemsSource = userNamesVal;
-
-
-
-            EditDG.Columns.Add(nsName);
-            EditDG.Columns.Add(ipAdr);
-            EditDG.Columns.Add(userCol);
-
+           
+            
+            compList = logic.GetComputers();
             EditDG.ItemsSource = compList;
+           
 
 
-            EditDG.IsEnabled = true;
         }
 
         private void BindDivision()
@@ -243,6 +229,7 @@ namespace CompMgr
         }
 
         #endregion
+
 
         private void BaseSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -347,15 +334,5 @@ namespace CompMgr
             SaveButton.IsEnabled = true;
         }
 
-        private void EditDG_LoadingRow(object sender, DataGridRowEventArgs e)
-        {
-            //if (BaseSelect.SelectedIndex == 3)
-            //{
-            //    DataRow comp = (DataRow)e.Row.DataContext;
-            //    var usr = from user in users.AsEnumerable()
-            //              select new {userID = user.Field<int>("userID"), name = user.Field<string>("fio") };
-            //   // if(comp.Field<int>)
-            //}
-        }
     }
 }

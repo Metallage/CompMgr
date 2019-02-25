@@ -7,13 +7,7 @@
         mc:Ignorable="d"
         Title="Редактирование таблиц" Height="450" Width="800">
     <Grid x:Name="EditTableMainGrid">
-        <Grid.Resources>
-            <DataTemplate x:Key="UserNamesEdit">
-                <ComboBox x:Name="UserNamesComboBox">
-                  
-                </ComboBox>
-            </DataTemplate>
-        </Grid.Resources>
+        
         <Grid.RowDefinitions>
             <RowDefinition MinHeight="10"/>
             <RowDefinition MinHeight="10"/>
@@ -43,8 +37,18 @@
             <ColumnDefinition MinWidth="100" MaxWidth="200"/>
             <ColumnDefinition MinWidth="2" MaxWidth="5"/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="EditDG" AutoGenerateColumns="False" IsEnabled="False" Grid.Row="1" Grid.RowSpan="18" Grid.Column="1" RowEditEnding="EditDG_RowEditEnding" BeginningEdit="EditDG_BeginningEdit" LoadingRow="EditDG_LoadingRow">
-            
+        <DataGrid x:Name="EditDG" AutoGenerateColumns="False"
+                  Grid.Row="1" Grid.RowSpan="18" Grid.Column="1" 
+                  RowEditEnding="EditDG_RowEditEnding"
+                  BeginningEdit="EditDG_BeginningEdit" 
+                  FontSize="16"
+                  >
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="NsName" Header="Имя компьютера" Binding="{Binding Path=NsName}" Visibility="Collapsed"/>
+                <DataGridTextColumn x:Name="Ip" Header="IP адрес" Binding="{Binding Path=Ip}" Visibility="Collapsed"/>
+                <DataGridTextColumn x:Name="Division" Header="Подразделение" Binding="{Binding Path=Division}" Visibility="Collapsed" />
+                <DataGridTextColumn x:Name="User" Header="Пользователь" Binding="{Binding Path=User}" Visibility="Collapsed" />
+            </DataGrid.Columns>
         </DataGrid>
         <TextBlock x:Name="SelectDBTextBlock" Text="Выбор таблицы для редактирования" TextWrapping="Wrap" Grid.Row="1" Grid.RowSpan="2" Grid.Column="3" TextAlignment="Center" VerticalAlignment="Center"/>
         <ComboBox x:Name="BaseSelect" Grid.Row="3" Grid.Column="3" SelectionChanged="BaseSelect_SelectionChanged" DropDownOpened="BaseSelect_DropDownOpened" >

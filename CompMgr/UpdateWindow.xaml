@@ -22,12 +22,16 @@
             <TextBlock x:Name="Info" DockPanel.Dock="Top" MinHeight="30" MaxHeight="100" FontSize="22" Text="Тест" TextAlignment="Center"/>
             <DataGrid x:Name="UpdGrid" 
                       AutoGenerateColumns="False" 
-                      CanUserAddRows="False"
+                      CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeColumns="True"
                       MinRowHeight="30"
-                      CanUserDeleteRows="False" 
                       FontSize="16"
                       >
-                
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="NsName" Header="Имя компьтера" Binding="{Binding Path=NsName}" IsReadOnly="True"/>
+                    <DataGridTextColumn x:Name="Ip" Header="IP адрес" Binding="{Binding Path=Ip}" IsReadOnly="True" />
+                    <DataGridTextColumn x:Name="User" Header="Пользователь" Binding="{Binding Path=User}" IsReadOnly="True"/>
+                    <DataGridCheckBoxColumn x:Name="IsUp" Header="Обновлено" Binding="{Binding Path=IsUp}" IsReadOnly="False"/>
+                </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
     </Grid>

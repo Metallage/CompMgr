@@ -89,6 +89,36 @@ namespace CompMgr
             return retDist;
         }
 
+        public List<Computer> GetComputers()
+        {
+            List<Computer> computers = new List<Computer>();
+
+            var compQuer = from comp in computer.AsEnumerable()
+                           join div in division.AsEnumerable() on comp.Field<long>("divisionID") equals div.Field<long>("id")
+                           select new {Id = comp.Field<long>("id"), NsName=comp.Field<string>("nsName"), Ip=comp.Field<string>("ip"), Division=div.Field<string>("name") };
+
+            foreach (dynamic comp in compQuer)
+            {
+                Computer newComp = new Computer(comp.NsName, comp.Ip);
+                newComp.Division = comp.Division;
+
+                if (distribution.Select($"computerID = {comp.Id}").Count() > 0)
+                {
+                    var userComp = from dist in distribution.Select($"computerID = {comp.Id}").CopyToDataTable().AsEnumerable()
+                                   join usr in user.AsEnumerable() on dist.Field<long>("userId") equals usr.Field<long>("id")
+                                   select usr.Field<string>("fio");
+
+                    if (userComp.Count() == 1)
+                        newComp.User = userComp.First();
+                }
+                computers.Add(newComp);
+
+            }
+                           
+
+
+            return computers;
+        }
 
         public DataTable GetDiv()
         {
@@ -114,7 +144,10 @@ namespace CompMgr
         }
 
 
-
+        /// <summary>
+        /// Парсинг входной строки для добавления компьютера
+        /// </summary>
+        /// <param name="data">Входные данные</param>
         public void ParseComp(string data)
         {
 
@@ -136,16 +169,23 @@ namespace CompMgr
                     long usr = FindUserID(param[3]);
                     if (usr >= 0)
                         newComp["userID"] = usr;
+
                     computer.Rows.Add(newComp);
                 }
 
             }
         }
 
-        //Поиск ID пользователя по имени
+
+
+        /// <summary>
+        /// Поиск ID пользователя по имени
+        /// </summary>
+        /// <param name="userName">Имя</param>
+        /// <returns></returns>
         private long FindUserID(string userName)
         {
-            var idsQuer = from ids in user.Select($"fio LIKE %{userName}%").CopyToDataTable().AsEnumerable()
+            var idsQuer = from ids in user.Select($"fio LIKE '%{userName}%'").CopyToDataTable().AsEnumerable()
                           select ids.Field<long>("id");
             if (idsQuer.Count() == 1)
             {
@@ -155,10 +195,15 @@ namespace CompMgr
                 return -1;                   
         }
 
-        //Поиск ID подразделения по части названия
+
+        /// <summary>
+        /// Поиск ID подразделения по названию
+        /// </summary>
+        /// <param name="divisionName">название подразделения</param>
+        /// <returns></returns>
         private long FindDivisionID(string divisionName)
         {
-            var divQuer = from div in division.Select($"name LIKE %{divisionName}").CopyToDataTable().AsEnumerable()
+            var divQuer = from div in division.Select($"name LIKE '%{divisionName}%'").CopyToDataTable().AsEnumerable()
                           select div.Field<long>("id");
             if (divQuer.Count() == 1)
                 return (long)divQuer.First();

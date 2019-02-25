@@ -29,43 +29,12 @@ namespace CompMgr
             gridSource = core.GetUpdates("Ордер");
 
             InitializeComponent();
+            
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
-            
-
-            DataGridTextColumn nsName = new DataGridTextColumn();
-            nsName.Header = "Имя Компьютера";
-            Binding nsBind = new Binding("NsName");
-            nsName.Binding = nsBind;
-            nsName.IsReadOnly = true;
-            UpdGrid.Columns.Add(nsName);
-
-            DataGridTextColumn ip = new DataGridTextColumn();
-            ip.Header = "IP адрес";
-            Binding ipBind = new Binding("Ip");
-            ip.IsReadOnly = true;
-            ip.Binding = ipBind;
-            UpdGrid.Columns.Add(ip);
-
-            DataGridTextColumn user = new DataGridTextColumn();
-            user.Header = "Пользователь";
-            Binding usrBind = new Binding("User");
-            user.Binding = usrBind;
-            user.IsReadOnly = true;
-            UpdGrid.Columns.Add(user);
-
-            DataGridCheckBoxColumn isUp = new DataGridCheckBoxColumn();
-            isUp.Header = "Обновлено";
-            Binding upBind = new Binding("IsUp");
-            isUp.Binding = upBind;
-            UpdGrid.Columns.Add(isUp);
-            
-
-
-
+            Info.Text = "Обновления для Ордер";
             UpdGrid.ItemsSource = gridSource;
         }
     }

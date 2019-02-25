@@ -56,7 +56,8 @@ namespace CompMgr
         private void TestButton_Click(object sender, RoutedEventArgs e)
         {
 
-            RunCore();
+            EditTableWindow editTable = new EditTableWindow(core);
+            editTable.Show();
 
             //Dictionary<string, string> distr = core.GetDistr();
 
