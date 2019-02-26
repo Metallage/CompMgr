@@ -89,10 +89,15 @@ namespace CompMgr
             return retDist;
         }
 
+        /// <summary>
+        /// Формируем список компьютеров в понятный интерфейсу вид
+        /// </summary>
+        /// <returns>Лист классов компьютер</returns>
         public List<Computer> GetComputers()
         {
             List<Computer> computers = new List<Computer>();
 
+            //Выбираем все компьютеры с подразделениями
             var compQuer = from comp in computer.AsEnumerable()
                            join div in division.AsEnumerable() on comp.Field<long>("divisionID") equals div.Field<long>("id")
                            select new {Id = comp.Field<long>("id"), NsName=comp.Field<string>("nsName"), Ip=comp.Field<string>("ip"), Division=div.Field<string>("name") };
@@ -102,6 +107,7 @@ namespace CompMgr
                 Computer newComp = new Computer(comp.NsName, comp.Ip);
                 newComp.Division = comp.Division;
 
+                //Ищем есть ли пользователи которым назначен этот комп
                 if (distribution.Select($"computerID = {comp.Id}").Count() > 0)
                 {
                     var userComp = from dist in distribution.Select($"computerID = {comp.Id}").CopyToDataTable().AsEnumerable()
@@ -177,6 +183,56 @@ namespace CompMgr
         }
 
 
+        public void UpdateComp(List<Computer> comps)
+        {
+            foreach(Computer comp in comps)
+            {
+                long id = FindCompID(comp.NsName);
+                long divID = FindDivisionID(comp.Division);
+                string userFIO = null;
+                if ((comp.User != null) && (comp.User != "") && (comp.User != " "))
+                    userFIO = comp.User;
+                
+                long userID = FindUserID(userFIO);
+
+                if (id == -1)
+                {
+                    DataRow newRow = computer.NewRow();
+                    newRow["nsName"] = comp.NsName;
+                    newRow["ip"] = comp.Ip;
+
+                    if ((comp.Division != null) && (divID != -1))
+                    {
+                        newRow["divisionID"] = divID;
+                    }
+                    computer.Rows.Add(newRow);
+                }
+                else
+                {
+                    DataRow upRow = computer.Rows.Find(id);
+                    upRow["ip"] = comp.Ip;
+                    if ((comp.Division != null) && (divID != -1))
+                    {
+                        upRow["divisionID"] = divID;
+                    }
+                }
+
+                if ((comp.User != null) && (userID != -1))
+                {
+                    long distributionID = FindDistributionID(id, userID);
+                    if (distributionID == -1)
+                    {
+                        DeleteDistributionByUserOrCompID(id, userID);
+                        DataRow newDistrib = distribution.NewRow();
+                        newDistrib["computerID"] = id;
+                        newDistrib["userID"] = userID;
+                        distribution.Rows.Add(newDistrib);
+                    }
+                }
+            }
+        }
+
+        #region Поиск ID по таблицам
 
         /// <summary>
         /// Поиск ID пользователя по имени
@@ -185,14 +241,19 @@ namespace CompMgr
         /// <returns></returns>
         private long FindUserID(string userName)
         {
-            var idsQuer = from ids in user.Select($"fio LIKE '%{userName}%'").CopyToDataTable().AsEnumerable()
-                          select ids.Field<long>("id");
-            if (idsQuer.Count() == 1)
-            {
-                return (long)idsQuer.First();
-            }
+            if (userName == null)
+                return -1;
             else
-                return -1;                   
+            {
+                var idsQuer = from ids in user.Select($"fio LIKE '{userName}%'").CopyToDataTable().AsEnumerable()
+                              select ids.Field<long>("id");
+                if (idsQuer.Count() == 1)
+                {
+                    return (long)idsQuer.First();
+                }
+                else
+                    return -1;
+            }          
         }
 
 
@@ -200,15 +261,67 @@ namespace CompMgr
         /// Поиск ID подразделения по названию
         /// </summary>
         /// <param name="divisionName">название подразделения</param>
-        /// <returns></returns>
+        /// <returns>ID</returns>
         private long FindDivisionID(string divisionName)
         {
-            var divQuer = from div in division.Select($"name LIKE '%{divisionName}%'").CopyToDataTable().AsEnumerable()
+            var divQuer = from div in division.Select($"name = '{divisionName}'").CopyToDataTable().AsEnumerable()
                           select div.Field<long>("id");
             if (divQuer.Count() == 1)
                 return (long)divQuer.First();
             else
                 return -1;
+        }
+
+        /// <summary>
+        /// Поиск ID компа по имени
+        /// </summary>
+        /// <param name="nsName">имя компа</param>
+        /// <returns>ID</returns>
+        private long FindCompID(string nsName)
+        {
+            var compQuery = from comp in computer.Select($"nsName = '{nsName}'").AsEnumerable()
+                            select comp.Field<long>("id");
+            if (compQuery.Count() == 1)
+                return (long)compQuery.First();
+            else
+                return -1;
+        }
+
+        /// <summary>
+        /// Поиск ID назначения по ID пользователя или ID компьютера
+        /// </summary>
+        /// <param name="compID"></param>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        private long FindDistributionID(long compID, long userID)
+        {
+            var distrQuery = from dist in distribution.Select($"(computerID = {compID})AND(userID = {userID})").AsEnumerable()
+                             select dist.Field<long>("id");
+            if (distrQuery.Count() == 1)
+                return distrQuery.First();
+            else
+                return -1;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Удаляет все распреления компов для конкретного пользователя
+        /// </summary>
+        /// <param name="userID">ID пользователя/param>
+        private void DeleteDistributionByUserOrCompID( long compID, long userID)
+        {
+            var distQuery = from dist in distribution.Select($"(userID = {userID})OR(computerID = {compID})").AsEnumerable()
+                            select dist.Field<long>("id");
+            if(distQuery.Count()>0)
+            {
+                foreach(dynamic dist in distQuery)
+                {
+                    DataRow delRow = distribution.Rows.Find((long)dist);
+                    if (delRow != null)
+                        distribution.Rows.Remove(delRow);
+                }
+            }
         }
 
         private Dictionary<string,bool> GetCompIsUp(string software, string version)

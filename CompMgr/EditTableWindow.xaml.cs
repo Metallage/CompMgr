@@ -51,65 +51,7 @@ namespace CompMgr
             InitializeComponent();
         }
 
-       //private void FormComp()
-       // {
-       //     compList.Clear();
-       //     userNames.Clear();
-       //     divNames.Clear();
-
-
-       //     var queryUser = from user in users.AsEnumerable()
-       //                     select new { Id = user.Field<long>("id"), Fio = user.Field<string>("fio") };
-       //     foreach(dynamic us in queryUser)
-       //     {
-       //         userNames.Add(us.Id, us.Fio);
-       //     }
-
-       //     userNames.Add(-1,"не закреплён");
-
-
-       //     var queryDiv = from div in division.AsEnumerable()
-       //                     select new { Id = div.Field<long>("id"), Name = div.Field<string>("name") };
-       //     foreach (var div in queryDiv)
-       //     {
-       //         divNames.Add(div.Id, div.Name);
-       //     }
-
-       //     divNames.Add(-1, "не закреплён");
-
-       //     foreach (DataRow dr in computer.Select())
-       //     {
-       //         Computer comp = new Computer();
-       //         comp.NsName = dr.Field<string>("nsName");
-       //         comp.Ip = dr.Field<string>("ip");
-       //         comp.Id = dr.Field<long>("id");
-
-       //         if (dr.Field<string>("userID") == null)
-       //             comp.UserID = -1;
-       //         else
-       //             comp.UserID = dr.Field<long>("userID");
-       //         if (dr.Field<string>("divID") == null)
-       //             comp.DivisionId = -1;
-       //         else
-       //             comp.DivisionId = dr.Field<long>("divID");
-
-       //         compList.Add(comp);
-
-       //     }
-
-
-       // }
-
-        ///// <summary>
-        ///// Сохраняет изменения в тавлице
-        ///// </summary>
-        ///// <param name="tableName">Имя таблицы</param>
-        //private void SaveChanges(string tableName)
-        //{
-        //    changed = false;
-        //    localDS.Tables[$"{tableName}"].AcceptChanges(); //Сохраняем локальную копию формы
-        //    logic.UpdateTable(tableName, localDS.Tables[$"{tableName}"]); //Сохраняем в основной базе
-        //}
+      
 
         #region Привязываем таблицы к DataGrid
 
@@ -334,5 +276,29 @@ namespace CompMgr
             SaveButton.IsEnabled = true;
         }
 
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            switch (BaseSelect.SelectedIndex)
+            {
+                case 3:
+                    logic.UpdateComp(compList);
+
+                    compList = logic.GetComputers();
+                    EditDG.ItemsSource = null;
+                    EditDG.ItemsSource = compList;
+
+                    break;
+            }
+        }
+
+        private void StreamInputButton_Click(object sender, RoutedEventArgs e)
+        {
+            StreamAddWindow compIn = new StreamAddWindow("computer");
+
+            if(compIn.ShowDialog()==true)
+            {
+
+            }
+        }
     }
 }

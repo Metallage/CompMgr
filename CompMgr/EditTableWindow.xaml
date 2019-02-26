@@ -59,7 +59,8 @@
             <ComboBoxItem x:Name="InstallItem" Content="Установленное ПО"/>
         </ComboBox>
         <Button x:Name="ExitButton" Grid.Row="17" Grid.RowSpan="2" Grid.Column="3" Content="Выход"/>
-        <Button x:Name="SaveButton" Grid.Row="14" Grid.RowSpan="2" Grid.Column="3" Content="Сохранить изменения" IsEnabled="False"/>
+        <Button x:Name="SaveButton" Grid.Row="14" Grid.RowSpan="2" Grid.Column="3" Content="Сохранить изменения" IsEnabled="False" Click="SaveButton_Click"/>
         <Button x:Name="RollbackButton" Grid.Row="11" Grid.RowSpan="2" Grid.Column="3" Content="Откатить изменения" IsEnabled="False" Click="RollbackButton_Click"/>
+        <Button x:Name="StreamInputButton" Grid.Row="8" Grid.RowSpan="2" Grid.Column="3" Content="Поточный ввод данных" Click="StreamInputButton_Click" />
     </Grid>
 </Window>
