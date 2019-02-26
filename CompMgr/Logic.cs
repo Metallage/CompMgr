@@ -72,7 +72,7 @@ namespace CompMgr
             return updateList;
         }
 
-        public Dictionary<string, string> GetDistr()
+        public Dictionary<string, string> GetDistr() //Нужен ли?
         {
             Dictionary<string, string> retDist = new Dictionary<string, string>();
 
@@ -88,6 +88,8 @@ namespace CompMgr
 
             return retDist;
         }
+
+        #region Получение данных для интерфейса
 
         /// <summary>
         /// Формируем список компьютеров в понятный интерфейсу вид
@@ -115,7 +117,7 @@ namespace CompMgr
                                    select usr.Field<string>("fio");
 
                     if (userComp.Count() == 1)
-                        newComp.User = userComp.First();
+                        newComp.UserFio = userComp.First();
                 }
                 computers.Add(newComp);
             }
@@ -123,7 +125,46 @@ namespace CompMgr
             return computers;
         }
 
-        public DataTable GetDiv()
+        /// <summary>
+        /// Возвращает список всего софта с версиями в понятном интерфейсу виде
+        /// </summary>
+        /// <returns>Список софта с версиями</returns>
+        public HashSet<Software> GetSoftware()
+        {
+            HashSet<Software> softList = new HashSet<Software>();
+
+            var softQuery = from soft in software.AsEnumerable()
+                            select new { Name = soft.Field<string>("name"), Ver = soft.Field<string>("version") };
+            foreach(dynamic soft in softQuery)
+            {
+                Software sf = new Software(soft.Name);
+                sf.SoftwareVersion = soft.Ver;
+                softList.Add(sf);
+            }
+            return softList;
+        }
+
+
+        /// <summary>
+        /// Возвращает список пользователей в понятном для интерфейса виде
+        /// </summary>
+        /// <returns>Список пользователей</returns>
+        public HashSet<User> GetUsers()
+        {
+            HashSet<User> users = new HashSet<User>();
+
+            foreach(DataRow usr in user.Select())
+            {
+                User newUser = new User();
+                newUser.UserFio = usr.Field<string>("fio");
+                newUser.UserTel = usr.Field<long>("tel");
+                users.Add(newUser);
+            }
+
+            return users;
+        }
+
+        public DataTable GetDiv() // на удаление
         {
             return install;
         }
@@ -146,6 +187,7 @@ namespace CompMgr
             return compData;
         }
 
+        #endregion
 
         /// <summary>
         /// Парсинг входной строки для добавления компьютера
@@ -166,7 +208,7 @@ namespace CompMgr
                 {
                     newComp.Division = param[2];
                     if (param.Count() == 4)
-                        newComp.User = param[3];
+                        newComp.UserFio = param[3];
                 }
 
                 outputComp.Add(newComp);
@@ -186,8 +228,8 @@ namespace CompMgr
                 long id = FindCompID(comp.NsName); //Пытаемся найти ID компьютера
                 long divID = FindDivisionID(comp.Division); //Пытаемся найти ID подразделения
                 string userFIO = null;
-                if ((comp.User != null) && (comp.User != "") && (comp.User != " ")) //Если имя пользователя не пустое
-                    userFIO = comp.User; 
+                if ((comp.UserFio != null) && (comp.UserFio != "") && (comp.UserFio != " ")) //Если имя пользователя не пустое
+                    userFIO = comp.UserFio; 
                 
                 long userID = FindUserID(userFIO);//Пытаемся найти имя пользователя
 
@@ -214,7 +256,7 @@ namespace CompMgr
                 }
 
                 //Если компу назначен пользователь
-                if ((comp.User != null) && (userID != -1))
+                if ((comp.UserFio != null) && (userID != -1))
                 {
                     long distributionID = FindDistributionID(id, userID); //Пытаемся найти связанную запись о назначении
                     if (distributionID == -1) //Если такой нет
@@ -226,7 +268,7 @@ namespace CompMgr
                         distribution.Rows.Add(newDistrib);
                     }
                 }
-                else if (comp.User == null) //Если у компа нет пользователя
+                else if (comp.UserFio == null) //Если у компа нет пользователя
                 {
                     DeleteDistributionByUserOrCompID(id, -1); //Удаляем все записи о назначении для этого компа
                 }

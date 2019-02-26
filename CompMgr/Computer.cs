@@ -12,7 +12,7 @@ namespace CompMgr
         public string Ip { get; set; }
         //public long UserID { get; set; }
         //public long DivisionId { get; set; }
-        public string User { get; set; }
+        public string UserFio { get; set; }
         public string Division { get; set; }
 
         //public Dictionary<int, string> User { get; set; }

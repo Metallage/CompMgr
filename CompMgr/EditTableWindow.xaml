@@ -47,7 +47,10 @@
                 <DataGridTextColumn x:Name="NsName" Header="Имя компьютера" Binding="{Binding Path=NsName}" Visibility="Collapsed"/>
                 <DataGridTextColumn x:Name="Ip" Header="IP адрес" Binding="{Binding Path=Ip}" Visibility="Collapsed"/>
                 <DataGridTextColumn x:Name="Division" Header="Подразделение" Binding="{Binding Path=Division}" Visibility="Collapsed" />
-                <DataGridTextColumn x:Name="User" Header="Пользователь" Binding="{Binding Path=User}" Visibility="Collapsed" />
+                <DataGridTextColumn x:Name="User" Header="Пользователь" Binding="{Binding Path=UserFio}" Visibility="Collapsed" />
+                <DataGridTextColumn x:Name="SoftName" Header="Наименование ПО" Binding="{Binding Path=SoftwareName}" Visibility="Collapsed" />
+                <DataGridTextColumn x:Name="SoftVersion" Header="Актуальная версия" Binding="{Binding Path=SoftwareVersion}" Visibility="Collapsed" />
+                <DataGridTextColumn x:Name="UserTel" Header="Номер телефона" Binding="{Binding Path=UserTel}" Visibility="Collapsed" />
             </DataGrid.Columns>
         </DataGrid>
         <TextBlock x:Name="SelectDBTextBlock" Text="Выбор таблицы для редактирования" TextWrapping="Wrap" Grid.Row="1" Grid.RowSpan="2" Grid.Column="3" TextAlignment="Center" VerticalAlignment="Center"/>

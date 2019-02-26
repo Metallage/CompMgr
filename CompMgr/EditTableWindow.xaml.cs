@@ -34,7 +34,11 @@ namespace CompMgr
         private DataTable division;
         private DataTable computer;
         private DataTable install;
+
         private HashSet<Computer> compList = new HashSet<Computer>();
+        private HashSet<Software> softList = new HashSet<Software>();
+        private HashSet<User> userList = new HashSet<User>();
+
         Dictionary<long, string> userNames = new Dictionary<long, string>();
         Dictionary<long, string> divNames = new Dictionary<long, string>();
 
@@ -55,74 +59,65 @@ namespace CompMgr
 
         #region Привязываем таблицы к DataGrid
 
-        private void CollapseColumns()
-        {
-            foreach (DataGridColumn dc in EditDG.Columns)
-                dc.Visibility = Visibility.Collapsed;    
-        }
+        //private void CollapseColumns()
+        //{
+        //    foreach (DataGridColumn dc in EditDG.Columns)
+        //        dc.Visibility = Visibility.Collapsed;    
+        //}
 
         /// <summary>
         /// Настраивает DataGrid на отображение таблицы Software 
         /// </summary>
         private void BindSoft()
         {
-            //удаляем все предыдущие столбцы и запрещаем из автогенерацию
-            EditDG.Columns.Clear();
-            EditDG.AutoGenerateColumns = false;
+            foreach (DataGridColumn dc in EditDG.Columns)
+            {
+                switch (dc.Header.ToString().ToLower())
+                {
+                    case "наименование по":
+                        dc.Visibility = Visibility.Visible;
+                        continue;
+                    case "актуальная версия":
+                        dc.Visibility = Visibility.Visible;
+                        continue;
+                    default:
+                        dc.Visibility = Visibility.Collapsed;
+                        continue;
+                }
+            }
 
-            //Создаём текстовый столбец с заголовком "Название ПО"
-            DataGridTextColumn nameColumn = new DataGridTextColumn();
-            nameColumn.Header = "Название ПО";
-            //Привязываем его к источнику данных с полем name
-            Binding softName = new Binding("name");
-            nameColumn.Binding = softName;
+            softList = core.GetSoftware();
+            EditDG.ItemsSource = softList;
 
-            //Создаём текстовый столбец с заголовком "Текущая версия ПО"
-            DataGridTextColumn verColumn = new DataGridTextColumn();
-            verColumn.Header = "Текущая версия ПО";
-            //Привязываем его к источнику данных с полем version
-            Binding softVer = new Binding("version");
-            verColumn.Binding = softVer;
-
-            //Добавляем таблички к DataGrid
-            EditDG.Columns.Add(nameColumn);
-            EditDG.Columns.Add(verColumn);
-
-            //Источник таблица Software
-            EditDG.ItemsSource = software.DefaultView;
-
-            EditDG.IsEnabled = true;
         }
 
 
         private void BindUsers()
         {
-            EditDG.AutoGenerateColumns = false;
-            EditDG.Columns.Clear();
-
-            DataGridTextColumn fioCol = new DataGridTextColumn();
-            fioCol.Header = "Фамилия и инициалы";
-            Binding fioBind = new Binding("fio");
-            fioCol.Binding = fioBind;
-
-            DataGridTextColumn telCol = new DataGridTextColumn();
-            telCol.Header = "Рабочий телефон";
-            Binding telBind = new Binding("tel");
-            telCol.Binding = telBind;
-
-            EditDG.Columns.Add(fioCol);
-            EditDG.Columns.Add(telCol);
-
-            EditDG.ItemsSource = users.DefaultView;
-
-            EditDG.IsEnabled = true;
+            foreach (DataGridColumn dc in EditDG.Columns)
+            {
+                switch (dc.Header.ToString())
+                {
+                    case "Пользователь":
+                        dc.Visibility = Visibility.Visible;
+                        continue;
+                    case "Номер телефона":
+                        dc.Visibility = Visibility.Visible;
+                        continue;
+                    default:
+                        dc.Visibility = Visibility.Collapsed;
+                        continue;
+                }
+            }
+            userList = core.GetUsers();
+            EditDG.ItemsSource = userList;
         }
 
 
 
         private void BindComp()
         {
-            CollapseColumns();
+           // CollapseColumns();
 
             foreach (DataGridColumn dc in EditDG.Columns)
             {
@@ -139,6 +134,9 @@ namespace CompMgr
                         continue;
                     case "пользователь":
                         dc.Visibility = Visibility.Visible;
+                        continue;
+                    default:
+                        dc.Visibility = Visibility.Collapsed;
                         continue;
                 }
             }
