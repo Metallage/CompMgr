@@ -34,7 +34,7 @@ namespace CompMgr
         private DataTable division;
         private DataTable computer;
         private DataTable install;
-        private List<Computer> compList = new List<Computer>();
+        private HashSet<Computer> compList = new HashSet<Computer>();
         Dictionary<long, string> userNames = new Dictionary<long, string>();
         Dictionary<long, string> divNames = new Dictionary<long, string>();
 
@@ -43,11 +43,11 @@ namespace CompMgr
         private bool changed = false;
 
 
-        private Logic logic;
+        private Logic core;
 
         public EditTableWindow(Logic logic)
         {
-            this.logic = logic;
+            this.core = logic;
             InitializeComponent();
         }
 
@@ -145,7 +145,7 @@ namespace CompMgr
 
            
             
-            compList = logic.GetComputers();
+            compList = core.GetComputers();
             EditDG.ItemsSource = compList;
            
 
@@ -281,9 +281,9 @@ namespace CompMgr
             switch (BaseSelect.SelectedIndex)
             {
                 case 3:
-                    logic.UpdateComp(compList);
+                    core.UpdateComp(compList);
 
-                    compList = logic.GetComputers();
+                    compList = core.GetComputers();
                     EditDG.ItemsSource = null;
                     EditDG.ItemsSource = compList;
 
@@ -297,7 +297,14 @@ namespace CompMgr
 
             if(compIn.ShowDialog()==true)
             {
-
+                changed = true;
+                RollbackButton.IsEnabled = true;
+                SaveButton.IsEnabled = true;
+                HashSet<Computer> newData = core.ParseComp(compIn.InputData);
+                newData.UnionWith(compList);
+                compList=newData;
+                EditDG.ItemsSource = null;
+                EditDG.ItemsSource = compList;
             }
         }
     }

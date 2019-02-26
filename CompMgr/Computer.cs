@@ -32,36 +32,36 @@ namespace CompMgr
                 return 0;
         }
 
-        //public override bool Equals(object obj)
-        //{
-            
-        //    if (obj == null)
-        //    {
-        //        return false;
-        //    }
+        public override bool Equals(object obj)
+        {
 
-        //    if (obj.GetType() == typeof(Computer))
-        //    {
-        //        Computer objAsComp = (Computer)obj;
-        //        if (objAsComp == null)
-        //        {
-        //            return false;
-        //        }
-        //        else if (objAsComp.NsName == this.NsName)
-        //        {
+            if (obj == null)
+            {
+                return false;
+            }
 
-        //            return true;
-        //        }
-        //        else
-        //        {
-        //            return false;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
+            if (obj.GetType() == typeof(Computer))
+            {
+                Computer objAsComp = (Computer)obj;
+                if (objAsComp == null)
+                {
+                    return false;
+                }
+                else if (objAsComp.NsName == this.NsName)
+                {
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         public override string ToString()
         {

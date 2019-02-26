@@ -23,7 +23,7 @@
             <RowDefinition MinHeight="2" MaxHeight="5"/>
         </Grid.RowDefinitions>
         <TextBlock x:Name="HeaderTextBlock" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1"/>
-        <TextBox x:Name="InputTextBox" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2" />
+        <TextBox x:Name="InputTextBox" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2" AcceptsReturn="True"/>
         <Button x:Name="OkButton" Content="OK" Grid.Column="1" Grid.Row="3"  Click="OkButton_Click"/>
         <Button x:Name="CancelButton" Content="Отмена" Grid.Column="3" Grid.Row="3" IsCancel="True" />
     </Grid>

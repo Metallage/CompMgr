@@ -53,5 +53,10 @@ namespace CompMgr
             }
             HeaderTextBlock.Text = headertext;
         }
+
+        private void InputTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
     }
 }

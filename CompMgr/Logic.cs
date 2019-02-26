@@ -93,9 +93,9 @@ namespace CompMgr
         /// Формируем список компьютеров в понятный интерфейсу вид
         /// </summary>
         /// <returns>Лист классов компьютер</returns>
-        public List<Computer> GetComputers()
+        public HashSet<Computer> GetComputers()
         {
-            List<Computer> computers = new List<Computer>();
+            HashSet<Computer> computers = new HashSet<Computer>();
 
             //Выбираем все компьютеры с подразделениями
             var compQuer = from comp in computer.AsEnumerable()
@@ -154,36 +154,32 @@ namespace CompMgr
         /// Парсинг входной строки для добавления компьютера
         /// </summary>
         /// <param name="data">Входные данные</param>
-        public void ParseComp(string data)
+        public HashSet<Computer> ParseComp(string data)
         {
-
+            HashSet<Computer> outputComp = new HashSet<Computer>();
             char[] paramSeparators = { ';', ',' };
-            string[] comps =  data.Split('\n');
+            char[] compSeparators = { '\r', '\n' };
+            string[] comps =  data.Split(compSeparators, StringSplitOptions.RemoveEmptyEntries);
             foreach (string comp in comps)
             {
+                
                 string[] param = comp.Split(paramSeparators);
-
-
-                DataRow newComp = computer.NewRow();
-                newComp["nsName"] = param[0];
-                newComp["ip"] = param[1];
-                if(param.Count() > 2)
+                Computer newComp = new Computer(param[0], param[1]);
+                if(param.Count()>2)
                 {
-                    long div = FindDivisionID(param[2]);
-                    if (div >= 0)
-                        newComp["divID"] = div;
-                    long usr = FindUserID(param[3]);
-                    if (usr >= 0)
-                        newComp["userID"] = usr;
-
-                    computer.Rows.Add(newComp);
+                    newComp.Division = param[2];
+                    if (param.Count() == 4)
+                        newComp.User = param[3];
                 }
 
+                outputComp.Add(newComp);
+
             }
+            return outputComp;
         }
 
 
-        public void UpdateComp(List<Computer> comps)
+        public void UpdateComp(HashSet<Computer> comps)
         {
             foreach(Computer comp in comps)
             {
@@ -229,6 +225,10 @@ namespace CompMgr
                         distribution.Rows.Add(newDistrib);
                     }
                 }
+                else
+                {
+                    DeleteDistributionByUserOrCompID(id, userID);
+                }
             }
         }
 
@@ -264,12 +264,17 @@ namespace CompMgr
         /// <returns>ID</returns>
         private long FindDivisionID(string divisionName)
         {
-            var divQuer = from div in division.Select($"name = '{divisionName}'").CopyToDataTable().AsEnumerable()
-                          select div.Field<long>("id");
-            if (divQuer.Count() == 1)
-                return (long)divQuer.First();
-            else
+            if (divisionName == null)
                 return -1;
+            else
+            {
+                var divQuer = from div in division.Select($"name = '{divisionName}'").CopyToDataTable().AsEnumerable()
+                              select div.Field<long>("id");
+                if (divQuer.Count() == 1)
+                    return (long)divQuer.First();
+                else
+                    return -1;
+            }
         }
 
         /// <summary>
