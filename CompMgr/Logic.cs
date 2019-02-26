@@ -118,10 +118,7 @@ namespace CompMgr
                         newComp.User = userComp.First();
                 }
                 computers.Add(newComp);
-
             }
-                           
-
 
             return computers;
         }
@@ -178,22 +175,25 @@ namespace CompMgr
             return outputComp;
         }
 
-
+        /// <summary>
+        /// Обновляет таблицу компьютеров и связанную с ней таблицу назначений компьютеров пользователю
+        /// </summary>
+        /// <param name="comps">Обновлённый список компьютеров</param>
         public void UpdateComp(HashSet<Computer> comps)
         {
             foreach(Computer comp in comps)
             {
-                long id = FindCompID(comp.NsName);
-                long divID = FindDivisionID(comp.Division);
+                long id = FindCompID(comp.NsName); //Пытаемся найти ID компьютера
+                long divID = FindDivisionID(comp.Division); //Пытаемся найти ID подразделения
                 string userFIO = null;
-                if ((comp.User != null) && (comp.User != "") && (comp.User != " "))
-                    userFIO = comp.User;
+                if ((comp.User != null) && (comp.User != "") && (comp.User != " ")) //Если имя пользователя не пустое
+                    userFIO = comp.User; 
                 
-                long userID = FindUserID(userFIO);
+                long userID = FindUserID(userFIO);//Пытаемся найти имя пользователя
 
-                if (id == -1)
+                if (id == -1) //Если такого компьютера не найдено
                 {
-                    DataRow newRow = computer.NewRow();
+                    DataRow newRow = computer.NewRow(); //создаём новую запись
                     newRow["nsName"] = comp.NsName;
                     newRow["ip"] = comp.Ip;
 
@@ -203,7 +203,7 @@ namespace CompMgr
                     }
                     computer.Rows.Add(newRow);
                 }
-                else
+                else //Если такой уже есть, редактируем
                 {
                     DataRow upRow = computer.Rows.Find(id);
                     upRow["ip"] = comp.Ip;
@@ -213,21 +213,22 @@ namespace CompMgr
                     }
                 }
 
+                //Если компу назначен пользователь
                 if ((comp.User != null) && (userID != -1))
                 {
-                    long distributionID = FindDistributionID(id, userID);
-                    if (distributionID == -1)
+                    long distributionID = FindDistributionID(id, userID); //Пытаемся найти связанную запись о назначении
+                    if (distributionID == -1) //Если такой нет
                     {
-                        DeleteDistributionByUserOrCompID(id, userID);
-                        DataRow newDistrib = distribution.NewRow();
+                        DeleteDistributionByUserOrCompID(id, userID); //Снимаем все назначения для выбранных компьютера и пользователя
+                        DataRow newDistrib = distribution.NewRow(); //Создаём новую запись назначения
                         newDistrib["computerID"] = id;
                         newDistrib["userID"] = userID;
                         distribution.Rows.Add(newDistrib);
                     }
                 }
-                else
+                else if (comp.User == null) //Если у компа нет пользователя
                 {
-                    DeleteDistributionByUserOrCompID(id, userID);
+                    DeleteDistributionByUserOrCompID(id, -1); //Удаляем все записи о назначении для этого компа
                 }
             }
         }
@@ -245,7 +246,7 @@ namespace CompMgr
                 return -1;
             else
             {
-                var idsQuer = from ids in user.Select($"fio LIKE '{userName}%'").CopyToDataTable().AsEnumerable()
+                var idsQuer = from ids in user.Select($"fio LIKE '{userName}%'").AsEnumerable()
                               select ids.Field<long>("id");
                 if (idsQuer.Count() == 1)
                 {
@@ -268,7 +269,7 @@ namespace CompMgr
                 return -1;
             else
             {
-                var divQuer = from div in division.Select($"name = '{divisionName}'").CopyToDataTable().AsEnumerable()
+                var divQuer = from div in division.Select($"name = '{divisionName}'").AsEnumerable()
                               select div.Field<long>("id");
                 if (divQuer.Count() == 1)
                     return (long)divQuer.First();
@@ -311,8 +312,9 @@ namespace CompMgr
         #endregion
 
         /// <summary>
-        /// Удаляет все распреления компов для конкретного пользователя
+        /// Удаляет все распреления компов для конкретного пользователя или компа
         /// </summary>
+        /// <param name="compID">ID компа/param>
         /// <param name="userID">ID пользователя/param>
         private void DeleteDistributionByUserOrCompID( long compID, long userID)
         {
@@ -329,11 +331,17 @@ namespace CompMgr
             }
         }
 
+        /// <summary>
+        /// Возвращает массив компьютеров с проверкой состояния обновления
+        /// </summary>
+        /// <param name="software">ПО</param>
+        /// <param name="version">Актуальная версия</param>
+        /// <returns></returns>
         private Dictionary<string,bool> GetCompIsUp(string software, string version)
         {
             Dictionary<string, bool> comps = new Dictionary<string, bool>();
 
-            var compQuery = from comp in computer.AsEnumerable()
+            var compQuery = from comp in computer.AsEnumerable() //Выбираем все компьютеры с актуальной версией
                            join ins in install.AsEnumerable() on comp.Field<long>("id") equals ins.Field<long>("computerID")
                            join soft in this.software.AsEnumerable() on ins.Field<long>("softID") equals soft.Field<long>("id")
                            where (soft.Field<string>("name") == software) && (ins.Field<string>("version") == version)
@@ -344,7 +352,7 @@ namespace CompMgr
                 comps.Add(comp.ToString(), true);
             }
 
-            var compNotUp = from comp in computer.AsEnumerable()
+            var compNotUp = from comp in computer.AsEnumerable() //Выбираем все компьютеры, с версией отличной от актуальной
                             join ins in install.AsEnumerable() on comp.Field<long>("id") equals ins.Field<long>("computerID")
                             join soft in this.software.AsEnumerable() on ins.Field<long>("softID") equals soft.Field<long>("id")
                             where (soft.Field<string>("name") == software) && (ins.Field<string>("version") != version)
