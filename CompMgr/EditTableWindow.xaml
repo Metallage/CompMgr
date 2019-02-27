@@ -6,8 +6,17 @@
         xmlns:local="clr-namespace:CompMgr"
         mc:Ignorable="d"
         Title="Редактирование таблиц" Height="450" Width="800">
+    <Window.Resources>
+        <ContextMenu x:Key="RowContextMenu">
+            <MenuItem x:Name="Add" Header="Добавить"/>
+            <Separator/>
+            <MenuItem x:Name="Edit" Header="Изменить"/>
+            <Separator/>
+            <MenuItem x:Name="Delete" Header="Удалить" Click="Delete_Click"/>
+        </ContextMenu>
+    </Window.Resources>
     <Grid x:Name="EditTableMainGrid">
-        
+
         <Grid.RowDefinitions>
             <RowDefinition MinHeight="10"/>
             <RowDefinition MinHeight="10"/>
@@ -39,31 +48,33 @@
         </Grid.ColumnDefinitions>
         <DataGrid x:Name="EditDG" AutoGenerateColumns="False"
                   Grid.Row="1" Grid.RowSpan="18" Grid.Column="1" 
-                  RowEditEnding="EditDG_RowEditEnding"
-                  BeginningEdit="EditDG_BeginningEdit" 
                   FontSize="16"
+                  IsReadOnly="True"
+                  MouseRightButtonDown="EditDG_MouseRightButtonDown"
                   >
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="NsName" Header="Имя компьютера" Binding="{Binding Path=NsName}" Visibility="Collapsed"/>
                 <DataGridTextColumn x:Name="Ip" Header="IP адрес" Binding="{Binding Path=Ip}" Visibility="Collapsed"/>
-                <DataGridTextColumn x:Name="Division" Header="Подразделение" Binding="{Binding Path=Division}" Visibility="Collapsed" />
+                <DataGridTextColumn x:Name="Division" Header="Подразделение" Binding="{Binding Path=DivisionName}" Visibility="Collapsed" />
                 <DataGridTextColumn x:Name="User" Header="Пользователь" Binding="{Binding Path=UserFio}" Visibility="Collapsed" />
                 <DataGridTextColumn x:Name="SoftName" Header="Наименование ПО" Binding="{Binding Path=SoftwareName}" Visibility="Collapsed" />
                 <DataGridTextColumn x:Name="SoftVersion" Header="Актуальная версия" Binding="{Binding Path=SoftwareVersion}" Visibility="Collapsed" />
                 <DataGridTextColumn x:Name="UserTel" Header="Номер телефона" Binding="{Binding Path=UserTel}" Visibility="Collapsed" />
             </DataGrid.Columns>
+
         </DataGrid>
         <TextBlock x:Name="SelectDBTextBlock" Text="Выбор таблицы для редактирования" TextWrapping="Wrap" Grid.Row="1" Grid.RowSpan="2" Grid.Column="3" TextAlignment="Center" VerticalAlignment="Center"/>
-        <ComboBox x:Name="BaseSelect" Grid.Row="3" Grid.Column="3" SelectionChanged="BaseSelect_SelectionChanged" DropDownOpened="BaseSelect_DropDownOpened" >
+        <ComboBox x:Name="BaseSelect" Grid.Row="3" Grid.Column="3" SelectionChanged="BaseSelect_SelectionChanged" DropDownOpened="BaseSelect_DropDownOpened">
             <ComboBoxItem x:Name="SoftItem" Content="ПО"/>
             <ComboBoxItem x:Name="UserItem" Content="Пользователи"/>
             <ComboBoxItem x:Name="DivItem" Content="Подразделение"/>
             <ComboBoxItem x:Name="CompItem" Content="Компьютеры"/>
-            <ComboBoxItem x:Name="InstallItem" Content="Установленное ПО"/>
         </ComboBox>
         <Button x:Name="ExitButton" Grid.Row="17" Grid.RowSpan="2" Grid.Column="3" Content="Выход"/>
         <Button x:Name="SaveButton" Grid.Row="14" Grid.RowSpan="2" Grid.Column="3" Content="Сохранить изменения" IsEnabled="False" Click="SaveButton_Click"/>
         <Button x:Name="RollbackButton" Grid.Row="11" Grid.RowSpan="2" Grid.Column="3" Content="Откатить изменения" IsEnabled="False" Click="RollbackButton_Click"/>
         <Button x:Name="StreamInputButton" Grid.Row="8" Grid.RowSpan="2" Grid.Column="3" Content="Поточный ввод данных" Click="StreamInputButton_Click" />
+
+
     </Grid>
 </Window>

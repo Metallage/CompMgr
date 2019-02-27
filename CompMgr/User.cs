@@ -8,7 +8,7 @@ namespace CompMgr
     public class User
     {
         public string UserFio { get; set; }
-        public long UserTel { get; set; }
+        public string UserTel { get; set; }
 
         public override string ToString()
         {

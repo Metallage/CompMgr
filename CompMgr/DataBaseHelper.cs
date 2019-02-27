@@ -99,7 +99,7 @@ namespace CompMgr
 
                 //Создаём таблицу Users
                 string createUserDB = "CREATE TABLE IF NOT EXISTS User (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "fio TEXT NOT NULL, tel INTEGER )";
+                    "fio TEXT NOT NULL, tel TEXT )";
                 createDb.CommandText = createUserDB;
                 createDb.ExecuteNonQuery();
 
@@ -141,7 +141,7 @@ namespace CompMgr
         }
 
         /// <summary>
-        /// Создаём внешние улючи в датасете
+        /// Создаём внешние ключи в датасете
         /// </summary>
         private void CreateFK()
         {

@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 using System.Data;
 
 
+
 namespace CompMgr
 {
     /// <summary>
@@ -29,18 +30,19 @@ namespace CompMgr
             Install = 4
         }
 
-        private DataTable software;
-        private DataTable users;
-        private DataTable division;
-        private DataTable computer;
-        private DataTable install;
+       // private DataTable software;
+        //private DataTable users;
+        //private DataTable division;
+        //private DataTable computer;
+        //private DataTable install;
 
         private HashSet<Computer> compList = new HashSet<Computer>();
         private HashSet<Software> softList = new HashSet<Software>();
         private HashSet<User> userList = new HashSet<User>();
+        private HashSet<Division> divisionList = new HashSet<Division>();
 
-        Dictionary<long, string> userNames = new Dictionary<long, string>();
-        Dictionary<long, string> divNames = new Dictionary<long, string>();
+        //Dictionary<long, string> userNames = new Dictionary<long, string>();
+        //Dictionary<long, string> divNames = new Dictionary<long, string>();
 
 
 
@@ -58,12 +60,6 @@ namespace CompMgr
       
 
         #region Привязываем таблицы к DataGrid
-
-        //private void CollapseColumns()
-        //{
-        //    foreach (DataGridColumn dc in EditDG.Columns)
-        //        dc.Visibility = Visibility.Collapsed;    
-        //}
 
         /// <summary>
         /// Настраивает DataGrid на отображение таблицы Software 
@@ -113,12 +109,29 @@ namespace CompMgr
             EditDG.ItemsSource = userList;
         }
 
+        private void BindDivision()
+        {
+            foreach (DataGridColumn dc in EditDG.Columns)
+            {
+                switch (dc.Header.ToString())
+                {
+                    
+                    case "Подразделение":
+                        dc.Visibility = Visibility.Visible;
+                        continue;
+                  
+                    default:
+                        dc.Visibility = Visibility.Collapsed;
+                        continue;
+                }
+            }
+            divisionList = core.GetDivision();
+            EditDG.ItemsSource = divisionList;
+        }
 
 
         private void BindComp()
         {
-           // CollapseColumns();
-
             foreach (DataGridColumn dc in EditDG.Columns)
             {
                 switch(dc.Header.ToString().ToLower())
@@ -150,23 +163,7 @@ namespace CompMgr
 
         }
 
-        private void BindDivision()
-        {
-            EditDG.AutoGenerateColumns = false;
-            EditDG.Columns.Clear();
-
-            DataGridTextColumn divNameCol = new DataGridTextColumn();
-            divNameCol.Header = "Наименование подразделения";
-            Binding nameBind = new Binding("name");
-            divNameCol.Binding = nameBind;
-
-            EditDG.Columns.Add(divNameCol);
-
-            EditDG.ItemsSource = division.DefaultView;
-
-            EditDG.IsEnabled = true;
-
-        }
+      
 
         #endregion
 
@@ -193,12 +190,7 @@ namespace CompMgr
                     case 3:
                         BindComp();
                         break;
-                    case 4:
-                        EditDG.Columns.Clear();
-                        EditDG.ItemsSource = install.DefaultView;
-                        EditDG.AutoGenerateColumns = true;
-                        EditDG.IsEnabled = true;
-                        break;
+
                 }
             }
         }
@@ -221,34 +213,33 @@ namespace CompMgr
 
         private void RollbackButton_Click(object sender, RoutedEventArgs e)
         {
+            EditDG.ItemsSource = null;
             switch (BaseSelect.SelectedIndex)
             {
                 case 0:
-                    software.RejectChanges();
+                    softList = core.GetSoftware();
+                    EditDG.ItemsSource = softList;
                     changed = false;
                     RollbackButton.IsEnabled = false;
                     SaveButton.IsEnabled = false;
                     break;
                 case 1:
-                    users.RejectChanges();
+                    userList = core.GetUsers();
+                    EditDG.ItemsSource = userList;
                     changed = false;
                     RollbackButton.IsEnabled = false;
                     SaveButton.IsEnabled = false;
                     break;
                 case 2:
-                    division.RejectChanges();
+                    divisionList = core.GetDivision();
+                    EditDG.ItemsSource = divisionList;
                     changed = false;
                     RollbackButton.IsEnabled = false;
                     SaveButton.IsEnabled = false;
                     break;
                 case 3:
-                    computer.RejectChanges();
-                    changed = false;
-                    RollbackButton.IsEnabled = false;
-                    SaveButton.IsEnabled = false;
-                    break;
-                case 4:
-                    install.RejectChanges();
+                    compList = core.GetComputers();
+                    EditDG.ItemsSource = compList;
                     changed = false;
                     RollbackButton.IsEnabled = false;
                     SaveButton.IsEnabled = false;
@@ -304,6 +295,55 @@ namespace CompMgr
                 EditDG.ItemsSource = null;
                 EditDG.ItemsSource = compList;
             }
+        }
+
+
+
+        private void EditDG_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            //Сложная магия по поиску нужной строки
+            DependencyObject obj = (DependencyObject)e.OriginalSource; //Получаем элемент куда ткнули мышкой
+            while((obj!=null)&&!(obj is DataGridCell)) //Перебираем последовательно его родителей пока не упрёмся в ячейку датагрида (ну или в нулл)
+            {
+                obj = VisualTreeHelper.GetParent(obj);
+            }
+
+            if (obj == null) //Мы за безопасный нулл
+                return;
+
+            if(obj is DataGridCell) //Если яччейка найдена
+            {
+                while((obj!=null)&&!(obj is DataGridRow)) //Перебираем всех родителей пока не найдём строку
+                {
+                    obj = VisualTreeHelper.GetParent(obj);
+                }
+
+                if (obj == null)
+                    return;
+
+                DataGridRow dr = obj as DataGridRow; //искомая строка
+                string ert = dr.Item.ToString(); //Тут можно обратиться непосредсвенно к итему.
+                EditDG.SelectedItem = dr.Item;
+
+                ContextMenu rowMenu = this.FindResource("RowContextMenu") as ContextMenu;
+                dr.ContextMenu = rowMenu;
+                rowMenu.IsOpen = true;
+                
+
+            }
+            //ContextMenu rowMenu = EditDG.ContextMenu;
+            //string src = e.OriginalSource.ToString();
+            //string tp = sender.GetType().ToString();
+            //DataGrid send = sender as DataGrid;
+            //string itm = send.ToString();
+            //rowMenu.PlacementTarget = send;
+            //rowMenu.IsOpen = true;
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            string src = sender.GetType().ToString();
+
         }
     }
 }

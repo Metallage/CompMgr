@@ -7,21 +7,20 @@ namespace CompMgr
 {
     public class Computer
     {
-        //public long Id { get; set; }
+
         public string NsName { get; set; }
         public string Ip { get; set; }
-        //public long UserID { get; set; }
-        //public long DivisionId { get; set; }
-        public string UserFio { get; set; }
-        public string Division { get; set; }
 
-        //public Dictionary<int, string> User { get; set; }
-        //public Dictionary<int, string> Division { get; set; }
+        public string UserFio { get; set; }
+        public string DivisionName { get; set; }
+
+
 
         public Computer(string nsName, string ip)
         {
             NsName = nsName;
             Ip = ip;
+            
         }
 
         public override int GetHashCode()

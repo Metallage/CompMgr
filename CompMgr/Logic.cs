@@ -107,7 +107,7 @@ namespace CompMgr
             foreach (dynamic comp in compQuer)
             {
                 Computer newComp = new Computer(comp.NsName, comp.Ip);
-                newComp.Division = comp.Division;
+                newComp.DivisionName = comp.Division;
 
                 //Ищем есть ли пользователи которым назначен этот комп
                 if (distribution.Select($"computerID = {comp.Id}").Count() > 0)
@@ -157,16 +157,23 @@ namespace CompMgr
             {
                 User newUser = new User();
                 newUser.UserFio = usr.Field<string>("fio");
-                newUser.UserTel = usr.Field<long>("tel");
+                newUser.UserTel = usr.Field<string>("tel");
                 users.Add(newUser);
             }
 
             return users;
         }
 
-        public DataTable GetDiv() // на удаление
+
+        public HashSet<Division> GetDivision()
         {
-            return install;
+            HashSet<Division> divisions = new HashSet<Division>();
+            foreach(DataRow dr in division.Rows)
+            {
+                divisions.Add(new Division(dr.Field<string>("name")));
+            }
+
+            return divisions;
         }
 
 
@@ -206,7 +213,7 @@ namespace CompMgr
                 Computer newComp = new Computer(param[0], param[1]);
                 if(param.Count()>2)
                 {
-                    newComp.Division = param[2];
+                    newComp.DivisionName = param[2];
                     if (param.Count() == 4)
                         newComp.UserFio = param[3];
                 }
@@ -226,7 +233,7 @@ namespace CompMgr
             foreach(Computer comp in comps)
             {
                 long id = FindCompID(comp.NsName); //Пытаемся найти ID компьютера
-                long divID = FindDivisionID(comp.Division); //Пытаемся найти ID подразделения
+                long divID = FindDivisionID(comp.DivisionName); //Пытаемся найти ID подразделения
                 string userFIO = null;
                 if ((comp.UserFio != null) && (comp.UserFio != "") && (comp.UserFio != " ")) //Если имя пользователя не пустое
                     userFIO = comp.UserFio; 
@@ -239,7 +246,7 @@ namespace CompMgr
                     newRow["nsName"] = comp.NsName;
                     newRow["ip"] = comp.Ip;
 
-                    if ((comp.Division != null) && (divID != -1))
+                    if ((comp.DivisionName != null) && (divID != -1))
                     {
                         newRow["divisionID"] = divID;
                     }
@@ -249,7 +256,7 @@ namespace CompMgr
                 {
                     DataRow upRow = computer.Rows.Find(id);
                     upRow["ip"] = comp.Ip;
-                    if ((comp.Division != null) && (divID != -1))
+                    if ((comp.DivisionName != null) && (divID != -1))
                     {
                         upRow["divisionID"] = divID;
                     }
