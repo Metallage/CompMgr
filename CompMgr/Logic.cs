@@ -30,12 +30,12 @@ namespace CompMgr
 
                 software = mainDS.Tables["Software"];
                 user = mainDS.Tables["User"];
-                division = mainDS.Tables["Division"];
+               // division = mainDS.Tables["Division"];
                 computer = mainDS.Tables["Computer"];
                 install = mainDS.Tables["Install"];
                 distribution = mainDS.Tables["Distribution"];
 
-                AddSomeData(); //Для тестов
+                //AddSomeData(); //Для тестов
 
                 return new ErrorMessageHelper();
             }
@@ -45,6 +45,14 @@ namespace CompMgr
             }
         }
 
+
+        public void Save()
+        {
+            dbHelper.Save();
+            dbHelper.Reload();
+            foreach (DataTable dt in mainDS.Tables)
+                dt.AcceptChanges();
+        }
 
         /// <summary>
         /// Формирует список обновлений для ПО
@@ -72,24 +80,21 @@ namespace CompMgr
             return updateList;
         }
 
-        public Dictionary<string, string> GetDistr() //Нужен ли?
-        {
-            Dictionary<string, string> retDist = new Dictionary<string, string>();
 
-            var distQuery = from comp in computer.AsEnumerable()
-                            join dist in distribution.AsEnumerable() on comp.Field<long>("id") equals dist.Field<long>("computerID")
-                            join usr in user.AsEnumerable() on dist.Field<long>("userID") equals usr.Field<long>("id")
-                            select new {Fio = usr.Field<string>("fio"), NsName = comp.Field<string>("nsName") };
-
-            foreach(dynamic dst in distQuery)
-            {
-                retDist.Add(dst.Fio, dst.NsName);
-            }
-
-            return retDist;
-        }
 
         #region Получение данных для интерфейса
+
+        public DataTable GetUser()
+        {
+            return user;
+        }
+
+        public DataTable GetComputer()
+        {
+            return computer;
+        }
+
+
 
         /// <summary>
         /// Формируем список компьютеров в понятный интерфейсу вид
@@ -128,52 +133,9 @@ namespace CompMgr
         /// <summary>
         /// Возвращает список всего софта с версиями в понятном интерфейсу виде
         /// </summary>
-        /// <returns>Список софта с версиями</returns>
-        public HashSet<Software> GetSoftware()
+        public DataTable GetSoftware()
         {
-            HashSet<Software> softList = new HashSet<Software>();
-
-            var softQuery = from soft in software.AsEnumerable()
-                            select new { Name = soft.Field<string>("name"), Ver = soft.Field<string>("version") };
-            foreach(dynamic soft in softQuery)
-            {
-                Software sf = new Software(soft.Name);
-                sf.SoftwareVersion = soft.Ver;
-                softList.Add(sf);
-            }
-            return softList;
-        }
-
-
-        /// <summary>
-        /// Возвращает список пользователей в понятном для интерфейса виде
-        /// </summary>
-        /// <returns>Список пользователей</returns>
-        public HashSet<User> GetUsers()
-        {
-            HashSet<User> users = new HashSet<User>();
-
-            foreach(DataRow usr in user.Select())
-            {
-                User newUser = new User();
-                newUser.UserFio = usr.Field<string>("fio");
-                newUser.UserTel = usr.Field<string>("tel");
-                users.Add(newUser);
-            }
-
-            return users;
-        }
-
-
-        public HashSet<Division> GetDivision()
-        {
-            HashSet<Division> divisions = new HashSet<Division>();
-            foreach(DataRow dr in division.Rows)
-            {
-                divisions.Add(new Division(dr.Field<string>("name")));
-            }
-
-            return divisions;
+            return software;
         }
 
 
@@ -196,13 +158,15 @@ namespace CompMgr
 
         #endregion
 
+        #region Парсинг в таблицы из текста
+
         /// <summary>
         /// Парсинг входной строки для добавления компьютера
         /// </summary>
         /// <param name="data">Входные данные</param>
-        public HashSet<Computer> ParseComp(string data)
+        public void ParseComputer(string data)
         {
-            HashSet<Computer> outputComp = new HashSet<Computer>();
+
             char[] paramSeparators = { ';', ',' };
             char[] compSeparators = { '\r', '\n' };
             string[] comps =  data.Split(compSeparators, StringSplitOptions.RemoveEmptyEntries);
@@ -210,19 +174,67 @@ namespace CompMgr
             {
                 
                 string[] param = comp.Split(paramSeparators);
-                Computer newComp = new Computer(param[0], param[1]);
-                if(param.Count()>2)
+                if(param.Count()>1)
                 {
-                    newComp.DivisionName = param[2];
-                    if (param.Count() == 4)
-                        newComp.UserFio = param[3];
+                    DataRow newComp = computer.NewRow();
+                    newComp["nsName"] = param[0];
+                    newComp["ip"] = param[1];
+                    computer.Rows.Add(newComp);
                 }
-
-                outputComp.Add(newComp);
-
             }
-            return outputComp;
         }
+
+        /// <summary>
+        /// Парсинг поточного ввода пользователей
+        /// </summary>
+        /// <param name="data">Входные данные</param>
+        public void ParseUser(string data)
+        {
+            char[] paramSeparators = { ';', ',' };
+            char[] compSeparators = { '\r', '\n' };
+            string[] users = data.Split(compSeparators, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string usr in users)
+            {
+
+                string[] param = usr.Split(paramSeparators);
+                if (param.Count() > 1)
+                {
+                    DataRow newUser = user.NewRow();
+                    newUser["fio"] = param[0];
+                    newUser["tel"] = param[1];
+                    user.Rows.Add(newUser);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Парсинг поточного ввода ПО
+        /// </summary>
+        /// <param name="data">Входные данные</param>
+        public void ParseSoftware(string data)
+        {
+            char[] paramSeparators = { ';', ',' };
+            char[] compSeparators = { '\r', '\n' };
+            string[] soft = data.Split(compSeparators, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string sf in soft)
+            {
+
+                string[] param = sf.Split(paramSeparators);
+                if (param.Count() > 1)
+                {
+                    software.BeginLoadData();
+                    DataRow newSoft = software.NewRow();
+                    newSoft["softName"] = param[0];
+                    newSoft["version"] = param[1];
+                    software.Rows.Add(newSoft);
+                    software.EndLoadData();
+                }
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Обновляет таблицу компьютеров и связанную с ней таблицу назначений компьютеров пользователю
@@ -416,12 +428,15 @@ namespace CompMgr
         }
 
 
+
+
+
         //Для тестов
         private void AddSomeData()
         {
 
             DataRow order = software.NewRow();
-            order["name"] = "Ордер";
+            order["Softname"] = "Ордер";
             order["version"] = "001";
             software.Rows.Add(order);
 

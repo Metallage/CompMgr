@@ -21,28 +21,11 @@ namespace CompMgr
     /// </summary>
     public partial class EditTableWindow : Window
     {
-        enum Tables : int
-        {
-            Software = 0,
-            Users = 1,
-            Division = 2,
-            Computer = 3,
-            Install = 4
-        }
 
-       // private DataTable software;
-        //private DataTable users;
-        //private DataTable division;
-        //private DataTable computer;
-        //private DataTable install;
 
-        private HashSet<Computer> compList = new HashSet<Computer>();
-        private HashSet<Software> softList = new HashSet<Software>();
-        private HashSet<User> userList = new HashSet<User>();
-        private HashSet<Division> divisionList = new HashSet<Division>();
-
-        //Dictionary<long, string> userNames = new Dictionary<long, string>();
-        //Dictionary<long, string> divNames = new Dictionary<long, string>();
+        private DataTable software;
+        private DataTable user;
+        private DataTable computer;
 
 
 
@@ -55,9 +38,13 @@ namespace CompMgr
         {
             this.core = logic;
             InitializeComponent();
+            software = core.GetSoftware();
+            user = core.GetUser();
+            computer = core.GetComputer();
+
         }
 
-      
+
 
         #region Привязываем таблицы к DataGrid
 
@@ -81,9 +68,9 @@ namespace CompMgr
                         continue;
                 }
             }
+            
 
-            softList = core.GetSoftware();
-            EditDG.ItemsSource = softList;
+            EditDG.ItemsSource = software.DefaultView;
 
         }
 
@@ -105,29 +92,30 @@ namespace CompMgr
                         continue;
                 }
             }
-            userList = core.GetUsers();
-            EditDG.ItemsSource = userList;
+
+
+            EditDG.ItemsSource = user.DefaultView;
         }
 
-        private void BindDivision()
-        {
-            foreach (DataGridColumn dc in EditDG.Columns)
-            {
-                switch (dc.Header.ToString())
-                {
+        //private void BindDivision()
+        //{
+        //    foreach (DataGridColumn dc in EditDG.Columns)
+        //    {
+        //        switch (dc.Header.ToString())
+        //        {
                     
-                    case "Подразделение":
-                        dc.Visibility = Visibility.Visible;
-                        continue;
+        //            case "Подразделение":
+        //                dc.Visibility = Visibility.Visible;
+        //                continue;
                   
-                    default:
-                        dc.Visibility = Visibility.Collapsed;
-                        continue;
-                }
-            }
-            divisionList = core.GetDivision();
-            EditDG.ItemsSource = divisionList;
-        }
+        //            default:
+        //                dc.Visibility = Visibility.Collapsed;
+        //                continue;
+        //        }
+        //    }
+        //    //divisionList = core.GetDivision();
+        //    EditDG.ItemsSource = divisionList;
+        //}
 
 
         private void BindComp()
@@ -142,25 +130,13 @@ namespace CompMgr
                     case "ip адрес":
                         dc.Visibility = Visibility.Visible;
                         continue;
-                    case "подразделение":
-                        dc.Visibility = Visibility.Visible;
-                        continue;
-                    case "пользователь":
-                        dc.Visibility = Visibility.Visible;
-                        continue;
                     default:
                         dc.Visibility = Visibility.Collapsed;
                         continue;
                 }
             }
 
-           
-            
-            compList = core.GetComputers();
-            EditDG.ItemsSource = compList;
-           
-
-
+            EditDG.ItemsSource = computer.DefaultView;
         }
 
       
@@ -185,9 +161,6 @@ namespace CompMgr
                         BindUsers();
                         break;
                     case 2:
-                        BindDivision();
-                        break;
-                    case 3:
                         BindComp();
                         break;
 
@@ -217,36 +190,34 @@ namespace CompMgr
             switch (BaseSelect.SelectedIndex)
             {
                 case 0:
-                    softList = core.GetSoftware();
-                    EditDG.ItemsSource = softList;
+                    software.RejectChanges();
+                    BindSoft();
                     changed = false;
                     RollbackButton.IsEnabled = false;
                     SaveButton.IsEnabled = false;
                     break;
                 case 1:
-                    userList = core.GetUsers();
-                    EditDG.ItemsSource = userList;
+                    user.RejectChanges();
+                    BindUsers();
                     changed = false;
                     RollbackButton.IsEnabled = false;
                     SaveButton.IsEnabled = false;
                     break;
                 case 2:
-                    divisionList = core.GetDivision();
-                    EditDG.ItemsSource = divisionList;
-                    changed = false;
-                    RollbackButton.IsEnabled = false;
-                    SaveButton.IsEnabled = false;
-                    break;
-                case 3:
-                    compList = core.GetComputers();
-                    EditDG.ItemsSource = compList;
+                    computer.RejectChanges();
+                    BindComp();
                     changed = false;
                     RollbackButton.IsEnabled = false;
                     SaveButton.IsEnabled = false;
                     break;
             }
+            DgRefreshImensSourse();
         }
 
+        private void DgRefreshImensSourse()
+        {
+
+        }
 
         private void BaseSelect_DropDownOpened(object sender, EventArgs e)
         {
@@ -267,33 +238,58 @@ namespace CompMgr
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            switch (BaseSelect.SelectedIndex)
-            {
-                case 3:
-                    core.UpdateComp(compList);
 
-                    compList = core.GetComputers();
-                    EditDG.ItemsSource = null;
-                    EditDG.ItemsSource = compList;
+            core.Save();
+            changed = false;
+            RollbackButton.IsEnabled = false;
+            SaveButton.IsEnabled = false;
 
-                    break;
-            }
+
         }
 
         private void StreamInputButton_Click(object sender, RoutedEventArgs e)
         {
-            StreamAddWindow compIn = new StreamAddWindow("computer");
+            string tableToInput = String.Empty;
+            switch (BaseSelect.SelectedIndex)
+            {
+                case 0:
+                    tableToInput = "software";
+                    break;
 
-            if(compIn.ShowDialog()==true)
+                case 1:
+                    tableToInput = "user";
+                    break;
+
+                case 2:
+                    tableToInput = "computer";
+                    break;
+            }
+
+            StreamAddWindow inputWindow = new StreamAddWindow(tableToInput);
+
+
+            if (inputWindow.ShowDialog()==true)
             {
                 changed = true;
                 RollbackButton.IsEnabled = true;
                 SaveButton.IsEnabled = true;
-                HashSet<Computer> newData = core.ParseComp(compIn.InputData);
-                newData.UnionWith(compList);
-                compList=newData;
-                EditDG.ItemsSource = null;
-                EditDG.ItemsSource = compList;
+
+                switch(tableToInput)
+                {
+                    case "software":
+                        core.ParseSoftware(inputWindow.InputData);
+                        
+                        break;
+                    case "user":
+                        core.ParseUser(inputWindow.InputData);
+
+                        break;
+                    case "conputer":
+                        core.ParseComputer(inputWindow.InputData);
+                        break;
+                }
+                EditDG.Items.Refresh();
+
             }
         }
 
@@ -344,6 +340,34 @@ namespace CompMgr
         {
             string src = sender.GetType().ToString();
 
+        }
+
+        private void EditDG_BeginningEdit_1(object sender, DataGridBeginningEditEventArgs e)
+        {
+            changed = true;
+            SaveButton.IsEnabled = true;
+            RollbackButton.IsEnabled = true;
+        }
+
+        private void EditDG_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Delete)
+            {
+                changed = true;
+                SaveButton.IsEnabled = true;
+                RollbackButton.IsEnabled = true;
+            }
+
+        }
+
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (changed)
+            {
+                MessageBox.Show("Необходимо сохранить или откатить изменения", "Таблица изменена");
+            }
+            else
+                this.Close();
         }
     }
 }

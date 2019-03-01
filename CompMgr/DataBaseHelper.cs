@@ -21,7 +21,7 @@ namespace CompMgr
         string connectionString;
 
         private DataTable user;
-        private DataTable division;
+        private DataTable division; //надо убрать
         private DataTable software;
         private DataTable computer;
         private DataTable install;
@@ -92,8 +92,8 @@ namespace CompMgr
 
                 //Создаём таблицу Software
                 SQLiteCommand createDb = new SQLiteCommand(createConnection);
-                string createSoftDB = "CREATE TABLE IF NOT EXISTS Software (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "name TEXT NOT NULL UNIQUE, version TEXT NOT NULL)";
+                string createSoftDB = "CREATE TABLE IF NOT EXISTS Software (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, " +
+                    "softName TEXT NOT NULL UNIQUE, version TEXT NOT NULL)";
                 createDb.CommandText = createSoftDB;
                 createDb.ExecuteNonQuery();
 
@@ -103,20 +103,9 @@ namespace CompMgr
                 createDb.CommandText = createUserDB;
                 createDb.ExecuteNonQuery();
 
-                //Создаём таблицу Division
-                string createDivDB = "CREATE TABLE IF NOT EXISTS Division (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "name TEXT NOT NULL UNIQUE )";
-                createDb.CommandText = createDivDB;
-                createDb.ExecuteNonQuery();
-
-                string addReservedRow = "INSERT INTO Division(name) VALUES ('В резерве')";
-                createDb.CommandText = addReservedRow;
-                createDb.ExecuteNonQuery();
-
                 //Создаём таблицу Computer
-                string createCompDB = "CREATE TABLE IF NOT EXISTS Computer (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "nsName TEXT NOT NULL UNIQUE, ip TEXT, divisionID INTEGER NOT NULL DEFAULT 1, " +
-                    "FOREIGN KEY (divisionID) REFERENCES Division(id))";
+                string createCompDB = "CREATE TABLE IF NOT EXISTS Computer (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, " +
+                    "nsName TEXT NOT NULL UNIQUE, ip TEXT)";
                 createDb.CommandText = createCompDB;
                 createDb.ExecuteNonQuery();
 
@@ -146,15 +135,7 @@ namespace CompMgr
         private void CreateFK()
         {
 
-            ForeignKeyConstraint divComp = new ForeignKeyConstraint(division.Columns["id"], computer.Columns["divisionID"])
-            {
-                ConstraintName = "division-comp",
-                UpdateRule = Rule.Cascade,
-                DeleteRule = Rule.SetDefault
-            };
-            computer.Constraints.Add(divComp);
 
-            LogicDataSet.Relations.Add("division-comp", division.Columns["id"], computer.Columns["divisionID"]);
 
             ForeignKeyConstraint compInst = new ForeignKeyConstraint(computer.Columns["id"], install.Columns["computerID"])
             {
@@ -215,8 +196,13 @@ namespace CompMgr
                 //Загружаем табличку из БД
                 using (SQLiteDataAdapter adapter = new SQLiteDataAdapter($"SELECT * FROM {tableName}", connection))
                 {
-                    adapter.FillSchema(LogicDataSet, SchemaType.Source, tableName);
+                    //adapter.FillSchema(LogicDataSet, SchemaType.Source, tableName);
                     adapter.Fill(LogicDataSet, tableName);
+                    LogicDataSet.Tables[tableName].Columns["id"].AutoIncrement = true;
+                    long maxIndex = Int64.MinValue;
+                    foreach (DataRow dr in LogicDataSet.Tables[tableName].Rows)
+                        maxIndex = Math.Max(maxIndex, dr.Field<long>("id"));
+                    LogicDataSet.Tables[tableName].Columns["id"].AutoIncrementSeed = maxIndex  + 1;
                 }
             }
         }
@@ -245,33 +231,44 @@ namespace CompMgr
         /// Сохраняем таблицы в БД TODO переписать под новое ядро логики
         /// </summary>
         /// <returns>Отчёт об ошибках</returns>
-        public ErrorMessageHelper Save()
+        public void Save()
         {
-            try
+            using (SQLiteConnection saveConnect = new SQLiteConnection(connectionString))
             {
-                using (SQLiteConnection saveConnect = new SQLiteConnection(connectionString))
+                saveConnect.Open();
+
+                EnableForeignKeys(saveConnect);
+
+                SaveTable(saveConnect, "Software");
+                SaveTable(saveConnect, "User");
+                //SaveTable(saveConnect, "Division");
+                SaveTable(saveConnect, "Computer");
+                SaveTable(saveConnect, "Install");
+                SaveTable(saveConnect, "Distribution");
+                saveConnect.Close();
+
+            }
+
+        }
+
+        public void Reload()
+        {
+            using (SQLiteConnection reLoadCon = new SQLiteConnection(connectionString))
+            {
+                reLoadCon.Open();
+
+                EnableForeignKeys(reLoadCon); //Включаем поддержку внешних ключей
+
+                foreach (DataTable dt in LogicDataSet.Tables)
                 {
-                    saveConnect.Open();
-
-                    EnableForeignKeys(saveConnect);
-
-                    SaveTable(saveConnect, "Software");
-                    SaveTable(saveConnect, "User");
-                    SaveTable(saveConnect, "Division");
-                    SaveTable(saveConnect, "Computer");
-                    SaveTable(saveConnect, "Install");
-                    SaveTable(saveConnect, "Distribution");
-                    saveConnect.Close();
-
+                    string tablename = dt.TableName;
+                    dt.Clear();
+                    LoadTable(reLoadCon, tablename);
+                    dt.AcceptChanges();
                 }
 
-                return new ErrorMessageHelper();
+                reLoadCon.Close();
             }
-            catch (Exception e)
-            {
-                return new ErrorMessageHelper(e.Message);
-            }
-
         }
 
         /// <summary>
@@ -296,8 +293,8 @@ namespace CompMgr
 
                 //Загружаем таблицы
                 LoadTable(loadCon, "Software");
+                
                 LoadTable(loadCon, "User");
-                LoadTable(loadCon, "Division");
                 LoadTable(loadCon, "Computer");
                 LoadTable(loadCon, "Install");
                 LoadTable(loadCon, "Distribution");
@@ -305,12 +302,15 @@ namespace CompMgr
                 loadCon.Close();
             }
 
+            foreach (DataTable dt in LogicDataSet.Tables)
+                dt.AcceptChanges();
+
             //TODO возможно стоит это убрать, а возможно нет (разобраться)
             software = LogicDataSet.Tables["Software"];
             user = LogicDataSet.Tables["User"];
-            division = LogicDataSet.Tables["Division"];
+
             computer = LogicDataSet.Tables["Computer"];
-            computer.Columns["divisionID"].DefaultValue = 1;
+
             install = LogicDataSet.Tables["Install"];
             distribution = LogicDataSet.Tables["Distribution"];
 

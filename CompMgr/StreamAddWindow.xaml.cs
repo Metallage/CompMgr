@@ -50,6 +50,12 @@ namespace CompMgr
                 case "computer":
                     headertext = "Введите информацию о компьютерах";
                     break;
+                case "user":
+                    headertext = "Введите информацию по пользователях";
+                    break;
+                case "software":
+                    headertext = "введите информацию о ПО";
+                    break;
             }
             HeaderTextBlock.Text = headertext;
         }

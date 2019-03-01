@@ -56,17 +56,7 @@ namespace CompMgr
         private void TestButton_Click(object sender, RoutedEventArgs e)
         {
 
-            EditTableWindow editTable = new EditTableWindow(core);
-            editTable.Show();
 
-            //Dictionary<string, string> distr = core.GetDistr();
-
-
-            //gridField.ItemsSource = distr;
-
-            //EditTableWindow editSoft = new EditTableWindow(this.baseLogic);
-
-            //editSoft.Show();
         }
 
         private void UpdButton_Click(object sender, RoutedEventArgs e)
@@ -77,7 +67,14 @@ namespace CompMgr
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-           // baseLogic.AddSomeData();
+
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            EditTableWindow editTable = new EditTableWindow(core);
+            editTable.Show();
         }
     }
 }
