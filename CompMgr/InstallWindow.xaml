@@ -11,7 +11,7 @@
         <StackPanel DockPanel.Dock="Right" MaxWidth="200" MinWidth="100">
             
         </StackPanel>
-        <ListView>
+        <ListView View="{StaticResource InstallView}">
             <ListView.Resources>
                 <ResourceDictionary>
                     <ResourceDictionary.MergedDictionaries>
@@ -19,6 +19,7 @@
                     </ResourceDictionary.MergedDictionaries>
                 </ResourceDictionary>
             </ListView.Resources>
+           
         </ListView>
     </DockPanel>
 </Window>

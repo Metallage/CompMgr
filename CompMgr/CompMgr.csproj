@@ -74,7 +74,6 @@
     <Compile Include="CompleteData.cs" />
     <Compile Include="CompleteTableHelper.cs" />
     <Compile Include="Computer.cs" />
-    <Compile Include="Division.cs" />
     <Compile Include="ErrorMessageHelper.cs" />
     <Compile Include="DataBaseHelper.cs" />
     <Compile Include="Install.cs" />
