@@ -13,7 +13,7 @@ namespace CompMgr
     {
         private DataSet mainDS;
         private DataTable user;
-        private DataTable division;
+       // private DataTable division;
         private DataTable software;
         private DataTable computer;
         private DataTable install;
@@ -100,35 +100,35 @@ namespace CompMgr
         /// Формируем список компьютеров в понятный интерфейсу вид
         /// </summary>
         /// <returns>Лист классов компьютер</returns>
-        public HashSet<Computer> GetComputers()
-        {
-            HashSet<Computer> computers = new HashSet<Computer>();
+        //public HashSet<Computer> GetComputers()
+        //{
+        //    HashSet<Computer> computers = new HashSet<Computer>();
 
-            //Выбираем все компьютеры с подразделениями
-            var compQuer = from comp in computer.AsEnumerable()
-                           join div in division.AsEnumerable() on comp.Field<long>("divisionID") equals div.Field<long>("id")
-                           select new {Id = comp.Field<long>("id"), NsName=comp.Field<string>("nsName"), Ip=comp.Field<string>("ip"), Division=div.Field<string>("name") };
+        //    //Выбираем все компьютеры с подразделениями
+        //    var compQuer = from comp in computer.AsEnumerable()
+        //                   join div in division.AsEnumerable() on comp.Field<long>("divisionID") equals div.Field<long>("id")
+        //                   select new {Id = comp.Field<long>("id"), NsName=comp.Field<string>("nsName"), Ip=comp.Field<string>("ip"), Division=div.Field<string>("name") };
 
-            foreach (dynamic comp in compQuer)
-            {
-                Computer newComp = new Computer(comp.NsName, comp.Ip);
-                newComp.DivisionName = comp.Division;
+        //    foreach (dynamic comp in compQuer)
+        //    {
+        //        Computer newComp = new Computer(comp.NsName, comp.Ip);
+        //        newComp.DivisionName = comp.Division;
 
-                //Ищем есть ли пользователи которым назначен этот комп
-                if (distribution.Select($"computerID = {comp.Id}").Count() > 0)
-                {
-                    var userComp = from dist in distribution.Select($"computerID = {comp.Id}").CopyToDataTable().AsEnumerable()
-                                   join usr in user.AsEnumerable() on dist.Field<long>("userId") equals usr.Field<long>("id")
-                                   select usr.Field<string>("fio");
+        //        //Ищем есть ли пользователи которым назначен этот комп
+        //        if (distribution.Select($"computerID = {comp.Id}").Count() > 0)
+        //        {
+        //            var userComp = from dist in distribution.Select($"computerID = {comp.Id}").CopyToDataTable().AsEnumerable()
+        //                           join usr in user.AsEnumerable() on dist.Field<long>("userId") equals usr.Field<long>("id")
+        //                           select usr.Field<string>("fio");
 
-                    if (userComp.Count() == 1)
-                        newComp.UserFio = userComp.First();
-                }
-                computers.Add(newComp);
-            }
+        //            if (userComp.Count() == 1)
+        //                newComp.UserFio = userComp.First();
+        //        }
+        //        computers.Add(newComp);
+        //    }
 
-            return computers;
-        }
+        //    return computers;
+        //}
 
         /// <summary>
         /// Возвращает список всего софта с версиями в понятном интерфейсу виде
@@ -240,59 +240,59 @@ namespace CompMgr
         /// Обновляет таблицу компьютеров и связанную с ней таблицу назначений компьютеров пользователю
         /// </summary>
         /// <param name="comps">Обновлённый список компьютеров</param>
-        public void UpdateComp(HashSet<Computer> comps)
-        {
-            foreach(Computer comp in comps)
-            {
-                long id = FindCompID(comp.NsName); //Пытаемся найти ID компьютера
-                long divID = FindDivisionID(comp.DivisionName); //Пытаемся найти ID подразделения
-                string userFIO = null;
-                if ((comp.UserFio != null) && (comp.UserFio != "") && (comp.UserFio != " ")) //Если имя пользователя не пустое
-                    userFIO = comp.UserFio; 
+        //public void UpdateComp(HashSet<Computer> comps)
+        //{
+        //    foreach(Computer comp in comps)
+        //    {
+        //        long id = FindCompID(comp.NsName); //Пытаемся найти ID компьютера
+        //        long divID = FindDivisionID(comp.DivisionName); //Пытаемся найти ID подразделения
+        //        string userFIO = null;
+        //        if ((comp.UserFio != null) && (comp.UserFio != "") && (comp.UserFio != " ")) //Если имя пользователя не пустое
+        //            userFIO = comp.UserFio; 
                 
-                long userID = FindUserID(userFIO);//Пытаемся найти имя пользователя
+        //        long userID = FindUserID(userFIO);//Пытаемся найти имя пользователя
 
-                if (id == -1) //Если такого компьютера не найдено
-                {
-                    DataRow newRow = computer.NewRow(); //создаём новую запись
-                    newRow["nsName"] = comp.NsName;
-                    newRow["ip"] = comp.Ip;
+        //        if (id == -1) //Если такого компьютера не найдено
+        //        {
+        //            DataRow newRow = computer.NewRow(); //создаём новую запись
+        //            newRow["nsName"] = comp.NsName;
+        //            newRow["ip"] = comp.Ip;
 
-                    if ((comp.DivisionName != null) && (divID != -1))
-                    {
-                        newRow["divisionID"] = divID;
-                    }
-                    computer.Rows.Add(newRow);
-                }
-                else //Если такой уже есть, редактируем
-                {
-                    DataRow upRow = computer.Rows.Find(id);
-                    upRow["ip"] = comp.Ip;
-                    if ((comp.DivisionName != null) && (divID != -1))
-                    {
-                        upRow["divisionID"] = divID;
-                    }
-                }
+        //            if ((comp.DivisionName != null) && (divID != -1))
+        //            {
+        //                newRow["divisionID"] = divID;
+        //            }
+        //            computer.Rows.Add(newRow);
+        //        }
+        //        else //Если такой уже есть, редактируем
+        //        {
+        //            DataRow upRow = computer.Rows.Find(id);
+        //            upRow["ip"] = comp.Ip;
+        //            if ((comp.DivisionName != null) && (divID != -1))
+        //            {
+        //                upRow["divisionID"] = divID;
+        //            }
+        //        }
 
-                //Если компу назначен пользователь
-                if ((comp.UserFio != null) && (userID != -1))
-                {
-                    long distributionID = FindDistributionID(id, userID); //Пытаемся найти связанную запись о назначении
-                    if (distributionID == -1) //Если такой нет
-                    {
-                        DeleteDistributionByUserOrCompID(id, userID); //Снимаем все назначения для выбранных компьютера и пользователя
-                        DataRow newDistrib = distribution.NewRow(); //Создаём новую запись назначения
-                        newDistrib["computerID"] = id;
-                        newDistrib["userID"] = userID;
-                        distribution.Rows.Add(newDistrib);
-                    }
-                }
-                else if (comp.UserFio == null) //Если у компа нет пользователя
-                {
-                    DeleteDistributionByUserOrCompID(id, -1); //Удаляем все записи о назначении для этого компа
-                }
-            }
-        }
+        //        //Если компу назначен пользователь
+        //        if ((comp.UserFio != null) && (userID != -1))
+        //        {
+        //            long distributionID = FindDistributionID(id, userID); //Пытаемся найти связанную запись о назначении
+        //            if (distributionID == -1) //Если такой нет
+        //            {
+        //                DeleteDistributionByUserOrCompID(id, userID); //Снимаем все назначения для выбранных компьютера и пользователя
+        //                DataRow newDistrib = distribution.NewRow(); //Создаём новую запись назначения
+        //                newDistrib["computerID"] = id;
+        //                newDistrib["userID"] = userID;
+        //                distribution.Rows.Add(newDistrib);
+        //            }
+        //        }
+        //        else if (comp.UserFio == null) //Если у компа нет пользователя
+        //        {
+        //            DeleteDistributionByUserOrCompID(id, -1); //Удаляем все записи о назначении для этого компа
+        //        }
+        //    }
+        //}
 
         #region Поиск ID по таблицам
 
@@ -324,20 +324,20 @@ namespace CompMgr
         /// </summary>
         /// <param name="divisionName">название подразделения</param>
         /// <returns>ID</returns>
-        private long FindDivisionID(string divisionName)
-        {
-            if (divisionName == null)
-                return -1;
-            else
-            {
-                var divQuer = from div in division.Select($"name = '{divisionName}'").AsEnumerable()
-                              select div.Field<long>("id");
-                if (divQuer.Count() == 1)
-                    return (long)divQuer.First();
-                else
-                    return -1;
-            }
-        }
+        //private long FindDivisionID(string divisionName)
+        //{
+        //    if (divisionName == null)
+        //        return -1;
+        //    else
+        //    {
+        //        var divQuer = from div in division.Select($"name = '{divisionName}'").AsEnumerable()
+        //                      select div.Field<long>("id");
+        //        if (divQuer.Count() == 1)
+        //            return (long)divQuer.First();
+        //        else
+        //            return -1;
+        //    }
+        //}
 
         /// <summary>
         /// Поиск ID компа по имени

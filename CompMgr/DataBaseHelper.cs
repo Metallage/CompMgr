@@ -21,7 +21,7 @@ namespace CompMgr
         string connectionString;
 
         private DataTable user;
-        private DataTable division; //надо убрать
+      //  private DataTable division; //надо убрать
         private DataTable software;
         private DataTable computer;
         private DataTable install;
