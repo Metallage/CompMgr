@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SQLite;
+using System.Data.SQLite.Generic;
 using System.IO;
 using System.Collections.Generic;
 
@@ -19,7 +20,7 @@ namespace CompMgr
 
         //Строка соединения с БД
         string connectionString;
-
+        
         private DataTable user;
       //  private DataTable division; //надо убрать
         private DataTable software;
@@ -199,7 +200,7 @@ namespace CompMgr
                     //adapter.FillSchema(LogicDataSet, SchemaType.Source, tableName);
                     adapter.Fill(LogicDataSet, tableName);
                     LogicDataSet.Tables[tableName].Columns["id"].AutoIncrement = true;
-                    long maxIndex = Int64.MinValue;
+                    long maxIndex = 0;
                     foreach (DataRow dr in LogicDataSet.Tables[tableName].Rows)
                         maxIndex = Math.Max(maxIndex, dr.Field<long>("id"));
                     LogicDataSet.Tables[tableName].Columns["id"].AutoIncrementSeed = maxIndex  + 1;
@@ -221,6 +222,8 @@ namespace CompMgr
                 using (SQLiteDataAdapter adapter = new SQLiteDataAdapter($"SELECT * FROM {tableName}", connection))
                 {
                     SQLiteCommandBuilder commands = new SQLiteCommandBuilder(adapter);
+                    adapter.DeleteCommand = new SQLiteCommand("DELETE FROM Install WHERE id = :id", connection);
+                    adapter.DeleteCommand.Parameters.Add("id", DbType.Int32, 0, "id").SourceVersion = DataRowVersion.Original;
                     adapter.Update(LogicDataSet, tableName);
                 }
             }
@@ -260,10 +263,19 @@ namespace CompMgr
                 EnableForeignKeys(reLoadCon); //Включаем поддержку внешних ключей
 
                 foreach (DataTable dt in LogicDataSet.Tables)
+                    dt.BeginLoadData();
+
+                foreach (DataTable dt in LogicDataSet.Tables)
                 {
                     string tablename = dt.TableName;
                     dt.Clear();
                     LoadTable(reLoadCon, tablename);
+
+                }
+
+                foreach (DataTable dt in LogicDataSet.Tables)
+                {
+                    dt.EndLoadData();
                     dt.AcceptChanges();
                 }
 

@@ -30,12 +30,13 @@ namespace CompMgr
 
         public MainWindow()
         {
-
             InitializeComponent();
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            
             RunCore();
 
             
@@ -55,7 +56,8 @@ namespace CompMgr
 
         private void TestButton_Click(object sender, RoutedEventArgs e)
         {
-
+            InstallWindow installWindow = new InstallWindow(core);
+            installWindow.Show();
 
         }
 

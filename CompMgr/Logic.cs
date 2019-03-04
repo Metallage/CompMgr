@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
+using System.Collections.ObjectModel;
 
 namespace CompMgr
 {
@@ -156,6 +157,42 @@ namespace CompMgr
             return compData;
         }
 
+        public ObservableCollection<Install> GetInstall()
+        {
+            ObservableCollection<Install> inst = new ObservableCollection<Install>();
+            foreach (DataRow drc in computer.Rows)
+            {
+                Install newInst = new Install();
+                newInst.ComputerId = drc.Field<long>("id");
+                newInst.Ip = drc.Field<string>("ip");
+                newInst.NsName = drc.Field<string>("nsName");
+
+                ObservableCollection<InstallSoft> insS = new ObservableCollection<InstallSoft>();
+                foreach (DataRow drs in software.Rows )
+                {
+                    InstallSoft newInsS = new InstallSoft();
+                    newInsS.ComputerId = drc.Field<long>("id");
+                    newInsS.SoftName = drs.Field<string>("softName");
+                    newInsS.SoftId = drs.Field<long>("id");
+                    long idInst = FindInstallID(newInsS.ComputerId, newInsS.SoftId);
+                    if(idInst == -1)
+                    {
+                        newInsS.Installed = false;
+                    }
+                    else
+                    {
+                        newInsS.Installed = true;
+                    }
+                    newInsS.InstallId = idInst;
+                    insS.Add(newInsS);
+                }
+
+                newInst.IsInstalled = insS;
+                inst.Add(newInst);
+            }
+            return inst;
+        }
+
         #endregion
 
         #region Парсинг в таблицы из текста
@@ -235,6 +272,39 @@ namespace CompMgr
         }
 
         #endregion
+
+
+        public void SaveInstall(ObservableCollection<Install> installCollection)
+        {
+            foreach(Install inst in installCollection)
+            {
+                long compID = inst.ComputerId;
+                foreach (InstallSoft sInst in inst.IsInstalled)
+                {
+
+                    long softID = sInst.SoftId;
+                    long installID = FindInstallID(compID, softID);
+                    if (sInst.Installed)
+                    {
+                        if(installID == -1)
+                        {
+                            DataRow newInstallRow = install.NewRow();
+                            newInstallRow["computerID"] = compID;
+                            newInstallRow["softID"] = softID;
+                            newInstallRow["version"] = software.Select($"id = {softID}")[0].Field<string>("version");
+                            install.Rows.Add(newInstallRow);
+                        }
+                    }
+                    else
+                    {
+                        if(installID!=-1)
+                        {
+                            install.Rows.Remove(install.Select($"id = {installID}")[0]);
+                        }
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Обновляет таблицу компьютеров и связанную с ней таблицу назначений компьютеров пользователю
@@ -370,6 +440,22 @@ namespace CompMgr
                 return -1;
         }
 
+
+        /// <summary>
+        /// Поиск ID установки по ID компа и ID ПО
+        /// </summary>
+        /// <param name="compId">ID компа</param>
+        /// <param name="softId">ID ПО</param>
+        /// <returns>ID установки, если -1 то установки нет</returns>
+        private long FindInstallID(long compId, long softId)
+        {
+            DataRow[] ids = install.Select($"computerID = {compId} AND softID = {softId}");
+            if (ids.Count() == 1)
+                return ids[0].Field<long>("id");
+            else
+                return -1;
+        }
+
         #endregion
 
         /// <summary>
@@ -391,6 +477,8 @@ namespace CompMgr
                 }
             }
         }
+
+
 
         /// <summary>
         /// Возвращает массив компьютеров с проверкой состояния обновления

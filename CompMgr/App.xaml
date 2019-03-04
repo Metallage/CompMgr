@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:CompMgr"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+       <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="MainDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

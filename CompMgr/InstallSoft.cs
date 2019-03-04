@@ -15,6 +15,7 @@ namespace CompMgr
         public string SoftName { get; set; }
         public string SoftVersion { get; set; }
         public long ComputerId { get; set; }
+        public long InstallId { get; set; }
 
         public bool Installed
         {

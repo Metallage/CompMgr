@@ -16,7 +16,7 @@ namespace CompMgr
         //private string ip = String.Empty; //ip компа куда будем устанавливать софт
 
         //ID записи об установке
-        public long Id { get; set; }
+        //public long Id { get; set; }
         public long ComputerId { get; set; }
         public string NsName { get; set; }
         public string Ip { get; set; }

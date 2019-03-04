@@ -5,21 +5,52 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CompMgr"
         mc:Ignorable="d"
-        Title="Установка ПО" Height="450" Width="800">
+        Title="Установка ПО" Height="450" Width="800"
+        Loaded="Window_Loaded">
+
+
     <DockPanel LastChildFill="True">
         
         <StackPanel DockPanel.Dock="Right" MaxWidth="200" MinWidth="100">
-            
+            <Button x:Name="ExitButton" Content="Выход" Click="ExitButton_Click"/>
         </StackPanel>
-        <ListView View="{StaticResource InstallView}">
+        <ListView x:Name="MainInstallView" 
+                  View="{DynamicResource InstallView}"
+                   >
+
             <ListView.Resources>
-                <ResourceDictionary>
-                    <ResourceDictionary.MergedDictionaries>
-                        <ResourceDictionary Source="MainDictionary.xaml"/>
-                    </ResourceDictionary.MergedDictionaries>
-                </ResourceDictionary>
+                <DataTemplate x:Key="SoftTemplate">
+                    <StackPanel>
+                        <TextBlock  Text="{Binding Path=SoftName}" Margin="2 2 10 2" HorizontalAlignment="Center"/>
+                        <CheckBox  IsChecked="{Binding Path=Installed}" Margin="2 2 10 2" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </DataTemplate>
+
+
+                <GridView x:Key="InstallView">
+                    <GridViewColumn Header="Имя компьютера">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock x:Name="NsNameTB" Text="{Binding  Path=NsName}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="ПО">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <ListBox x:Name="SoftLW" ItemsSource="{Binding Path=IsInstalled}" ItemTemplate="{StaticResource SoftTemplate}" SelectionMode="Multiple">
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                </ListBox>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
             </ListView.Resources>
-           
         </ListView>
+        
     </DockPanel>
 </Window>
