@@ -146,7 +146,7 @@ namespace CompMgr
 
             foreach(DataRow softdr in software.Select())
             {
-                string softName = softdr.Field<string>("name");
+                string softName = softdr.Field<string>("softName");
                 string currentversion = softdr.Field<string>("version");
 
                 CompleteTableHelper cth = new CompleteTableHelper(softName,currentversion);
@@ -299,11 +299,14 @@ namespace CompMgr
                     {
                         if(installID!=-1)
                         {
-                            install.Rows.Remove(install.Select($"id = {installID}")[0]);
+                            install.Select($"id = {installID}")[0].Delete();
                         }
                     }
                 }
             }
+            dbHelper.UpdateInstall();
+            dbHelper.Reload();
+
         }
 
         /// <summary>
@@ -493,7 +496,7 @@ namespace CompMgr
             var compQuery = from comp in computer.AsEnumerable() //Выбираем все компьютеры с актуальной версией
                            join ins in install.AsEnumerable() on comp.Field<long>("id") equals ins.Field<long>("computerID")
                            join soft in this.software.AsEnumerable() on ins.Field<long>("softID") equals soft.Field<long>("id")
-                           where (soft.Field<string>("name") == software) && (ins.Field<string>("version") == version)
+                           where (soft.Field<string>("softName") == software) && (ins.Field<string>("version") == version)
                            select comp.Field<string>("nsName");
 
             foreach(dynamic comp in compQuery)
@@ -504,7 +507,7 @@ namespace CompMgr
             var compNotUp = from comp in computer.AsEnumerable() //Выбираем все компьютеры, с версией отличной от актуальной
                             join ins in install.AsEnumerable() on comp.Field<long>("id") equals ins.Field<long>("computerID")
                             join soft in this.software.AsEnumerable() on ins.Field<long>("softID") equals soft.Field<long>("id")
-                            where (soft.Field<string>("name") == software) && (ins.Field<string>("version") != version)
+                            where (soft.Field<string>("softName") == software) && (ins.Field<string>("version") != version)
                             select comp.Field<string>("nsName");
 
             foreach (dynamic comp in compNotUp)
@@ -513,59 +516,6 @@ namespace CompMgr
             }
 
             return comps;
-        }
-
-
-
-
-
-        //Для тестов
-        private void AddSomeData()
-        {
-
-            DataRow order = software.NewRow();
-            order["Softname"] = "Ордер";
-            order["version"] = "001";
-            software.Rows.Add(order);
-
-            DataRow test = user.NewRow();
-            test["fio"] = "Тестов Тест Тестович";
-            test["tel"] = "777777";
-            user.Rows.Add(test);
-
-            DataRow localhost1 = computer.NewRow();
-            localhost1["nsName"] = "localhost1";
-            localhost1["ip"] = "127.0.0.1";
-            computer.Rows.Add(localhost1);
-
-            DataRow localhost2 = computer.NewRow();
-            localhost2["nsName"] = "localhost2";
-            localhost2["ip"] = "127.0.0.2";
-            computer.Rows.Add(localhost2);
-
-            DataRow distr1 = distribution.NewRow();
-            distr1["userID"] = 0;
-            distr1["computerID"] = 1;
-            distribution.Rows.Add(distr1);
-
-            DataRow inst1 = install.NewRow();
-            inst1["softID"] = 0;
-            inst1["computerID"] = 0;
-            inst1["version"] = "000";
-            install.Rows.Add(inst1);
-
-            DataRow inst2 = install.NewRow();
-            inst2["softID"] = 0;
-            inst2["computerID"] = 1;
-            inst2["version"] = "000";
-            install.Rows.Add(inst2);
-
-
-            //DataRow inst = install.NewRow();
-            //inst["softID"] = 1;
-            //inst["computerID"] = 1;
-            //inst["version"] = "002";
-            //install.Rows.Add(inst);
         }
 
     }

@@ -31,7 +31,7 @@ namespace CompMgr
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             core.SaveInstall(source);
-            core.Save();
+            //core.Save();
             Close();
         }
 

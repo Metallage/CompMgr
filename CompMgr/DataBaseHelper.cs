@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Data.SQLite;
-using System.Data.SQLite.Generic;
 using System.IO;
 using System.Collections.Generic;
 
@@ -34,33 +33,8 @@ namespace CompMgr
         }
 
 
-        //TODO перенести или убрать
-        public ErrorMessageHelper UpdateTable(string tableName, DataTable newTable)
-        {
-            try
-            {
-                if (newTable != null)
-                {
 
-                    using (DataTableReader newReader = newTable.CreateDataReader())
-                    {
-                        LogicDataSet.Tables[$"{tableName}"].Clear();
-                        LogicDataSet.Tables[$"{tableName}"].Load(newReader);
-                    }
-
-                    return new ErrorMessageHelper();
-                }
-                else
-                {
-                    throw new NullReferenceException("Переданной таблицы не существует");
-                }
-            }
-            catch (Exception e)
-            {
-                return new ErrorMessageHelper(e.Message);
-            }
-        }
-
+        
 
         /// <summary>
         /// Включает поддержку внешних ключей для установленного соединения
@@ -135,9 +109,6 @@ namespace CompMgr
         /// </summary>
         private void CreateFK()
         {
-
-
-
             ForeignKeyConstraint compInst = new ForeignKeyConstraint(computer.Columns["id"], install.Columns["computerID"])
             {
                 ConstraintName = "comp-install",
@@ -222,8 +193,8 @@ namespace CompMgr
                 using (SQLiteDataAdapter adapter = new SQLiteDataAdapter($"SELECT * FROM {tableName}", connection))
                 {
                     SQLiteCommandBuilder commands = new SQLiteCommandBuilder(adapter);
-                    adapter.DeleteCommand = new SQLiteCommand("DELETE FROM Install WHERE id = :id", connection);
-                    adapter.DeleteCommand.Parameters.Add("id", DbType.Int32, 0, "id").SourceVersion = DataRowVersion.Original;
+                    adapter.DeleteCommand = new SQLiteCommand($"DELETE FROM {tableName} WHERE id = @id", connection);
+                    adapter.DeleteCommand.Parameters.Add("@id", DbType.Int32, 0, "id").SourceVersion = DataRowVersion.Original;
                     adapter.Update(LogicDataSet, tableName);
                 }
             }
@@ -250,6 +221,32 @@ namespace CompMgr
                 SaveTable(saveConnect, "Distribution");
                 saveConnect.Close();
 
+            }
+
+        }
+
+        public void UpdateInstall()
+        {
+            using (SQLiteConnection saveConnect = new SQLiteConnection(connectionString))
+            {
+                saveConnect.Open();
+                EnableForeignKeys(saveConnect);
+
+                using (SQLiteDataAdapter adapter = new SQLiteDataAdapter("SELECT id, computerID, softID, version FROM Install" , saveConnect))
+                {
+                    adapter.DeleteCommand = new SQLiteCommand("DELETE FROM Install WHERE id = @id", saveConnect);
+                    adapter.DeleteCommand.Parameters.Add("@id", DbType.Int64, 8, "id").SourceVersion = DataRowVersion.Original;
+                    adapter.InsertCommand = new SQLiteCommand("INSERT INTO INSTALL(computerID, softID, version) " +
+                        "VALUES (@computerID, @softID, @version)", saveConnect);
+                    adapter.InsertCommand.Parameters.Add("@computerID", DbType.Int64, 8, "computerID");
+                    adapter.InsertCommand.Parameters.Add("@softID", DbType.Int64, 8, "softID");
+                    adapter.InsertCommand.Parameters.Add("@version", DbType.String, 16, "version");
+
+                    // DataTable instch = install.GetChanges(DataRowState.Deleted);
+                    adapter.Update(install);
+
+                }
+                saveConnect.Close();
             }
 
         }
