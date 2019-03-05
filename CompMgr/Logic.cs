@@ -92,34 +92,40 @@ namespace CompMgr
             return computer;
         }
 
-        public ObservableCollection<User> GetUsers()
+        public ObservableCollection<User> GetUsersNoComp()
         {
             ObservableCollection<User> users = new ObservableCollection<User>();
 
             foreach(DataRow dru in user.Rows)
             {
-                User newUser = new User();
-                newUser.Id = dru.Field<long>("id");
-                newUser.UserFio = dru.Field<string>("fio");
-                newUser.UserTel = dru.Field<string>("tel");
-                users.Add(newUser);
+                if (distribution.Select($"userID = {dru.Field<long>("id")}").Count() == 0)
+                {
+                    User newUser = new User();
+                    newUser.Id = dru.Field<long>("id");
+                    newUser.UserFio = dru.Field<string>("fio");
+                    newUser.UserTel = dru.Field<string>("tel");
+                    users.Add(newUser);
+                }
             }
 
             return users;
         }
 
-        public ObservableCollection<Computer> GetComputers()
+        public ObservableCollection<Computer> GetComputersNoUser()
         {
             ObservableCollection<Computer> computers = new ObservableCollection<Computer>();
 
-
+            
             foreach (DataRow drc in computer.Rows)
             {
-                Computer newComp = new Computer();
-                newComp.Id = drc.Field<long>("id");
-                newComp.NsName = drc.Field<string>("nsName");
-                newComp.Ip = drc.Field<string>("ip");
-                computers.Add(newComp);
+                if (distribution.Select($"computerID = {drc.Field<long>("id")}").Count()==0 )
+                {
+                    Computer newComp = new Computer();
+                    newComp.Id = drc.Field<long>("id");
+                    newComp.NsName = drc.Field<string>("nsName");
+                    newComp.Ip = drc.Field<string>("ip");
+                    computers.Add(newComp);
+                }
             }
 
             return computers;
@@ -227,7 +233,7 @@ namespace CompMgr
             var distribQuery = from dst in distribution.AsEnumerable()
                                join usr in user.AsEnumerable() on dst.Field<long>("userID") equals usr.Field<long>("id")
                                join cmp in computer.AsEnumerable() on dst.Field<long>("computerID") equals cmp.Field<long>("id")
-                               select new { Id = dst.Field<long>("id"), ComputerId = dst.Field<long>("computerID"), UserId = dst.Field<long>("userID"),
+                               select new { Id = dst.Field<long>("id"), ComputerID = dst.Field<long>("computerID"), UserID = dst.Field<long>("userID"),
                                NsName = cmp.Field<string>("nsName"), UserFio = usr.Field<string>("fio") };
 
             foreach (dynamic distribItem in distribQuery)
@@ -358,6 +364,32 @@ namespace CompMgr
             dbHelper.UpdateInstall();
             dbHelper.Reload();
 
+        }
+
+        public void SaveDistribution(ObservableCollection<Distribution> distribs)
+        {
+            foreach (DataRow drd in distribution.Rows) //Поиск удалённых распределений
+            {
+                bool found = false;
+                foreach(Distribution dst in distribs)
+                    if(dst.Id == drd.Field<long>("id"))
+                    {
+                        found = true;
+                        break;
+                    }
+                if (!found)
+                    drd.Delete();
+            }
+
+            foreach(Distribution newDistr in distribs)
+                if(newDistr.Id == -1)
+                {
+                    DataRow newDistribution = distribution.NewRow();
+                    newDistribution["computerID"] = newDistr.ComputerID;
+                    newDistribution["userID"] = newDistr.UserID;
+                    distribution.Rows.Add(newDistribution);
+                }
+            dbHelper.Save();
         }
 
         /// <summary>

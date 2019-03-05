@@ -71,10 +71,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ItemCommand.cs" />
     <Compile Include="Distribution.cs" />
     <Compile Include="CompleteData.cs" />
     <Compile Include="CompleteTableHelper.cs" />
     <Compile Include="Computer.cs" />
+    <Compile Include="DistributionViewModel.cs" />
     <Compile Include="DistributionWindow.xaml.cs">
       <DependentUpon>DistributionWindow.xaml</DependentUpon>
     </Compile>
@@ -85,6 +87,7 @@
     <Compile Include="InstallWindow.xaml.cs">
       <DependentUpon>InstallWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ListBoxCommands.cs" />
     <Compile Include="Logic.cs" />
     <Compile Include="EditTableWindow.xaml.cs">
       <DependentUpon>EditTableWindow.xaml</DependentUpon>

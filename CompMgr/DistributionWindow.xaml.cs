@@ -29,9 +29,13 @@ namespace CompMgr
         {
             this.core = core;
             InitializeComponent();
-            source = core.GetDistribution();
-            userSource = core.GetUsers();
-            computerSource = core.GetComputers();
+            DistributionViewModel dvm = new DistributionViewModel();
+
+            dvm.SourceDistr = core.GetDistribution();
+            dvm.UserSource = core.GetUsersNoComp();
+            dvm.CompSource = core.GetComputersNoUser();
+            DataContext = dvm;
+            
         }
 
         private void Bind()
@@ -43,7 +47,8 @@ namespace CompMgr
 
         private void SaveAndExit_Click(object sender, RoutedEventArgs e)
         {
-            
+            core.SaveDistribution(source);
+            Close();
         }
 
         private void ExitNoSave_Click(object sender, RoutedEventArgs e)
@@ -53,12 +58,32 @@ namespace CompMgr
 
         private void AddBt_Click(object sender, RoutedEventArgs e)
         {
+            if ((SelectComp.SelectedItem != null) && (SelectUser.SelectedItem != null))
+            {
+                User currentUser = (User)SelectUser.SelectedItem;
+                Computer currentComp = (Computer)SelectComp.SelectedItem;
+                Distribution newDistribution = new Distribution();
+                newDistribution.Id = -1;
+                newDistribution.ComputerID = currentComp.Id;
+                newDistribution.NsName = currentComp.NsName;
+                newDistribution.UserFio = currentUser.UserFio;
+                newDistribution.UserID = currentUser.Id;
 
+                source.Add(newDistribution);
+
+                userSource.Remove(currentUser);
+                computerSource.Remove(currentComp);
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Bind();
+            //Bind();
+        }
+
+        private void DeleteItem_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
         }
     }
 }

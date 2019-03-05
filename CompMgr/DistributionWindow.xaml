@@ -9,7 +9,7 @@
         Loaded="Window_Loaded">
     <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Right" MinWidth="150">
-            <Button x:Name="SaveAndExit" Content="Сохранить и выйти" Click="SaveAndExit_Click"/>
+            <Button x:Name="SaveAndExit" Content="Сохранить и выйти" />
             <Button x:Name="ExitNoSave" Content="Выйти без сохранения" Click="ExitNoSave_Click"/>
         </StackPanel>
         <Grid>
@@ -19,16 +19,27 @@
                 <RowDefinition MaxHeight="50" MinHeight="20"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0"/>
-            <ListBox x:Name="DistributionView" Grid.Row="1" ItemTemplate="{DynamicResource DistributedItems}"/>
+            <ListBox x:Name="DistributionView" Grid.Row="1" 
+                     ItemTemplate="{DynamicResource DistributedItems}"
+                     ItemsSource="{Binding SourceDistr, UpdateSourceTrigger=PropertyChanged}"
+                     >
+
+            </ListBox>
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <ComboBox x:Name="SelectComp" Grid.Column="0" ItemTemplate="{DynamicResource CompsTemplate}" />
-                <ComboBox x:Name="SelectUser" Grid.Column="1" ItemTemplate="{DynamicResource UsersTemplate}"/>
-                <Button x:Name="AddBt" Grid.Column="2" Content="Распределить" Click="AddBt_Click"/>
+                <ComboBox x:Name="SelectComp" Grid.Column="0" 
+                          ItemTemplate="{DynamicResource CompsTemplate}" 
+                          ItemsSource="{Binding CompSource}"/>
+                <ComboBox x:Name="SelectUser" Grid.Column="1" 
+                          ItemTemplate="{DynamicResource UsersTemplate}"
+                          ItemsSource="{Binding UserSource}"/>
+                <Button x:Name="AddBt" Grid.Column="2" Content="Распределить" 
+                        Command="{Binding AddItem}"
+                        CommandParameter="{Binding ElementName=SelectComp, Path=Text}"/>
             </Grid>
         </Grid>
     </DockPanel>

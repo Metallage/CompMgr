@@ -34,9 +34,10 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="ComputerTB" Grid.Column="0" Text="{Binding StringFormat=Имя компьютера:{0},Path=NsName}" />
-            <TextBlock x:Name="UserFioTB" Grid.Column="1" Text="{Binding StringFormat=ФИО пользователя:{0},Path=UserFio}"/>
-            <Button x:Name="RemoveButton" Grid.Column="2" Content="Удалить"/>
+            <TextBlock x:Name="ComputerTB" Grid.Column="0" Text="{Binding Path=NsName}" />
+            <TextBlock x:Name="UserFioTB" Grid.Column="1" Text="{Binding Path=UserFio}"/>
+            <Button x:Name="RemoveButton" Grid.Column="2" Content="Удалить" Command="{Binding DeleteItem}" 
+                    CommandParameter="{Binding ElementName=ComputerTB, Path=Text}"/>
         </Grid>
     </DataTemplate>
     <DataTemplate x:Key="UsersTemplate">
