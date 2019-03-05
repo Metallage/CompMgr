@@ -71,6 +71,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DistributedView.cs" />
     <Compile Include="ItemCommand.cs" />
     <Compile Include="Distribution.cs" />
     <Compile Include="CompleteData.cs" />

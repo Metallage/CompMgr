@@ -10,9 +10,9 @@ namespace CompMgr
 {
     public class DistributionViewModel:INotifyPropertyChanged
     {
-        private ObservableCollection<Distribution> sourceDistr = new ObservableCollection<Distribution>();
+        private DistributedView sourceDistr = new DistributedView();
 
-        public ObservableCollection<Distribution> SourceDistr {
+        public DistributedView SourceDistr {
             get
             {
                 return sourceDistr;

@@ -103,16 +103,21 @@ namespace CompMgr
             }
         }
 
-        /// <summary>
-        /// Создаём внешние ключи в датасете
-        /// </summary>
-        private void CreateKeys()
+        private void CreatePK()
         {
             user.PrimaryKey = new DataColumn[] { user.Columns["id"] };
             software.PrimaryKey = new DataColumn[] { software.Columns["id"] };
             computer.PrimaryKey = new DataColumn[] { computer.Columns["id"] };
-            install.PrimaryKey = new DataColumn[] { install.Columns["id"]};
-            distribution.PrimaryKey = new DataColumn[] { distribution.Columns["id"]};
+            install.PrimaryKey = new DataColumn[] { install.Columns["id"] };
+            distribution.PrimaryKey = new DataColumn[] { distribution.Columns["id"] };
+
+        }
+
+        /// <summary>
+        /// Создаём внешние ключи в датасете
+        /// </summary>
+        private void CreateFK()
+        {
 
             ForeignKeyConstraint compInst = new ForeignKeyConstraint(computer.Columns["id"], install.Columns["computerID"])
             {
@@ -313,6 +318,9 @@ namespace CompMgr
 
 
                 loadCon.Close();
+
+                //Создаём ключи
+                CreateFK();
             }
         }
 
@@ -346,8 +354,7 @@ namespace CompMgr
                 install = LogicDataSet.Tables["Install"];
                 distribution = LogicDataSet.Tables["Distribution"];
 
-                //Создаём ключи
-                CreateKeys();
+                CreatePK();
 
                 //разобраться нужно ли
                 foreach (DataTable dt in LogicDataSet.Tables)

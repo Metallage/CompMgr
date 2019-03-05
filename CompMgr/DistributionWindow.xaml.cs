@@ -25,13 +25,16 @@ namespace CompMgr
         private ObservableCollection<User> userSource;
         private ObservableCollection<Computer> computerSource;
 
+        DistributionViewModel dvm;
+
         public DistributionWindow(Logic core)
         {
             this.core = core;
             InitializeComponent();
-            DistributionViewModel dvm = new DistributionViewModel();
-
-            dvm.SourceDistr = core.GetDistribution();
+             dvm = new DistributionViewModel();
+            DistributedView distributed = new DistributedView();
+            distributed.InputMe(core.GetDistribution());
+            dvm.SourceDistr = distributed;
             dvm.UserSource = core.GetUsersNoComp();
             dvm.CompSource = core.GetComputersNoUser();
             DataContext = dvm;
@@ -69,10 +72,11 @@ namespace CompMgr
                 newDistribution.UserFio = currentUser.UserFio;
                 newDistribution.UserID = currentUser.Id;
 
-                source.Add(newDistribution);
+                dvm.SourceDistr.Add(newDistribution);
 
-                userSource.Remove(currentUser);
-                computerSource.Remove(currentComp);
+
+                dvm.UserSource.Remove(currentUser);
+                dvm.CompSource.Remove(currentComp);
             }
         }
 

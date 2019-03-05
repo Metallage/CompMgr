@@ -21,7 +21,8 @@
             <TextBlock Grid.Row="0"/>
             <ListBox x:Name="DistributionView" Grid.Row="1" 
                      ItemTemplate="{DynamicResource DistributedItems}"
-                     ItemsSource="{Binding SourceDistr, UpdateSourceTrigger=PropertyChanged}"
+                     ItemsSource="{Binding  SourceDistr, UpdateSourceTrigger=PropertyChanged}"
+        
                      >
 
             </ListBox>
@@ -38,8 +39,7 @@
                           ItemTemplate="{DynamicResource UsersTemplate}"
                           ItemsSource="{Binding UserSource}"/>
                 <Button x:Name="AddBt" Grid.Column="2" Content="Распределить" 
-                        Command="{Binding AddItem}"
-                        CommandParameter="{Binding ElementName=SelectComp, Path=Text}"/>
+                        Click="AddBt_Click"/>
             </Grid>
         </Grid>
     </DockPanel>

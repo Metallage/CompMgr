@@ -36,7 +36,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="ComputerTB" Grid.Column="0" Text="{Binding Path=NsName}" />
             <TextBlock x:Name="UserFioTB" Grid.Column="1" Text="{Binding Path=UserFio}"/>
-            <Button x:Name="RemoveButton" Grid.Column="2" Content="Удалить" Command="{Binding DeleteItem}" 
+            <Button x:Name="RemoveButton" Grid.Column="2" Content="Удалить" Command="{Binding Path=DeleteItem}" 
                     CommandParameter="{Binding ElementName=ComputerTB, Path=Text}"/>
         </Grid>
     </DataTemplate>
