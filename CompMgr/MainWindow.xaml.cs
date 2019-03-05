@@ -56,8 +56,7 @@ namespace CompMgr
 
         private void TestButton_Click(object sender, RoutedEventArgs e)
         {
-            InstallWindow installWindow = new InstallWindow(core);
-            installWindow.Show();
+
 
         }
 
@@ -67,16 +66,19 @@ namespace CompMgr
             upd.Show();
         }
 
-        private void AddButton_Click(object sender, RoutedEventArgs e)
-        {
 
-        }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
 
             EditTableWindow editTable = new EditTableWindow(core);
             editTable.Show();
+        }
+
+        private void InstallButton_Click(object sender, RoutedEventArgs e)
+        {
+            InstallWindow installWindow = new InstallWindow(core);
+            installWindow.Show();
         }
     }
 }

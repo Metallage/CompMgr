@@ -284,7 +284,7 @@ namespace CompMgr
                         core.ParseUser(inputWindow.InputData);
 
                         break;
-                    case "conputer":
+                    case "computer":
                         core.ParseComputer(inputWindow.InputData);
                         break;
                 }

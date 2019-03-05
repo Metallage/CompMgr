@@ -2,35 +2,48 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 
 namespace CompMgr
 {
-    public class Updates
+    public class Updates : INotifyPropertyChanged
     {
+        private bool isUp;
+
+        public long Id { get; set; }
         public string NsName { get; }
         public string Ip { get; }
-        public string User { get; }
-        public bool IsUp { get; set; }
+        public string UserFio { get; }
+        public string OldVersion { get; set; }
+        public string NewVersion { get; set; }
 
         public Updates(string nsName, string ip, string user)
         {
             NsName = nsName;
             Ip = ip;
-            User = user;
-            IsUp = false;
+            UserFio = user;
+            isUp = false;
         }
 
-        public override string ToString()
-        {
-            return $"{NsName}";
+        public bool IsUp { get
+            {
+                return isUp;
+            }
+            set
+            {
+                if (value != isUp)
+                {
+                    isUp = value;
+                    OnPropertyChanged(this, "IsUp");
+                }
+            }
         }
 
-        public override int GetHashCode()
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(object sender, string propertyName)
         {
-            if (NsName != null)
-                return NsName.GetHashCode();
-            else
-                return 0;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

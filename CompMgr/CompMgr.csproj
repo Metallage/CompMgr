@@ -71,9 +71,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Distribution.cs" />
     <Compile Include="CompleteData.cs" />
     <Compile Include="CompleteTableHelper.cs" />
     <Compile Include="Computer.cs" />
+    <Compile Include="DistributionWindow.xaml.cs">
+      <DependentUpon>DistributionWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ErrorMessageHelper.cs" />
     <Compile Include="DataBaseHelper.cs" />
     <Compile Include="Install.cs" />
@@ -94,6 +98,10 @@
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="User.cs" />
+    <Page Include="DistributionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="InstallWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

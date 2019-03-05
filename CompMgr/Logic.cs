@@ -31,12 +31,9 @@ namespace CompMgr
 
                 software = mainDS.Tables["Software"];
                 user = mainDS.Tables["User"];
-               // division = mainDS.Tables["Division"];
                 computer = mainDS.Tables["Computer"];
                 install = mainDS.Tables["Install"];
                 distribution = mainDS.Tables["Distribution"];
-
-                //AddSomeData(); //Для тестов
 
                 return new ErrorMessageHelper();
             }
@@ -60,18 +57,19 @@ namespace CompMgr
         /// </summary>
         /// <param name="upSoft">Название ПО</param>
         /// <returns>Список рабочих мест, где нужно обновить данное ПО</returns>
-        public List<Updates> GetUpdates(string upSoft)
+        public ObservableCollection<Updates> GetUpdates(string upSoft)
         {
 
-            List<Updates> updateList = new List<Updates>();
+            ObservableCollection<Updates> updateList = new ObservableCollection<Updates>();
 
             var updQuery = from comp in computer.AsEnumerable() //Из таблицы компов
                            join dist in distribution.AsEnumerable() on comp.Field<long>("id") equals dist.Field<long>("computerID") //Выбираем те, что разпределены пользователям
                            join usr in user.AsEnumerable() on dist.Field<long>("userID") equals usr.Field<long>("id") //Выбираем пользователей которым распределены компы
                            join inst in install.AsEnumerable() on comp.Field<long>("id") equals inst.Field<long>("computerID") //Выбираем те где есть установленное по
                            join soft in software.AsEnumerable() on inst.Field<long>("softID") equals soft.Field<long>("id") //Выбираем список ПО на этих компах
-                           where soft.Field<string>("name") == upSoft && soft.Field<string>("version") !=inst.Field<string>("version") // Выбираем те, что имеют нужное ПО и неправильную версию
-                           select new {NsName = comp.Field<string>("nsName"), Ip=comp.Field<string>("ip"), User = usr.Field<string>("fio")}; //Формируем запись
+                           where soft.Field<string>("softName") == upSoft && soft.Field<string>("version") !=inst.Field<string>("version") // Выбираем те, что имеют нужное ПО и неправильную версию
+                           select new {NsName = comp.Field<string>("nsName"), Ip=comp.Field<string>("ip"), User = usr.Field<string>("fio"),
+                               CurrentVersion =soft.Field<string>("version"), OldVersion = inst.Field<string>("version"), Id = inst.Field<long>("id")}; //Формируем запись
 
             foreach(dynamic upd in updQuery)
             {
@@ -191,6 +189,30 @@ namespace CompMgr
                 inst.Add(newInst);
             }
             return inst;
+        }
+
+        public ObservableCollection<Distribution> GetDistribution()
+        {
+            ObservableCollection<Distribution> distrib = new ObservableCollection<Distribution>();
+
+            var distribQuery = from dst in distribution.AsEnumerable()
+                               join usr in user.AsEnumerable() on dst.Field<long>("userID") equals usr.Field<long>("id")
+                               join cmp in computer.AsEnumerable() on dst.Field<long>("computerID") equals cmp.Field<long>("id")
+                               select new { Id = dst.Field<long>("id"), ComputerId = dst.Field<long>("computerID"), UserId = dst.Field<long>("userID"),
+                               NsName = cmp.Field<string>("nsName"), UserFio = usr.Field<string>("fio") };
+
+            foreach (dynamic distribItem in distribQuery)
+            {
+                Distribution newDistrib = new Distribution();
+                newDistrib.Id = distribItem.Id;
+                newDistrib.NsName = distribItem.NsName;
+                newDistrib.ComputerID = distribItem.ComputerID;
+                newDistrib.UserFio = distribItem.UserFio;
+                newDistrib.UserID = distribItem.UserID;
+                distrib.Add(newDistrib);
+            }
+
+            return distrib;
         }
 
         #endregion

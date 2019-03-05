@@ -7,9 +7,12 @@
         mc:Ignorable="d"
         Title="UpdateWindow" Height="450" Width="800"
         Loaded="Window_Loaded">
+
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition MinHeight="2" MaxHeight="5"/>
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition MinHeight="2" MaxHeight="5"/>
         </Grid.RowDefinitions>
@@ -18,21 +21,8 @@
             <ColumnDefinition/>
             <ColumnDefinition MinWidth="2" MaxWidth="5" />
         </Grid.ColumnDefinitions>
-        <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True">
-            <TextBlock x:Name="Info" DockPanel.Dock="Top" MinHeight="30" MaxHeight="100" FontSize="22" Text="Тест" TextAlignment="Center"/>
-            <DataGrid x:Name="UpdGrid" 
-                      AutoGenerateColumns="False" 
-                      CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeColumns="True"
-                      MinRowHeight="30"
-                      FontSize="16"
-                      >
-                <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="NsName" Header="Имя компьтера" Binding="{Binding Path=NsName}" IsReadOnly="True"/>
-                    <DataGridTextColumn x:Name="Ip" Header="IP адрес" Binding="{Binding Path=Ip}" IsReadOnly="True" />
-                    <DataGridTextColumn x:Name="User" Header="Пользователь" Binding="{Binding Path=User}" IsReadOnly="True"/>
-                    <DataGridCheckBoxColumn x:Name="IsUp" Header="Обновлено" Binding="{Binding Path=IsUp}" IsReadOnly="False"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </DockPanel>
+        <TextBlock x:Name="HeaderTextBlock" Grid.Column="1" Grid.Row="1"/>
+        <ListBox Grid.Row="2" Grid.Column="1" ItemTemplate="{DynamicResource UpdateItem}">
+        </ListBox>
     </Grid>
 </Window>

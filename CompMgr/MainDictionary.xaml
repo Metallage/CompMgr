@@ -1,6 +1,43 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:CompMgr">
+    <DataTemplate x:Key="UpdateItem">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <TextBlock x:Name="NsName" Text="{Binding Path=NsName}"/>
+                <TextBlock x:Name="Ip" Text="{Binding Path=Ip}"/>
+                <TextBlock x:Name="UserFio" Text="{Binding Path=UserFio}"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <TextBlock x:Name="OldVersion" Text="{Binding StringFormat=Установленная версия: {0}, Path=OldVersion}"/>
+                <TextBlock x:Name="CurrentVersion" Text="{Binding StringFormat=Актуальная версия: {0}, Path=CurrentBersion}"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="UpdateText" Grid.Column="0" Text="Обновить: "/>
+                    <CheckBox x:Name="UpdateVersion" Grid.Column="1" IsChecked="{Binding Path=IsUp}"/>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
 
+    <DataTemplate x:Key="DistributedItems">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="ComputerTB" Grid.Column="0" Text="{Binding StringFormat=Имя компьютера:{0},Path=NsName}" />
+            <TextBlock x:Name="UserFioTB" Grid.Column="1" Text="{Binding StringFormat=ФИО пользователя:{0},Path=UserFio}"/>
+            <Button x:Name="RemoveButton" Grid.Column="2" Content="Удалить"/>
+        </Grid>
+    </DataTemplate>
 
 </ResourceDictionary>

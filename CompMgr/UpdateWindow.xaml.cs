@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -21,12 +22,12 @@ namespace CompMgr
     {
         private Logic core;
 
-        public List<Updates> gridSource;
+        public ObservableCollection<Updates> gridSource;
 
         public UpdateWindow(Logic core)
         {
             this.core = core;
-            gridSource = core.GetUpdates("Ордер");
+            //gridSource = core.GetUpdates("Ордер");
 
             InitializeComponent();
             
@@ -34,8 +35,8 @@ namespace CompMgr
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Info.Text = "Обновления для Ордер";
-            UpdGrid.ItemsSource = gridSource;
+            //Info.Text = "Обновления для Ордер";
+            //UpdGrid.ItemsSource = gridSource;
         }
     }
 }

@@ -21,7 +21,6 @@ namespace CompMgr
         string connectionString;
         
         private DataTable user;
-      //  private DataTable division; //надо убрать
         private DataTable software;
         private DataTable computer;
         private DataTable install;
@@ -107,8 +106,14 @@ namespace CompMgr
         /// <summary>
         /// Создаём внешние ключи в датасете
         /// </summary>
-        private void CreateFK()
+        private void CreateKeys()
         {
+            user.PrimaryKey = new DataColumn[] { user.Columns["id"] };
+            software.PrimaryKey = new DataColumn[] { software.Columns["id"] };
+            computer.PrimaryKey = new DataColumn[] { computer.Columns["id"] };
+            install.PrimaryKey = new DataColumn[] { install.Columns["id"]};
+            distribution.PrimaryKey = new DataColumn[] { distribution.Columns["id"]};
+
             ForeignKeyConstraint compInst = new ForeignKeyConstraint(computer.Columns["id"], install.Columns["computerID"])
             {
                 ConstraintName = "comp-install",
@@ -215,7 +220,6 @@ namespace CompMgr
 
                 SaveTable(saveConnect, "Software");
                 SaveTable(saveConnect, "User");
-                //SaveTable(saveConnect, "Division");
                 SaveTable(saveConnect, "Computer");
                 SaveTable(saveConnect, "Install");
                 SaveTable(saveConnect, "Distribution");
@@ -238,9 +242,12 @@ namespace CompMgr
                     adapter.DeleteCommand.Parameters.Add("@id", DbType.Int64, 8, "id").SourceVersion = DataRowVersion.Original;
                     adapter.InsertCommand = new SQLiteCommand("INSERT INTO INSTALL(computerID, softID, version) " +
                         "VALUES (@computerID, @softID, @version)", saveConnect);
-                    adapter.InsertCommand.Parameters.Add("@computerID", DbType.Int64, 8, "computerID");
-                    adapter.InsertCommand.Parameters.Add("@softID", DbType.Int64, 8, "softID");
-                    adapter.InsertCommand.Parameters.Add("@version", DbType.String, 16, "version");
+                    adapter.InsertCommand.Parameters.Add("@computerID", DbType.Int64, 8, "computerID").SourceVersion = DataRowVersion.Original;
+                    adapter.InsertCommand.Parameters.Add("@softID", DbType.Int64, 8, "softID").SourceVersion = DataRowVersion.Original;
+                    adapter.InsertCommand.Parameters.Add("@version", DbType.String, 16, "version").SourceVersion = DataRowVersion.Original;
+                    adapter.UpdateCommand = new SQLiteCommand("UPDATE Install SET version=@version WHERE id=@id", saveConnect);
+                    adapter.UpdateCommand.Parameters.Add("@id", DbType.Int64, 8, "id").SourceVersion = DataRowVersion.Original;
+                    adapter.UpdateCommand.Parameters.Add("@version", DbType.String, 16, "version").SourceVersion = DataRowVersion.Original;
 
                     // DataTable instch = install.GetChanges(DataRowState.Deleted);
                     adapter.Update(install);
@@ -259,22 +266,25 @@ namespace CompMgr
 
                 EnableForeignKeys(reLoadCon); //Включаем поддержку внешних ключей
 
-                foreach (DataTable dt in LogicDataSet.Tables)
-                    dt.BeginLoadData();
+                LogicDataSet.Clear();
 
-                foreach (DataTable dt in LogicDataSet.Tables)
-                {
-                    string tablename = dt.TableName;
-                    dt.Clear();
-                    LoadTable(reLoadCon, tablename);
+                Load(reLoadCon);
+                //foreach (DataTable dt in LogicDataSet.Tables)
+                //    dt.BeginLoadData();
 
-                }
+                //foreach (DataTable dt in LogicDataSet.Tables)
+                //{
+                //    string tablename = dt.TableName;
+                //    dt.Clear();
+                //    LoadTable(reLoadCon, tablename);
 
-                foreach (DataTable dt in LogicDataSet.Tables)
-                {
-                    dt.EndLoadData();
-                    dt.AcceptChanges();
-                }
+                //}
+
+                //foreach (DataTable dt in LogicDataSet.Tables)
+                //{
+                //    dt.EndLoadData();
+                //    dt.AcceptChanges();
+                //}
 
                 reLoadCon.Close();
             }
@@ -299,31 +309,11 @@ namespace CompMgr
                 loadCon.Open();
 
                 EnableForeignKeys(loadCon); //Включаем поддержку внешних ключей
+                Load(loadCon);
 
-                //Загружаем таблицы
-                LoadTable(loadCon, "Software");
-                
-                LoadTable(loadCon, "User");
-                LoadTable(loadCon, "Computer");
-                LoadTable(loadCon, "Install");
-                LoadTable(loadCon, "Distribution");
 
                 loadCon.Close();
             }
-
-            foreach (DataTable dt in LogicDataSet.Tables)
-                dt.AcceptChanges();
-
-            //TODO возможно стоит это убрать, а возможно нет (разобраться)
-            software = LogicDataSet.Tables["Software"];
-            user = LogicDataSet.Tables["User"];
-
-            computer = LogicDataSet.Tables["Computer"];
-
-            install = LogicDataSet.Tables["Install"];
-            distribution = LogicDataSet.Tables["Distribution"];
-
-            CreateFK();   //Создаем внешние ключи в датасете
         }
 
         
@@ -332,6 +322,38 @@ namespace CompMgr
         /// Датасет с таблицами связями и ключами
         /// </summary>
         public DataSet LogicDataSet { get; set; } = new DataSet();
+
+
+        /// <summary>
+        /// Загружает все таблицы из БД инициализирует поля, создаёт ключи
+        /// </summary>
+        /// <param name="loadCon">Установленное соединение к БД</param>
+        private void Load(SQLiteConnection loadCon)
+        {
+            if (loadCon.State == ConnectionState.Open)
+            {
+                //Загружаем таблицы
+                LoadTable(loadCon, "Software");
+                LoadTable(loadCon, "User");
+                LoadTable(loadCon, "Computer");
+                LoadTable(loadCon, "Install");
+                LoadTable(loadCon, "Distribution");
+
+                //Инициализируем поля
+                software = LogicDataSet.Tables["Software"];
+                user = LogicDataSet.Tables["User"];
+                computer = LogicDataSet.Tables["Computer"];
+                install = LogicDataSet.Tables["Install"];
+                distribution = LogicDataSet.Tables["Distribution"];
+
+                //Создаём ключи
+                CreateKeys();
+
+                //разобраться нужно ли
+                foreach (DataTable dt in LogicDataSet.Tables)
+                    dt.AcceptChanges();
+            }
+        }
 
     }
 }

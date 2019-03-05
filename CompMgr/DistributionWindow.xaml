@@ -1,0 +1,35 @@
+﻿<Window x:Class="CompMgr.DistributionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CompMgr"
+        mc:Ignorable="d"
+        Title="DistributionWindow" Height="450" Width="800">
+    <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Right" MinWidth="150">
+            <Button x:Name="SaveAndExit" Content="Сохранить и выйти" Click="SaveAndExit_Click"/>
+            <Button x:Name="ExitNoSave" Content="Выйти без сохранения" Click="ExitNoSave_Click"/>
+        </StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition MaxHeight="20" MinHeight="10"/>
+                <RowDefinition/>
+                <RowDefinition MaxHeight="50" MinHeight="20"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0"/>
+            <ListBox Grid.Row="1" ItemTemplate="{DynamicResource DistributedItems}"/>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <ComboBox x:Name="SelectComp" Grid.Column="0"/>
+                <ComboBox x:Name="SelectUser" Grid.Column="1"/>
+                <Button x:Name="AddBt" Grid.Column="2" Content="Распределить"/>
+            </Grid>
+        </Grid>
+    </DockPanel>
+
+</Window>
