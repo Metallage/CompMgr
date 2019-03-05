@@ -39,8 +39,8 @@ namespace CompMgr
             this.core = logic;
             InitializeComponent();
             software = core.GetSoftware();
-            user = core.GetUser();
-            computer = core.GetComputer();
+            user = core.GetUserDT();
+            computer = core.GetComputerDT();
 
         }
 

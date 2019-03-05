@@ -14,7 +14,6 @@ namespace CompMgr
     {
         private DataSet mainDS;
         private DataTable user;
-       // private DataTable division;
         private DataTable software;
         private DataTable computer;
         private DataTable install;
@@ -83,18 +82,48 @@ namespace CompMgr
 
         #region Получение данных для интерфейса
 
-        public DataTable GetUser()
+        public DataTable GetUserDT()
         {
             return user;
         }
 
-        public DataTable GetComputer()
+        public DataTable GetComputerDT()
         {
             return computer;
         }
 
+        public ObservableCollection<User> GetUsers()
+        {
+            ObservableCollection<User> users = new ObservableCollection<User>();
+
+            foreach(DataRow dru in user.Rows)
+            {
+                User newUser = new User();
+                newUser.Id = dru.Field<long>("id");
+                newUser.UserFio = dru.Field<string>("fio");
+                newUser.UserTel = dru.Field<string>("tel");
+                users.Add(newUser);
+            }
+
+            return users;
+        }
+
+        public ObservableCollection<Computer> GetComputers()
+        {
+            ObservableCollection<Computer> computers = new ObservableCollection<Computer>();
 
 
+            foreach (DataRow drc in computer.Rows)
+            {
+                Computer newComp = new Computer();
+                newComp.Id = drc.Field<long>("id");
+                newComp.NsName = drc.Field<string>("nsName");
+                newComp.Ip = drc.Field<string>("ip");
+                computers.Add(newComp);
+            }
+
+            return computers;
+        }
         /// <summary>
         /// Формируем список компьютеров в понятный интерфейсу вид
         /// </summary>

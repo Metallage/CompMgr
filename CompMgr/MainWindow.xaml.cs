@@ -56,7 +56,8 @@ namespace CompMgr
 
         private void TestButton_Click(object sender, RoutedEventArgs e)
         {
-
+            DistributionWindow distr = new DistributionWindow(core);
+            distr.Show();
 
         }
 

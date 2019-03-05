@@ -39,5 +39,12 @@
             <Button x:Name="RemoveButton" Grid.Column="2" Content="Удалить"/>
         </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="UsersTemplate">
+        <TextBlock Text="{Binding Path=UserFio}"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="CompsTemplate">
+        <TextBlock Text="{Binding Path=NsName}"/>
+    </DataTemplate>
 
 </ResourceDictionary>
