@@ -22,7 +22,7 @@ namespace CompMgr
     {
         private Logic core;
 
-        public ObservableCollection<Updates> gridSource;
+       
 
         public UpdateWindow(Logic core)
         {

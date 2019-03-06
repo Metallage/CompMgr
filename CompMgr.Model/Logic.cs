@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using System.Collections.ObjectModel;
+using CompMgr;
 
-namespace CompMgr
+
+namespace CompMgr.Model
 {
     /// <summary>
     /// Класс ядра логики
@@ -21,10 +23,9 @@ namespace CompMgr
 
         private DataBaseHelper dbHelper = new DataBaseHelper();
 
-        public ErrorMessageHelper Start()
+        public void Start()
         {
-            try
-            {
+
                 dbHelper.InitialDB();
                 mainDS = dbHelper.LogicDataSet;
 
@@ -33,13 +34,6 @@ namespace CompMgr
                 computer = mainDS.Tables["Computer"];
                 install = mainDS.Tables["Install"];
                 distribution = mainDS.Tables["Distribution"];
-
-                return new ErrorMessageHelper();
-            }
-            catch(Exception e)
-            {
-                return new ErrorMessageHelper(e.Message);
-            }
         }
 
 
@@ -56,27 +50,27 @@ namespace CompMgr
         /// </summary>
         /// <param name="upSoft">Название ПО</param>
         /// <returns>Список рабочих мест, где нужно обновить данное ПО</returns>
-        //public ObservableCollection<Updates> GetUpdates(string upSoft)
-        //{
+        public List<Update> GetUpdates(string upSoft)
+        {
 
-        //    ObservableCollection<Updates> updateList = new ObservableCollection<Updates>();
+            List<Update> updateList = new List<Update>();
 
-        //    var updQuery = from comp in computer.AsEnumerable() //Из таблицы компов
-        //                   join dist in distribution.AsEnumerable() on comp.Field<long>("id") equals dist.Field<long>("computerID") //Выбираем те, что разпределены пользователям
-        //                   join usr in user.AsEnumerable() on dist.Field<long>("userID") equals usr.Field<long>("id") //Выбираем пользователей которым распределены компы
-        //                   join inst in install.AsEnumerable() on comp.Field<long>("id") equals inst.Field<long>("computerID") //Выбираем те где есть установленное по
-        //                   join soft in software.AsEnumerable() on inst.Field<long>("softID") equals soft.Field<long>("id") //Выбираем список ПО на этих компах
-        //                   where soft.Field<string>("softName") == upSoft && soft.Field<string>("version") !=inst.Field<string>("version") // Выбираем те, что имеют нужное ПО и неправильную версию
-        //                   select new {NsName = comp.Field<string>("nsName"), Ip=comp.Field<string>("ip"), User = usr.Field<string>("fio"),
-        //                       CurrentVersion =soft.Field<string>("version"), OldVersion = inst.Field<string>("version"), Id = inst.Field<long>("id")}; //Формируем запись
+            var updQuery = from comp in computer.AsEnumerable() //Из таблицы компов
+                           join dist in distribution.AsEnumerable() on comp.Field<long>("id") equals dist.Field<long>("computerID") //Выбираем те, что разпределены пользователям
+                           join usr in user.AsEnumerable() on dist.Field<long>("userID") equals usr.Field<long>("id") //Выбираем пользователей которым распределены компы
+                           join inst in install.AsEnumerable() on comp.Field<long>("id") equals inst.Field<long>("computerID") //Выбираем те где есть установленное по
+                           join soft in software.AsEnumerable() on inst.Field<long>("softID") equals soft.Field<long>("id") //Выбираем список ПО на этих компах
+                           where soft.Field<string>("softName") == upSoft && soft.Field<string>("version") !=inst.Field<string>("version") // Выбираем те, что имеют нужное ПО и неправильную версию
+                           select new {NsName = comp.Field<string>("nsName"), Ip=comp.Field<string>("ip"), User = usr.Field<string>("fio"),
+                               CurrentVersion =soft.Field<string>("version"), OldVersion = inst.Field<string>("version"), Id = inst.Field<long>("id")}; //Формируем запись
 
-        //    foreach(dynamic upd in updQuery)
-        //    {
-        //        updateList.Add(new Updates(upd.NsName,upd.Ip, upd.User)); //Добавляем всё найденное в лист обновлений
-        //    }
+            foreach(dynamic upd in updQuery)
+            {
+                updateList.Add(new Update(upd.Id, upd.NsName, upd.Ip, upd.UserFio, upd.OldVersion, upd.CurrentVersion)); //Добавляем всё найденное в лист обновлений
+            }
 
-        //    return updateList;
-        //}
+            return updateList;
+        }
 
 
 

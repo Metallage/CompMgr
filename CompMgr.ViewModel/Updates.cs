@@ -4,24 +4,31 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 
-namespace CompMgr
+namespace CompMgr.ViewModel
 {
-    public class Updates : INotifyPropertyChanged
+    public class ViewUpdate : INotifyPropertyChanged
     {
         private bool isUp;
 
         public long Id { get; set; }
-        public string NsName { get; }
-        public string Ip { get; }
-        public string UserFio { get; }
+        public string NsName { get; set; }
+        public string Ip { get; set; }
+        public string UserFio { get; set; }
         public string OldVersion { get; set; }
-        public string NewVersion { get; set; }
+        public string CurrentVersion { get; set; }
 
-        public Updates(string nsName, string ip, string user)
+        public ViewUpdate(long id, string nsName, string ip, string userFio, string oldVersion, string currentVersion)
         {
+            Id = id;
             NsName = nsName;
             Ip = ip;
-            UserFio = user;
+            UserFio = userFio;
+            OldVersion = oldVersion;
+            CurrentVersion = currentVersion;
+            isUp = false;
+        }
+        public ViewUpdate()
+        {
             isUp = false;
         }
 
