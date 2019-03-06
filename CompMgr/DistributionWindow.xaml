@@ -7,9 +7,24 @@
         mc:Ignorable="d"
         Title="DistributionWindow" Height="450" Width="800"
         Loaded="Window_Loaded">
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static local:DistributionViewModel.DeleteItemCommand}"
+                        Executed="DeleteItem_Executed"
+                        CanExecute="CanExecuteDeleteItem"/>
+        <CommandBinding Command="{x:Static local:DistributionViewModel.AddItemCommand}"
+                        Executed="AddItem_Executed"
+                        CanExecute="CanExecuteAddCommand"/>
+    </Window.CommandBindings>
+
+    <Window.Resources>
+        <local:Distribution x:Key="NewDistribution" Id="-1" 
+                            NsName="{Binding ElementName=SelectComp, Path=Text}"
+                            UserFio="{Binding ElementName=SelectUser, Path=Text}"/>
+    </Window.Resources>
+    
     <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Right" MinWidth="150">
-            <Button x:Name="SaveAndExit" Content="Сохранить и выйти" />
+            <Button x:Name="SaveAndExit" Content="Сохранить и выйти" Click="SaveAndExit_Click" />
             <Button x:Name="ExitNoSave" Content="Выйти без сохранения" Click="ExitNoSave_Click"/>
         </StackPanel>
         <Grid>

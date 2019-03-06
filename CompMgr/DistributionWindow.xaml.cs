@@ -38,6 +38,7 @@ namespace CompMgr
             dvm.UserSource = core.GetUsersNoComp();
             dvm.CompSource = core.GetComputersNoUser();
             DataContext = dvm;
+          
             
         }
 
@@ -50,7 +51,7 @@ namespace CompMgr
 
         private void SaveAndExit_Click(object sender, RoutedEventArgs e)
         {
-            core.SaveDistribution(source);
+            core.SaveDistribution(dvm.SourceDistr);
             Close();
         }
 
@@ -87,7 +88,44 @@ namespace CompMgr
 
         private void DeleteItem_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            dvm.ExecuteDeleteCommand(sender, e);
+        }
+
+        private void CanExecuteDeleteItem(object sender, CanExecuteRoutedEventArgs e)
+        {
+            dvm.CanExecuteDeleteCommand(sender, e);
+        }
+
+        private void AddItem_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Distribution newDistribution = e.Parameter as Distribution;
+            if ((SelectComp.SelectedItem != null) && (SelectUser.SelectedItem != null))
+            {
+                User currentUser = (User)SelectUser.SelectedItem;
+                Computer currentComp = (Computer)SelectComp.SelectedItem;
+
+                dvm.SourceDistr.Add(newDistribution);
+
+
+                dvm.UserSource.Remove(currentUser);
+                dvm.CompSource.Remove(currentComp);
+            }
 
         }
+
+        private void CanExecuteAddCommand(object sender, CanExecuteRoutedEventArgs e)
+        {
+            Control target = e.Source as Control;
+
+            if (target != null)
+            {
+                e.CanExecute = true;
+            }
+            else
+            {
+                e.CanExecute = false;
+            }
+        }
+
     }
 }

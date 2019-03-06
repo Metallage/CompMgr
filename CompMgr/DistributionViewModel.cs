@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using System.Windows.Input;
+using System.Windows.Controls;
 
 namespace CompMgr
 {
@@ -30,42 +31,77 @@ namespace CompMgr
         public ObservableCollection<User> UserSource { get; set; }
         public ObservableCollection<Computer> CompSource { get; set; }
 
-        private ItemCommand deleteItem;
-        private ItemCommand addItem;
+        public static RoutedCommand DeleteItemCommand = new RoutedCommand();
 
-        public ItemCommand DeleteItem
+        public static RoutedCommand AddItemCommand = new RoutedCommand();
+
+
+
+
+        public void ExecuteDeleteCommand(object sender, ExecutedRoutedEventArgs e)
         {
-            get
+            Distribution delDistribution = FindByNsName(e.Parameter.ToString());
+
+            UserSource.Add(new User(delDistribution.UserID,delDistribution.UserFio));
+            CompSource.Add(new Computer(delDistribution.ComputerID, delDistribution.NsName));
+            sourceDistr.Remove(delDistribution);
+        }
+
+        public void CanExecuteDeleteCommand(object sender, CanExecuteRoutedEventArgs e)
+        {
+            Control target = e.Source as Control;
+
+            if (target != null)
             {
-                return deleteItem ??
-                    (deleteItem = new ItemCommand(obj =>
-                    {
-                        Distribution distr = this.FindByNsName((string)obj);
-                        if (distr != null)
-                            SourceDistr.Remove(distr);
-                    },
-                    (obj)=>SourceDistr.Count()>0));
+                e.CanExecute = true;
+            }
+            else
+            {
+                e.CanExecute = false;
             }
         }
 
-        public ItemCommand AddItem
+        public void Save()
         {
-            get
-            {
-                return addItem ??
-                    (addItem = new ItemCommand(obj =>
-                    {
-                        Distribution distr = new Distribution();
-                        string param = obj as string;
-                        string[] paramPam = param.Split(',');
-                        distr.Id = -1;
-                        distr.NsName = paramPam[0];
-                        distr.UserFio = paramPam[1];
-                        SourceDistr.Add(distr);
-                    },(obj)=>(UserSource.Count>0)&&(CompSource.Count>0)
-                ));
-            }
+            
         }
+
+        //private static ItemCommand deleteItem;
+        //private ItemCommand addItem;
+
+        //public ItemCommand DeleteItem
+        //{
+        //    get
+        //    {
+        //        return deleteItem ??
+        //            (deleteItem = new ItemCommand(obj =>
+        //            {
+        //                Distribution distr = this.FindByNsName((string)obj);
+        //                if (distr != null)
+        //                    SourceDistr.Remove(distr);
+        //            },
+        //            (obj)=>SourceDistr.Count()>0));
+        //    }
+        //}
+
+        //public ItemCommand AddItem
+        //{
+        //    get
+        //    {
+        //        return addItem ??
+        //            (addItem = new ItemCommand(obj =>
+        //            {
+        //                Distribution distr = new Distribution();
+        //                string param = obj as string;
+        //                string[] paramPam = param.Split(',');
+        //                distr.Id = -1;
+        //                distr.NsName = paramPam[0];
+        //                distr.UserFio = paramPam[1];
+        //                SourceDistr.Add(distr);
+        //            },(obj)=>(UserSource.Count>0)&&(CompSource.Count>0)
+        //        ));
+        //    }
+        //}
 
 
         private Distribution FindByNsName(string nsName)

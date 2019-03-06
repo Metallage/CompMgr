@@ -3,15 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using System.Windows;
 
 namespace CompMgr
 {
-    public class Distribution:INotifyPropertyChanged
+    public class Distribution: DependencyObject, INotifyPropertyChanged
     {
         private string userFio = String.Empty;
         private string nsName = String.Empty;
         private long computerID;
         private long userID;
+
+        public static readonly DependencyProperty IDProperty = DependencyProperty.Register("Id", typeof(long), typeof(Distribution));
+        public static readonly DependencyProperty UserFioProperty = DependencyProperty.Register("UserFio", typeof(string), typeof(Distribution));
+        public static readonly DependencyProperty NsNameProperty = DependencyProperty.Register("NsName", typeof(string), typeof(Distribution));
 
         public long Id { get; set; }
 
@@ -19,15 +24,11 @@ namespace CompMgr
         {
             get
             {
-                return userFio;
+                return (string)GetValue(UserFioProperty);
             }
             set
             {
-                if(value != userFio)
-                {
-                    userFio = value;
-                    OnPropertyChanged(this, "UserFio");
-                }
+                SetValue(UserFioProperty, value);
             }
         }
 
@@ -35,15 +36,11 @@ namespace CompMgr
         {
             get
             {
-                return nsName;
+                 return (string)GetValue(NsNameProperty); 
             }
             set
             {
-                if (value != nsName)
-                {
-                    nsName = value;
-                    OnPropertyChanged(this, "NsName");
-                }
+                SetValue(NsNameProperty,value);
             }
         }
 

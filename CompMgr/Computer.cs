@@ -10,5 +10,14 @@ namespace CompMgr
         public long Id { get; set; }
         public string NsName { get; set; }
         public string Ip { get; set; }
+
+        public Computer()
+        { }
+
+        public Computer(long id, string nsName)
+        {
+            Id = id;
+            NsName = nsName;
+        }
     }
 }
