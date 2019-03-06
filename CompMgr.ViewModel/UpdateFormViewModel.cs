@@ -8,7 +8,7 @@ using CompMgr.Model;
 
 namespace CompMgr.ViewModel
 {
-    public class UpdateFormViewModel
+    public class UpdateFormViewModel:INotifyPropertyChanged
     {
         private Logic core;
         private ObservableCollection<ViewUpdate> updates = new ObservableCollection<ViewUpdate>();
@@ -19,6 +19,23 @@ namespace CompMgr.ViewModel
             this.core = core;
             this.softName = softName;
         }
+
+        public ObservableCollection<ViewUpdate> Updates
+        {
+            get
+            {
+                return updates;
+            }
+            set
+            {
+                if(value != updates)
+                {
+                    updates = value;
+                    OnPropertyChanged(this, "Updates");
+                }
+            }
+        }
+
 
         private void ImportUpdates()
         {
@@ -36,5 +53,13 @@ namespace CompMgr.ViewModel
             }
   
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(object sender, string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
     }
 }

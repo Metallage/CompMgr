@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+//using CompMgr.ViewModel;
 
 
 namespace CompMgr
@@ -21,7 +22,7 @@ namespace CompMgr
     public partial class UpdateWindow : Window
     {
         private Logic core;
-
+        
        
 
         public UpdateWindow(Logic core)

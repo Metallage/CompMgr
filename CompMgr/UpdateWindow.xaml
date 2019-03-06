@@ -12,7 +12,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition MinHeight="2" MaxHeight="5"/>
-            <RowDefinition/>
+            <RowDefinition MaxHeight="30"/>
             <RowDefinition/>
             <RowDefinition MinHeight="2" MaxHeight="5"/>
         </Grid.RowDefinitions>
@@ -22,7 +22,8 @@
             <ColumnDefinition MinWidth="2" MaxWidth="5" />
         </Grid.ColumnDefinitions>
         <TextBlock x:Name="HeaderTextBlock" Grid.Column="1" Grid.Row="1"/>
-        <ListBox Grid.Row="2" Grid.Column="1" ItemTemplate="{DynamicResource UpdateItem}">
+        <ListBox Grid.Row="2" Grid.Column="1" ItemTemplate="{DynamicResource UpdateItem}"
+                 ItemsSource="{Binding Path=Updates}">
         </ListBox>
     </Grid>
 </Window>
