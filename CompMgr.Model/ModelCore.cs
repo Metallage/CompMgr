@@ -12,7 +12,7 @@ namespace CompMgr.Model
     /// <summary>
     /// Класс ядра логики
     /// </summary>
-    public class Logic
+    public class ModelCore
     {
         private DataSet mainDS;
         private DataTable user;
@@ -124,39 +124,7 @@ namespace CompMgr.Model
 
             return computers;
         }
-        /// <summary>
-        /// Формируем список компьютеров в понятный интерфейсу вид
-        /// </summary>
-        /// <returns>Лист классов компьютер</returns>
-        //public HashSet<Computer> GetComputers()
-        //{
-        //    HashSet<Computer> computers = new HashSet<Computer>();
 
-        //    //Выбираем все компьютеры с подразделениями
-        //    var compQuer = from comp in computer.AsEnumerable()
-        //                   join div in division.AsEnumerable() on comp.Field<long>("divisionID") equals div.Field<long>("id")
-        //                   select new {Id = comp.Field<long>("id"), NsName=comp.Field<string>("nsName"), Ip=comp.Field<string>("ip"), Division=div.Field<string>("name") };
-
-        //    foreach (dynamic comp in compQuer)
-        //    {
-        //        Computer newComp = new Computer(comp.NsName, comp.Ip);
-        //        newComp.DivisionName = comp.Division;
-
-        //        //Ищем есть ли пользователи которым назначен этот комп
-        //        if (distribution.Select($"computerID = {comp.Id}").Count() > 0)
-        //        {
-        //            var userComp = from dist in distribution.Select($"computerID = {comp.Id}").CopyToDataTable().AsEnumerable()
-        //                           join usr in user.AsEnumerable() on dist.Field<long>("userId") equals usr.Field<long>("id")
-        //                           select usr.Field<string>("fio");
-
-        //            if (userComp.Count() == 1)
-        //                newComp.UserFio = userComp.First();
-        //        }
-        //        computers.Add(newComp);
-        //    }
-
-        //    return computers;
-        //}
 
         /// <summary>
         /// Возвращает список всего софта с версиями в понятном интерфейсу виде
