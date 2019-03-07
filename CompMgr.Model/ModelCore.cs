@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 using System.Collections.ObjectModel;
 using CompMgr;
+using System.Threading.Tasks;
 
 
 namespace CompMgr.Model
@@ -23,17 +24,23 @@ namespace CompMgr.Model
 
         private DataBaseHelper dbHelper = new DataBaseHelper();
 
+        public delegate void ReadyEventHandler();
+
+        public event ReadyEventHandler onReady; 
+
         public void Start()
         {
 
-                dbHelper.InitialDB();
-                mainDS = dbHelper.LogicDataSet;
+            dbHelper.InitialDB();
+            mainDS = dbHelper.LogicDataSet;
 
-                software = mainDS.Tables["Software"];
-                user = mainDS.Tables["User"];
-                computer = mainDS.Tables["Computer"];
-                install = mainDS.Tables["Install"];
-                distribution = mainDS.Tables["Distribution"];
+            software = mainDS.Tables["Software"];
+            user = mainDS.Tables["User"];
+            computer = mainDS.Tables["Computer"];
+            install = mainDS.Tables["Install"];
+            distribution = mainDS.Tables["Distribution"];
+
+            onReady();
         }
 
 
@@ -76,54 +83,54 @@ namespace CompMgr.Model
 
         #region Получение данных для интерфейса
 
-        public DataTable GetUserDT()
-        {
-            return user;
-        }
+        //public DataTable GetUserDT()
+        //{
+        //    return user;
+        //}
 
-        public DataTable GetComputerDT()
-        {
-            return computer;
-        }
+        //public DataTable GetComputerDT()
+        //{
+        //    return computer;
+        //}
 
-        public ObservableCollection<User> GetUsersNoComp()
-        {
-            ObservableCollection<User> users = new ObservableCollection<User>();
+        //public ObservableCollection<User> GetUsersNoComp()
+        //{
+        //    ObservableCollection<User> users = new ObservableCollection<User>();
 
-            foreach(DataRow dru in user.Rows)
-            {
-                if (distribution.Select($"userID = {dru.Field<long>("id")}").Count() == 0)
-                {
-                    User newUser = new User();
-                    newUser.Id = dru.Field<long>("id");
-                    newUser.UserFio = dru.Field<string>("fio");
-                    newUser.UserTel = dru.Field<string>("tel");
-                    users.Add(newUser);
-                }
-            }
+        //    foreach(DataRow dru in user.Rows)
+        //    {
+        //        if (distribution.Select($"userID = {dru.Field<long>("id")}").Count() == 0)
+        //        {
+        //            User newUser = new User();
+        //            newUser.Id = dru.Field<long>("id");
+        //            newUser.UserFio = dru.Field<string>("fio");
+        //            newUser.UserTel = dru.Field<string>("tel");
+        //            users.Add(newUser);
+        //        }
+        //    }
 
-            return users;
-        }
+        //    return users;
+        //}
 
-        public ObservableCollection<Computer> GetComputersNoUser()
-        {
-            ObservableCollection<Computer> computers = new ObservableCollection<Computer>();
+        //public ObservableCollection<Computer> GetComputersNoUser()
+        //{
+        //    ObservableCollection<Computer> computers = new ObservableCollection<Computer>();
 
             
-            foreach (DataRow drc in computer.Rows)
-            {
-                if (distribution.Select($"computerID = {drc.Field<long>("id")}").Count()==0 )
-                {
-                    Computer newComp = new Computer();
-                    newComp.Id = drc.Field<long>("id");
-                    newComp.NsName = drc.Field<string>("nsName");
-                    newComp.Ip = drc.Field<string>("ip");
-                    computers.Add(newComp);
-                }
-            }
+        //    foreach (DataRow drc in computer.Rows)
+        //    {
+        //        if (distribution.Select($"computerID = {drc.Field<long>("id")}").Count()==0 )
+        //        {
+        //            Computer newComp = new Computer();
+        //            newComp.Id = drc.Field<long>("id");
+        //            newComp.NsName = drc.Field<string>("nsName");
+        //            newComp.Ip = drc.Field<string>("ip");
+        //            computers.Add(newComp);
+        //        }
+        //    }
 
-            return computers;
-        }
+        //    return computers;
+        //}
 
 
         /// <summary>
@@ -135,82 +142,82 @@ namespace CompMgr.Model
         }
 
 
-        public List<CompleteTableHelper> GetCompleteTable()
-        {
-            List<CompleteTableHelper> compData = new List<CompleteTableHelper>();
+        //public List<CompleteTableHelper> GetCompleteTable()
+        //{
+        //    List<CompleteTableHelper> compData = new List<CompleteTableHelper>();
 
-            foreach(DataRow softdr in software.Select())
-            {
-                string softName = softdr.Field<string>("softName");
-                string currentversion = softdr.Field<string>("version");
+        //    foreach(DataRow softdr in software.Select())
+        //    {
+        //        string softName = softdr.Field<string>("softName");
+        //        string currentversion = softdr.Field<string>("version");
 
-                CompleteTableHelper cth = new CompleteTableHelper(softName,currentversion);
-                cth.CompNames = GetCompIsUp(softName, currentversion);
-                compData.Add(cth);
+        //        CompleteTableHelper cth = new CompleteTableHelper(softName,currentversion);
+        //        cth.CompNames = GetCompIsUp(softName, currentversion);
+        //        compData.Add(cth);
 
-            }
-            return compData;
-        }
+        //    }
+        //    return compData;
+        //}
 
-        public ObservableCollection<Install> GetInstall()
-        {
-            ObservableCollection<Install> inst = new ObservableCollection<Install>();
-            foreach (DataRow drc in computer.Rows)
-            {
-                Install newInst = new Install();
-                newInst.ComputerId = drc.Field<long>("id");
-                newInst.Ip = drc.Field<string>("ip");
-                newInst.NsName = drc.Field<string>("nsName");
+        //public ObservableCollection<Install> GetInstall()
+        //{
+        //    ObservableCollection<Install> inst = new ObservableCollection<Install>();
+        //    foreach (DataRow drc in computer.Rows)
+        //    {
+        //        Install newInst = new Install();
+        //        newInst.ComputerId = drc.Field<long>("id");
+        //        newInst.Ip = drc.Field<string>("ip");
+        //        newInst.NsName = drc.Field<string>("nsName");
 
-                ObservableCollection<InstallSoft> insS = new ObservableCollection<InstallSoft>();
-                foreach (DataRow drs in software.Rows )
-                {
-                    InstallSoft newInsS = new InstallSoft();
-                    newInsS.ComputerId = drc.Field<long>("id");
-                    newInsS.SoftName = drs.Field<string>("softName");
-                    newInsS.SoftId = drs.Field<long>("id");
-                    long idInst = FindInstallID(newInsS.ComputerId, newInsS.SoftId);
-                    if(idInst == -1)
-                    {
-                        newInsS.Installed = false;
-                    }
-                    else
-                    {
-                        newInsS.Installed = true;
-                    }
-                    newInsS.InstallId = idInst;
-                    insS.Add(newInsS);
-                }
+        //        ObservableCollection<InstallSoft> insS = new ObservableCollection<InstallSoft>();
+        //        foreach (DataRow drs in software.Rows )
+        //        {
+        //            InstallSoft newInsS = new InstallSoft();
+        //            newInsS.ComputerId = drc.Field<long>("id");
+        //            newInsS.SoftName = drs.Field<string>("softName");
+        //            newInsS.SoftId = drs.Field<long>("id");
+        //            long idInst = FindInstallID(newInsS.ComputerId, newInsS.SoftId);
+        //            if(idInst == -1)
+        //            {
+        //                newInsS.Installed = false;
+        //            }
+        //            else
+        //            {
+        //                newInsS.Installed = true;
+        //            }
+        //            newInsS.InstallId = idInst;
+        //            insS.Add(newInsS);
+        //        }
 
-                newInst.IsInstalled = insS;
-                inst.Add(newInst);
-            }
-            return inst;
-        }
+        //        newInst.IsInstalled = insS;
+        //        inst.Add(newInst);
+        //    }
+        //    return inst;
+        //}
 
-        public ObservableCollection<Distribution> GetDistribution()
-        {
-            ObservableCollection<Distribution> distrib = new ObservableCollection<Distribution>();
+        //public ObservableCollection<Distribution> GetDistribution()
+        //{
+        //    ObservableCollection<Distribution> distrib = new ObservableCollection<Distribution>();
 
-            var distribQuery = from dst in distribution.AsEnumerable()
-                               join usr in user.AsEnumerable() on dst.Field<long>("userID") equals usr.Field<long>("id")
-                               join cmp in computer.AsEnumerable() on dst.Field<long>("computerID") equals cmp.Field<long>("id")
-                               select new { Id = dst.Field<long>("id"), ComputerID = dst.Field<long>("computerID"), UserID = dst.Field<long>("userID"),
-                               NsName = cmp.Field<string>("nsName"), UserFio = usr.Field<string>("fio") };
+        //    var distribQuery = from dst in distribution.AsEnumerable()
+        //                       join usr in user.AsEnumerable() on dst.Field<long>("userID") equals usr.Field<long>("id")
+        //                       join cmp in computer.AsEnumerable() on dst.Field<long>("computerID") equals cmp.Field<long>("id")
+        //                       select new { Id = dst.Field<long>("id"), ComputerID = dst.Field<long>("computerID"), UserID = dst.Field<long>("userID"),
+        //                       NsName = cmp.Field<string>("nsName"), UserFio = usr.Field<string>("fio") };
 
-            foreach (dynamic distribItem in distribQuery)
-            {
-                Distribution newDistrib = new Distribution();
-                newDistrib.Id = distribItem.Id;
-                newDistrib.NsName = distribItem.NsName;
-                newDistrib.ComputerID = distribItem.ComputerID;
-                newDistrib.UserFio = distribItem.UserFio;
-                newDistrib.UserID = distribItem.UserID;
-                distrib.Add(newDistrib);
-            }
+        //    foreach (dynamic distribItem in distribQuery)
+        //    {
+        //        Distribution newDistrib = new Distribution();
+        //        newDistrib.Id = distribItem.Id;
+        //        newDistrib.NsName = distribItem.NsName;
+        //        newDistrib.ComputerID = distribItem.ComputerID;
+        //        newDistrib.UserFio = distribItem.UserFio;
+        //        newDistrib.UserID = distribItem.UserID;
+        //        distrib.Add(newDistrib);
+        //    }
 
-            return distrib;
-        }
+        //    return distrib;
+        //}
 
         #endregion
 
@@ -293,124 +300,68 @@ namespace CompMgr.Model
         #endregion
 
 
-        public void SaveInstall(ObservableCollection<Install> installCollection)
-        {
-            foreach(Install inst in installCollection)
-            {
-                long compID = inst.ComputerId;
-                foreach (InstallSoft sInst in inst.IsInstalled)
-                {
-
-                    long softID = sInst.SoftId;
-                    long installID = FindInstallID(compID, softID);
-                    if (sInst.Installed)
-                    {
-                        if(installID == -1)
-                        {
-                            DataRow newInstallRow = install.NewRow();
-                            newInstallRow["computerID"] = compID;
-                            newInstallRow["softID"] = softID;
-                            newInstallRow["version"] = software.Select($"id = {softID}")[0].Field<string>("version");
-                            install.Rows.Add(newInstallRow);
-                        }
-                    }
-                    else
-                    {
-                        if(installID!=-1)
-                        {
-                            install.Select($"id = {installID}")[0].Delete();
-                        }
-                    }
-                }
-            }
-            dbHelper.UpdateInstall();
-            dbHelper.Reload();
-
-        }
-
-        public void SaveDistribution(ObservableCollection<Distribution> distribs)
-        {
-            foreach (DataRow drd in distribution.Rows) //Поиск удалённых распределений
-            {
-                bool found = false;
-                foreach(Distribution dst in distribs)
-                    if(dst.Id == drd.Field<long>("id"))
-                    {
-                        found = true;
-                        break;
-                    }
-                if (!found)
-                    drd.Delete();
-            }
-
-            foreach(Distribution newDistr in distribs)
-                if(newDistr.Id == -1)
-                {
-                    DataRow newDistribution = distribution.NewRow();
-                    newDistribution["computerID"] = newDistr.ComputerID;
-                    newDistribution["userID"] = newDistr.UserID;
-                    distribution.Rows.Add(newDistribution);
-                }
-            dbHelper.Save();
-        }
-
-        /// <summary>
-        /// Обновляет таблицу компьютеров и связанную с ней таблицу назначений компьютеров пользователю
-        /// </summary>
-        /// <param name="comps">Обновлённый список компьютеров</param>
-        //public void UpdateComp(HashSet<Computer> comps)
+        //public void SaveInstall(ObservableCollection<Install> installCollection)
         //{
-        //    foreach(Computer comp in comps)
+        //    foreach(Install inst in installCollection)
         //    {
-        //        long id = FindCompID(comp.NsName); //Пытаемся найти ID компьютера
-        //        long divID = FindDivisionID(comp.DivisionName); //Пытаемся найти ID подразделения
-        //        string userFIO = null;
-        //        if ((comp.UserFio != null) && (comp.UserFio != "") && (comp.UserFio != " ")) //Если имя пользователя не пустое
-        //            userFIO = comp.UserFio; 
-                
-        //        long userID = FindUserID(userFIO);//Пытаемся найти имя пользователя
+        //        long compID = inst.ComputerId;
+        //        foreach (InstallSoft sInst in inst.IsInstalled)
+        //        {
 
-        //        if (id == -1) //Если такого компьютера не найдено
-        //        {
-        //            DataRow newRow = computer.NewRow(); //создаём новую запись
-        //            newRow["nsName"] = comp.NsName;
-        //            newRow["ip"] = comp.Ip;
-
-        //            if ((comp.DivisionName != null) && (divID != -1))
+        //            long softID = sInst.SoftId;
+        //            long installID = FindInstallID(compID, softID);
+        //            if (sInst.Installed)
         //            {
-        //                newRow["divisionID"] = divID;
+        //                if(installID == -1)
+        //                {
+        //                    DataRow newInstallRow = install.NewRow();
+        //                    newInstallRow["computerID"] = compID;
+        //                    newInstallRow["softID"] = softID;
+        //                    newInstallRow["version"] = software.Select($"id = {softID}")[0].Field<string>("version");
+        //                    install.Rows.Add(newInstallRow);
+        //                }
         //            }
-        //            computer.Rows.Add(newRow);
-        //        }
-        //        else //Если такой уже есть, редактируем
-        //        {
-        //            DataRow upRow = computer.Rows.Find(id);
-        //            upRow["ip"] = comp.Ip;
-        //            if ((comp.DivisionName != null) && (divID != -1))
+        //            else
         //            {
-        //                upRow["divisionID"] = divID;
+        //                if(installID!=-1)
+        //                {
+        //                    install.Select($"id = {installID}")[0].Delete();
+        //                }
         //            }
-        //        }
-
-        //        //Если компу назначен пользователь
-        //        if ((comp.UserFio != null) && (userID != -1))
-        //        {
-        //            long distributionID = FindDistributionID(id, userID); //Пытаемся найти связанную запись о назначении
-        //            if (distributionID == -1) //Если такой нет
-        //            {
-        //                DeleteDistributionByUserOrCompID(id, userID); //Снимаем все назначения для выбранных компьютера и пользователя
-        //                DataRow newDistrib = distribution.NewRow(); //Создаём новую запись назначения
-        //                newDistrib["computerID"] = id;
-        //                newDistrib["userID"] = userID;
-        //                distribution.Rows.Add(newDistrib);
-        //            }
-        //        }
-        //        else if (comp.UserFio == null) //Если у компа нет пользователя
-        //        {
-        //            DeleteDistributionByUserOrCompID(id, -1); //Удаляем все записи о назначении для этого компа
         //        }
         //    }
+        //    dbHelper.UpdateInstall();
+        //    dbHelper.Reload();
+
         //}
+
+        //public void SaveDistribution(ObservableCollection<Distribution> distribs)
+        //{
+        //    foreach (DataRow drd in distribution.Rows) //Поиск удалённых распределений
+        //    {
+        //        bool found = false;
+        //        foreach(Distribution dst in distribs)
+        //            if(dst.Id == drd.Field<long>("id"))
+        //            {
+        //                found = true;
+        //                break;
+        //            }
+        //        if (!found)
+        //            drd.Delete();
+        //    }
+
+        //    foreach(Distribution newDistr in distribs)
+        //        if(newDistr.Id == -1)
+        //        {
+        //            DataRow newDistribution = distribution.NewRow();
+        //            newDistribution["computerID"] = newDistr.ComputerID;
+        //            newDistribution["userID"] = newDistr.UserID;
+        //            distribution.Rows.Add(newDistribution);
+        //        }
+        //    dbHelper.Save();
+        //}
+
+      
 
         #region Поиск ID по таблицам
 

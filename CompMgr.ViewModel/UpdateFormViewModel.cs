@@ -18,6 +18,26 @@ namespace CompMgr.ViewModel
         {
             this.core = core;
             this.softName = softName;
+
+
+        }
+
+
+        public UpdateFormViewModel()
+        {
+            softName = "Ордер";
+
+            core = new ModelCore();
+            core.onReady += Core_onReady;
+
+            core.Start();
+
+
+        }
+
+        private void Core_onReady()
+        {
+            ImportUpdates();
         }
 
         public ObservableCollection<ViewUpdate> Updates

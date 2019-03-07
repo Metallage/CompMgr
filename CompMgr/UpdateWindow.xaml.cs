@@ -11,7 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-//using CompMgr.ViewModel;
+using CompMgr.ViewModel;
 
 
 namespace CompMgr
@@ -21,16 +21,18 @@ namespace CompMgr
     /// </summary>
     public partial class UpdateWindow : Window
     {
-        private Logic core;
-        
-       
+        UpdateFormViewModel updModel;
 
-        public UpdateWindow(Logic core)
+
+
+
+        public UpdateWindow(UpdateFormViewModel updModel)
         {
-            this.core = core;
+            this.updModel = updModel;
             //gridSource = core.GetUpdates("Ордер");
 
             InitializeComponent();
+            DataContext = updModel;
             
         }
 

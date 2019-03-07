@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data;
 using System.Threading;
+using CompMgr.ViewModel;
 
 namespace CompMgr
 {
@@ -56,15 +57,16 @@ namespace CompMgr
 
         private void TestButton_Click(object sender, RoutedEventArgs e)
         {
-            DistributionWindow distr = new DistributionWindow(core);
-            distr.Show();
 
+            UpdateFormViewModel uvm = new UpdateFormViewModel();
+            UpdateWindow UPD = new UpdateWindow(uvm);
+            UPD.Show();
         }
 
         private void UpdButton_Click(object sender, RoutedEventArgs e)
         {
-            UpdateWindow upd = new UpdateWindow(core);
-            upd.Show();
+            //UpdateWindow upd = new UpdateWindow(core);
+            //upd.Show();
         }
 
 
@@ -80,6 +82,13 @@ namespace CompMgr
         {
             InstallWindow installWindow = new InstallWindow(core);
             installWindow.Show();
+        }
+
+        private void DistributeButon_Click(object sender, RoutedEventArgs e)
+        {
+            DistributionWindow distr = new DistributionWindow(core);
+            distr.Show();
+
         }
     }
 }
