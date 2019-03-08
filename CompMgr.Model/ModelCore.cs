@@ -25,31 +25,59 @@ namespace CompMgr.Model
         private DataBaseHelper dbHelper = new DataBaseHelper();
 
         public delegate void ReadyEventHandler();
+        public delegate void ErrorEventHandler(ErrorArgs e);
 
-        public event ReadyEventHandler onReady; 
+        public event ReadyEventHandler onReady;
+        public event ErrorEventHandler onError;
+
 
         public void Start()
         {
 
-            dbHelper.InitialDB();
-            mainDS = dbHelper.LogicDataSet;
+            var loadAll = Task.Factory.StartNew(delegate()
+            {
 
-            software = mainDS.Tables["Software"];
-            user = mainDS.Tables["User"];
-            computer = mainDS.Tables["Computer"];
-            install = mainDS.Tables["Install"];
-            distribution = mainDS.Tables["Distribution"];
+                try
+                {
+                    dbHelper.InitialDB();
 
-            onReady();
+                    mainDS = dbHelper.LogicDataSet;
+
+                    software = mainDS.Tables["Software"];
+                    user = mainDS.Tables["User"];
+                    computer = mainDS.Tables["Computer"];
+                    install = mainDS.Tables["Install"];
+                    distribution = mainDS.Tables["Distribution"];
+
+                    onReady?.Invoke();
+                }
+                catch(Exception e)
+                {
+                    onError?.Invoke(new ErrorArgs("Инициализация", e.Message));
+                }
+            });
+
         }
 
 
         public void Save()
         {
-            dbHelper.Save();
-            dbHelper.Reload();
-            foreach (DataTable dt in mainDS.Tables)
-                dt.AcceptChanges();
+            var saveAll = Task.Factory.StartNew(() =>
+                {
+                    try
+                    {
+                        dbHelper.Save();
+                        dbHelper.Reload();
+                        foreach (DataTable dt in mainDS.Tables)
+                            dt.AcceptChanges();
+                        onReady?.Invoke();
+                    }
+                    catch(Exception e)
+                    {
+                        onError?.Invoke(new ErrorArgs("Сохранение", e.Message));
+                    }
+                });
+
         }
 
         /// <summary>
