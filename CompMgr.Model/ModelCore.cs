@@ -71,6 +71,7 @@ namespace CompMgr.Model
                         foreach (DataTable dt in mainDS.Tables)
                             dt.AcceptChanges();
                         onReady?.Invoke();
+
                     }
                     catch(Exception e)
                     {
@@ -96,7 +97,7 @@ namespace CompMgr.Model
                            join inst in install.AsEnumerable() on comp.Field<long>("id") equals inst.Field<long>("computerID") //Выбираем те где есть установленное по
                            join soft in software.AsEnumerable() on inst.Field<long>("softID") equals soft.Field<long>("id") //Выбираем список ПО на этих компах
                            where soft.Field<string>("softName") == upSoft && soft.Field<string>("version") !=inst.Field<string>("version") // Выбираем те, что имеют нужное ПО и неправильную версию
-                           select new {NsName = comp.Field<string>("nsName"), Ip=comp.Field<string>("ip"), User = usr.Field<string>("fio"),
+                           select new {NsName = comp.Field<string>("nsName"), Ip=comp.Field<string>("ip"), UserFio = usr.Field<string>("fio"),
                                CurrentVersion =soft.Field<string>("version"), OldVersion = inst.Field<string>("version"), Id = inst.Field<long>("id")}; //Формируем запись
 
             foreach(dynamic upd in updQuery)

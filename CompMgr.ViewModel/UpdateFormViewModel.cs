@@ -14,6 +14,9 @@ namespace CompMgr.ViewModel
         private ObservableCollection<ViewUpdate> updates = new ObservableCollection<ViewUpdate>();
         private string softName;
 
+        public delegate void RefreshEventHandler();
+        public event RefreshEventHandler onRefresh;
+
         public UpdateFormViewModel(ModelCore core, string softName)
         {
             this.core = core;
@@ -78,6 +81,7 @@ namespace CompMgr.ViewModel
                 iUpd.CurrentVersion = upd.CurrentVersion;
                 this.updates.Add(iUpd);
             }
+            onRefresh?.Invoke();
   
         }
 

@@ -22,7 +22,7 @@
             <ColumnDefinition MinWidth="2" MaxWidth="5" />
         </Grid.ColumnDefinitions>
         <TextBlock x:Name="HeaderTextBlock" Grid.Column="1" Grid.Row="1"/>
-        <ListBox Grid.Row="2" Grid.Column="1" ItemTemplate="{DynamicResource UpdateItem}"
+        <ListBox x:Name="UpdatesList" Grid.Row="2" Grid.Column="1" ItemTemplate="{DynamicResource UpdateItem}"
                  ItemsSource="{Binding Path=Updates}">
         </ListBox>
     </Grid>
