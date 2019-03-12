@@ -26,7 +26,7 @@ namespace CompMgr
         UpdateFormViewModel updModel;
 
 
-
+        public static RoutedCommand UpChanged = new RoutedCommand();
 
         public UpdateWindow(UpdateFormViewModel updModel)
         {
@@ -34,27 +34,56 @@ namespace CompMgr
             //gridSource = core.GetUpdates("Ордер");
 
             InitializeComponent();
+            DataContext = this.updModel;
+            this.updModel.CoreReady += UpdModel_CoreReady;
+            //this.updModel.onRefresh += UpdModel_onRefresh;
+        }
 
+        private void UpdModel_CoreReady()
+        {
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate ()
+            {
 
-            this.updModel.onRefresh += UpdModel_onRefresh;
+                updModel.Bind();
+               // UpdatesList.Items.Refresh();
+            }
+);
         }
 
         private void UpdModel_onRefresh()
         {
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+
+
+        }
+
+        private void ExecuteUpChange(object sender, ExecutedRoutedEventArgs e)
+        {
+            updModel.Changed(e.Parameter.ToString());
+        }
+
+        private void CanExecuteUpChange(object sender, CanExecuteRoutedEventArgs e)
+        {
+            Control target = e.Source as Control;
+
+            if (target != null)
             {
-
-                DataContext = updModel;
-                UpdatesList.Items.Refresh();
+                e.CanExecute = true;
             }
-            );
-
+            else
+            {
+                e.CanExecute = false;
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //Info.Text = "Обновления для Ордер";
             //UpdGrid.ItemsSource = gridSource;
+        }
+
+        private void SaveBt_Click(object sender, RoutedEventArgs e)
+        {
+            updModel.SaveChanges();
         }
     }
 }

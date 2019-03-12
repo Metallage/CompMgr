@@ -34,11 +34,11 @@ namespace CompMgr.Model
         public void Start()
         {
 
-            var loadAll = Task.Factory.StartNew(delegate()
-            {
+            //var loadAll = Task.Factory.StartNew(delegate()
+            //{
 
-                try
-                {
+            //    try
+            //    {
                     dbHelper.InitialDB();
 
                     mainDS = dbHelper.LogicDataSet;
@@ -49,35 +49,35 @@ namespace CompMgr.Model
                     install = mainDS.Tables["Install"];
                     distribution = mainDS.Tables["Distribution"];
 
-                    onReady?.Invoke();
-                }
-                catch(Exception e)
-                {
-                    onError?.Invoke(new ErrorArgs("Инициализация", e.Message));
-                }
-            });
+                   // onReady?.Invoke();
+                //}
+                //catch(Exception e)
+                //{
+                //    onError?.Invoke(new ErrorArgs("Инициализация", e.Message));
+                //}
+           // });
 
         }
 
 
         public void Save()
         {
-            var saveAll = Task.Factory.StartNew(() =>
-                {
-                    try
-                    {
+            //var saveAll = Task.Factory.StartNew(() =>
+            //    {
+            //        try
+            //        {
                         dbHelper.Save();
                         dbHelper.Reload();
                         foreach (DataTable dt in mainDS.Tables)
                             dt.AcceptChanges();
-                        onReady?.Invoke();
+                     //   onReady?.Invoke();
 
-                    }
-                    catch(Exception e)
-                    {
-                        onError?.Invoke(new ErrorArgs("Сохранение", e.Message));
-                    }
-                });
+                //    }
+                //    catch(Exception e)
+                //    {
+                //        onError?.Invoke(new ErrorArgs("Сохранение", e.Message));
+                //    }
+                //});
 
         }
 
@@ -390,7 +390,21 @@ namespace CompMgr.Model
         //    dbHelper.Save();
         //}
 
-      
+      public void SaveUpdate(List<long> ids)
+        {
+            if (ids.Count > 0)
+            {
+                long softID = install.Rows.Find(ids[0]).Field<long>("softID");
+                string version = software.Rows.Find(softID).Field<string>("version");
+                foreach (long id in ids)
+                {
+                    DataRow upRow = install.Rows.Find(id);
+                    upRow["version"] = version;
+                }
+                Save();
+            }
+
+        }
 
         #region Поиск ID по таблицам
 

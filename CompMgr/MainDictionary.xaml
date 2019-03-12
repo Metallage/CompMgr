@@ -21,7 +21,8 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <TextBlock x:Name="UpdateText" Grid.Column="0" Text="Обновить: "/>
-                    <CheckBox x:Name="UpdateVersion" Grid.Column="1" IsChecked="{Binding Path=IsUp}"/>
+                    <CheckBox x:Name="UpdateVersion" Grid.Column="1" IsChecked="{Binding Path=IsUp}" Command="{x:Static local:UpdateWindow.UpChanged}"
+                              CommandParameter="{Binding ElementName=NsName, Path=Text}"/>
                 </Grid>
             </StackPanel>
         </Grid>
