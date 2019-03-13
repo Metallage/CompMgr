@@ -36,6 +36,7 @@ namespace CompMgr.ViewModel
         {
             this.core = core;
             this.softName = softName;
+            ImportUpdates();
         }
 
 
@@ -115,11 +116,11 @@ namespace CompMgr.ViewModel
                 iUpd.OldVersion = upd.OldVersion;
                 iUpd.CurrentVersion = upd.CurrentVersion;
                 //???
-                Dispatcher ds = Dispatcher.CurrentDispatcher;
-                ds.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate ()
-                {
+                //Dispatcher ds = Dispatcher.CurrentDispatcher;
+                //ds.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate ()
+                //{
                     this.updates.Add(iUpd);
-                });
+                //});
 
             }
             onRefresh?.Invoke();

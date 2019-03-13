@@ -410,7 +410,11 @@ namespace CompMgr.Model
         {
             foreach (DataRow dr in software.Rows)
                 if (softName == dr.Field<string>("softName"))
+                {
                     dr["version"] = version;
+                    break;
+                }
+            
         }
 
 

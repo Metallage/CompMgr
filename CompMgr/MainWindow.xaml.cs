@@ -35,6 +35,7 @@ namespace CompMgr
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = mwvm;
             mwvm.CoreStarted += Mwvm_CoreStarted;
             mwvm.DataUpdate += Mwvm_DataUpdate;
 
@@ -42,23 +43,31 @@ namespace CompMgr
 
         private void Mwvm_DataUpdate()
         {
-            throw new NotImplementedException();
+            Bind();
         }
 
         private void Mwvm_CoreStarted()
         {
-            throw new NotImplementedException();
+            Bind();
+        }
+
+        private void Bind()
+        {
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+                {
+                    UpdButton.IsEnabled = true;
+                });
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             
-            RunCore();
+            RunOldCore();
 
             
         }
 
-        private void RunCore()
+        private void RunOldCore()
         {
             ErrorMessageHelper start = core.Start();
             if (start.HasErrors)
