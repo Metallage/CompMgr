@@ -27,7 +27,7 @@ namespace CompMgr.Model
         public delegate void ReadyEventHandler();
         public delegate void ErrorEventHandler(ErrorArgs e);
 
-        public event ReadyEventHandler onReady;
+        public event ReadyEventHandler DataUpdate;
         public event ErrorEventHandler onError;
 
 

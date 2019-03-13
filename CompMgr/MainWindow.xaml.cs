@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using System.Data;
 using System.Threading;
 using CompMgr.ViewModel;
@@ -34,7 +35,19 @@ namespace CompMgr
         public MainWindow()
         {
             InitializeComponent();
+            mwvm.CoreStarted += Mwvm_CoreStarted;
+            mwvm.DataUpdate += Mwvm_DataUpdate;
 
+        }
+
+        private void Mwvm_DataUpdate()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Mwvm_CoreStarted()
+        {
+            throw new NotImplementedException();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
