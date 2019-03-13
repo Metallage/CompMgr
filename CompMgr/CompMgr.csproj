@@ -93,6 +93,9 @@
     <Compile Include="EditTableWindow.xaml.cs">
       <DependentUpon>EditTableWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SelectSoftWindow.xaml.cs">
+      <DependentUpon>SelectSoftWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Software.cs" />
     <Compile Include="StreamAddWindow.xaml.cs">
       <DependentUpon>StreamAddWindow.xaml</DependentUpon>
@@ -126,6 +129,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="EditTableWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SelectSoftWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

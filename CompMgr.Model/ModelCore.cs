@@ -406,6 +406,14 @@ namespace CompMgr.Model
 
         }
 
+        public void UpdateSoft(string softName, string version)
+        {
+            foreach (DataRow dr in software.Rows)
+                if (softName == dr.Field<string>("softName"))
+                    dr["version"] = version;
+        }
+
+
         #region Поиск ID по таблицам
 
         /// <summary>

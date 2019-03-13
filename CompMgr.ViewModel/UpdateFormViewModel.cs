@@ -36,8 +36,6 @@ namespace CompMgr.ViewModel
         {
             this.core = core;
             this.softName = softName;
-
-
         }
 
 
@@ -48,12 +46,7 @@ namespace CompMgr.ViewModel
             core = new ModelCore();
             //core.onReady += Core_onReady;
 
-            var coreStart = Task.Factory.StartNew(() =>
-            {
-                core.Start();
-                CoreReady?.Invoke();
-            }
-            );
+
 
         }
 

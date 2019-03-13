@@ -21,5 +21,17 @@ namespace CompMgr.ViewModel
 
             return updateViewModel;
         }
+
+        public SelectSoftViewModel SelectSoftToUpdate()
+        {
+            SelectSoftViewModel ssvm = new SelectSoftViewModel(core);
+
+            return ssvm;
+        }
+
+        public void UpdateSoft(string softName, string version)
+        {
+            core.UpdateSoft(softName, version);
+        }
     }
 }

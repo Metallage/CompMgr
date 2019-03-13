@@ -25,6 +25,8 @@ namespace CompMgr
         // private SettingsHelper settings = new SettingsHelper();
         //private DataBaseHelper baseLogic;
 
+        private MainWindowViewModel mwvm = new MainWindowViewModel();
+
         private CompleteData completeData = new CompleteData();
 
         Logic core = new Logic();
@@ -65,6 +67,17 @@ namespace CompMgr
 
         private void UpdButton_Click(object sender, RoutedEventArgs e)
         {
+            SelectSoftViewModel ssvm = mwvm.SelectSoftToUpdate();
+            SelectSoftWindow ssw = new SelectSoftWindow(ssvm);
+            if(ssw.ShowDialog()==true)
+            {
+                string softName = ssvm.SelectedSoftName;
+                string newVer = ssvm.NewVersion;
+                mwvm.UpdateSoft(softName, newVer);
+                UpdateFormViewModel uwvm = mwvm.StartUpdate(softName);
+                UpdateWindow upWin = new UpdateWindow(uwvm);
+                upWin.ShowDialog();
+            }
             //UpdateWindow upd = new UpdateWindow(core);
             //upd.Show();
         }

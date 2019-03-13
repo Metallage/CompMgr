@@ -36,6 +36,7 @@ namespace CompMgr
             InitializeComponent();
             DataContext = this.updModel;
             this.updModel.CoreReady += UpdModel_CoreReady;
+            updModel.Bind();
             //this.updModel.onRefresh += UpdModel_onRefresh;
         }
 
