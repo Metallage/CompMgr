@@ -40,16 +40,16 @@ namespace CompMgr.ViewModel
         }
 
 
-        public UpdateFormViewModel()
-        {
-            softName = "Ордер";
+        //public UpdateFormViewModel()
+        //{
+        //    softName = "Ордер";
 
-            core = new ModelCore();
-            //core.onReady += Core_onReady;
+        //    core = new ModelCore();
+        //    //core.onReady += Core_onReady;
 
 
 
-        }
+        //}
 
         public void Bind()
         {

@@ -23,19 +23,18 @@ namespace CompMgr
     /// </summary>
     public partial class MainWindow : Window
     {
-        // private SettingsHelper settings = new SettingsHelper();
-        //private DataBaseHelper baseLogic;
 
+        //Визуальная модель главного окна
         private MainWindowViewModel mwvm = new MainWindowViewModel();
 
         private CompleteData completeData = new CompleteData();
 
-        Logic core = new Logic();
+
 
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = mwvm;
+
             mwvm.CoreStarted += Mwvm_CoreStarted;
             mwvm.DataUpdate += Mwvm_DataUpdate;
 
@@ -53,55 +52,62 @@ namespace CompMgr
 
         private void Bind()
         {
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+            //Перенаправления потока для исключения кросстрединга
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate() 
                 {
                     UpdButton.IsEnabled = true;
+                    mwvm.GetCompData();
+                    DataContext = mwvm;
+                    gridField.Items.Refresh();
                 });
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             
-            RunOldCore();
+            //RunOldCore();
 
             
         }
 
-        private void RunOldCore()
-        {
-            ErrorMessageHelper start = core.Start();
-            if (start.HasErrors)
-            {
-                MessageBox.Show(start.ErrorText);
-            }
-            completeData.GetData(core.GetCompleteTable());
-            gridField.ItemsSource = completeData;
+        //private void RunOldCore()
+        //{
+        //    ErrorMessageHelper start = core.Start();
+        //    if (start.HasErrors)
+        //    {
+        //        MessageBox.Show(start.ErrorText);
+        //    }
+        //    completeData.GetData(core.GetCompleteTable());
+        //    gridField.ItemsSource = completeData;
 
-        }
+        //}
 
         private void TestButton_Click(object sender, RoutedEventArgs e)
         {
 
-            UpdateFormViewModel uvm = new UpdateFormViewModel();
-            UpdateWindow UPD = new UpdateWindow(uvm);
-            UPD.Show();
+            //UpdateFormViewModel uvm = new UpdateFormViewModel();
+            //UpdateWindow UPD = new UpdateWindow(uvm);
+            //UPD.Show();
         }
 
+        /// <summary>
+        /// Обработчик нажатия кнопки "Обновление"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UpdButton_Click(object sender, RoutedEventArgs e)
         {
-            SelectSoftViewModel ssvm = mwvm.SelectSoftToUpdate();
-            SelectSoftWindow ssw = new SelectSoftWindow(ssvm);
-            if(ssw.ShowDialog()==true)
+            SelectSoftViewModel ssvm = mwvm.SelectSoftToUpdate(); //Формируем визуальную модель для окна выбора ПО
+            SelectSoftWindow ssw = new SelectSoftWindow(ssvm); //Создаём окно выбора ПО
+            if(ssw.ShowDialog()==true) //Если нажал ок
             {
-                string softName = ssvm.SelectedSoftName;
-                string newVer = ssvm.NewVersion;
-                mwvm.UpdateSoft(softName, newVer);
-                UpdateFormViewModel uwvm = mwvm.StartUpdate(softName);
-                UpdateWindow upWin = new UpdateWindow(uwvm);
-                upWin.ShowDialog();
+                string softName = ssvm.SelectedSoftName; //Выдираем имя ПО для обновления
+                string newVer = ssvm.NewVersion; //Выдираем новую версию
+                mwvm.UpdateSoft(softName, newVer); //Обновляем По в таблице software
+                UpdateFormViewModel uwvm = mwvm.StartUpdate(softName); //Формируем визуальную модель для окна обновдлений
+                UpdateWindow upWin = new UpdateWindow(uwvm); //создаём окно обновлений
+                upWin.ShowDialog(); //показываем
             }
-            //UpdateWindow upd = new UpdateWindow(core);
-            //upd.Show();
         }
 
 
@@ -109,18 +115,38 @@ namespace CompMgr
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
 
+            Logic core = new Logic();
+            ErrorMessageHelper start = core.Start();
+            if (start.HasErrors)
+            {
+                MessageBox.Show(start.ErrorText);
+            }
+
             EditTableWindow editTable = new EditTableWindow(core);
             editTable.Show();
         }
 
         private void InstallButton_Click(object sender, RoutedEventArgs e)
         {
+            Logic core = new Logic();
+            ErrorMessageHelper start = core.Start();
+            if (start.HasErrors)
+            {
+                MessageBox.Show(start.ErrorText);
+            }
             InstallWindow installWindow = new InstallWindow(core);
             installWindow.Show();
         }
 
         private void DistributeButon_Click(object sender, RoutedEventArgs e)
         {
+            Logic core = new Logic();
+            ErrorMessageHelper start = core.Start();
+            if (start.HasErrors)
+            {
+                MessageBox.Show(start.ErrorText);
+            }
+
             DistributionWindow distr = new DistributionWindow(core);
             distr.Show();
 

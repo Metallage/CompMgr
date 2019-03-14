@@ -171,22 +171,22 @@ namespace CompMgr.Model
         }
 
 
-        //public List<CompleteTableHelper> GetCompleteTable()
-        //{
-        //    List<CompleteTableHelper> compData = new List<CompleteTableHelper>();
+        public List<CompleteTableHelper> GetCompleteTable()
+        {
+            List<CompleteTableHelper> compData = new List<CompleteTableHelper>();
 
-        //    foreach(DataRow softdr in software.Select())
-        //    {
-        //        string softName = softdr.Field<string>("softName");
-        //        string currentversion = softdr.Field<string>("version");
+            foreach (DataRow softdr in software.Select())
+            {
+                string softName = softdr.Field<string>("softName");
+                string currentversion = softdr.Field<string>("version");
 
-        //        CompleteTableHelper cth = new CompleteTableHelper(softName,currentversion);
-        //        cth.CompNames = GetCompIsUp(softName, currentversion);
-        //        compData.Add(cth);
+                CompleteTableHelper cth = new CompleteTableHelper(softName, currentversion);
+                cth.CompNames = GetCompIsUp(softName, currentversion);
+                compData.Add(cth);
 
-        //    }
-        //    return compData;
-        //}
+            }
+            return compData;
+        }
 
         //public ObservableCollection<Install> GetInstall()
         //{

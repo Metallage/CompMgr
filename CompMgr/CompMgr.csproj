@@ -74,8 +74,6 @@
     <Compile Include="DistributedView.cs" />
     <Compile Include="ItemCommand.cs" />
     <Compile Include="Distribution.cs" />
-    <Compile Include="CompleteData.cs" />
-    <Compile Include="CompleteTableHelper.cs" />
     <Compile Include="Computer.cs" />
     <Compile Include="DistributionViewModel.cs" />
     <Compile Include="DistributionWindow.xaml.cs">

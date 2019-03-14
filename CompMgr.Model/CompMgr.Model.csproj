@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompleteTableHelper.cs" />
     <Compile Include="DataBaseHelper.cs" />
     <Compile Include="ErrorArgs.cs" />
     <Compile Include="ModelCore.cs" />

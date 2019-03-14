@@ -5,10 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CompMgr"
         mc:Ignorable="d"
-        Title="MainWindow" Height="768" Width="1024">
-    <Window.Resources>
-        <local:CompleteData x:Key="completeData"/>
-    </Window.Resources>
+        Title="MainWindow" Height="768" Width="1024"
+        FontSize="18" FontWeight="DemiBold">
+ 
     <Grid x:Name="rootGrid">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -34,14 +33,12 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="gridField" AutoGenerateColumns="False" Grid.Row="1" Grid.RowSpan="13" Grid.Column="0" Grid.ColumnSpan="4" ItemsSource="{StaticResource completeData}">
-            <DataGrid.Columns>
-                <DataGridTextColumn x:Name="SoftName" Header="Название ПО" Binding="{Binding Path=SoftName}" />
-                <DataGridTextColumn x:Name="CurrVersion" Header="Актуальная версия" Binding="{Binding Path=SoftVersion}" />
-                <DataGridTextColumn x:Name="Comps" Header="Список рабочих станций"/>
+        <ListView x:Name="gridField" 
+                  Grid.Row="1" Grid.RowSpan="13" Grid.Column="0" Grid.ColumnSpan="4"
+                  View="{StaticResource MaiWinData}" ItemsSource="{Binding DataList}">
 
-            </DataGrid.Columns>
-        </DataGrid>
+
+        </ListView>
         <Button x:Name="TestButton" Content="Проверка" Grid.Column="4" Grid.Row="0" Click="TestButton_Click"/>
         <Button x:Name="UpdButton" Content="Обновление" Grid.Column="4" Grid.Row="2" Click="UpdButton_Click" IsEnabled="False"/>
         <Button x:Name="InstallButton" Content="Установка и удаление" Grid.Column="4" Grid.Row="4" Click="InstallButton_Click" />
