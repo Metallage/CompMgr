@@ -56,6 +56,7 @@ namespace CompMgr
             this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate() 
                 {
                     UpdButton.IsEnabled = true;
+                    DistributeButon.IsEnabled = true;
                     mwvm.GetCompData();
                     DataContext = mwvm;
                     gridField.Items.Refresh();
@@ -138,18 +139,15 @@ namespace CompMgr
             installWindow.Show();
         }
 
+
+
         private void DistributeButon_Click(object sender, RoutedEventArgs e)
         {
-            Logic core = new Logic();
-            ErrorMessageHelper start = core.Start();
-            if (start.HasErrors)
-            {
-                MessageBox.Show(start.ErrorText);
-            }
+            DistributionViewModel dvm = mwvm.StartDistribute();
 
-            DistributionWindow distr = new DistributionWindow(core);
-            distr.Show();
-
+            DistributionWindow distribute = new DistributionWindow(dvm);
+            distribute.ShowDialog();
+           
         }
     }
 }

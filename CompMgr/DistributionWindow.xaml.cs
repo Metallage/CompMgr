@@ -10,8 +10,12 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Threading;
+using CompMgr.ViewModel;
+
 
 namespace CompMgr
 {
@@ -20,38 +24,49 @@ namespace CompMgr
     /// </summary>
     public partial class DistributionWindow : Window
     {
-        private ObservableCollection<Distribution> source;
-        private Logic core;
-        private ObservableCollection<User> userSource;
-        private ObservableCollection<Computer> computerSource;
 
         DistributionViewModel dvm;
 
-        public DistributionWindow(Logic core)
+        public static RoutedCommand DeleteItemCommand = new RoutedCommand();
+
+        public static RoutedCommand AddItemCommand = new RoutedCommand();
+
+
+        public DistributionWindow(DistributionViewModel dvm)
         {
-            this.core = core;
+            this.dvm = dvm;
             InitializeComponent();
-             dvm = new DistributionViewModel();
-            DistributedView distributed = new DistributedView();
-            distributed.InputMe(core.GetDistribution());
-            dvm.SourceDistr = distributed;
-            dvm.UserSource = core.GetUsersNoComp();
-            dvm.CompSource = core.GetComputersNoUser();
+            this.dvm.UpdateData += Dvm_UpdateData;
             DataContext = dvm;
-          
-            
+
+            //DistributedView distributed = new DistributedView();
+            //distributed.InputMe(core.GetDistribution());
+            //dvm.SourceDistr = distributed;
+            //dvm.UserSource = core.GetUsersNoComp();
+            //dvm.CompSource = core.GetComputersNoUser();
+            //DataContext = dvm;
+
+
+        }
+
+        private void Dvm_UpdateData()
+        {
+            Bind();
         }
 
         private void Bind()
         {
-            SelectUser.ItemsSource = userSource;
-            SelectComp.ItemsSource = computerSource;
-            DistributionView.ItemsSource = source;
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate ()
+             {
+                 dvm.ImportData();
+                 DataContext = dvm;
+
+             });
         }
 
         private void SaveAndExit_Click(object sender, RoutedEventArgs e)
         {
-            core.SaveDistribution(dvm.SourceDistr);
+           // core.SaveDistribution(dvm.SourceDistr);
             Close();
         }
 
@@ -62,23 +77,23 @@ namespace CompMgr
 
         private void AddBt_Click(object sender, RoutedEventArgs e)
         {
-            if ((SelectComp.SelectedItem != null) && (SelectUser.SelectedItem != null))
-            {
-                User currentUser = (User)SelectUser.SelectedItem;
-                Computer currentComp = (Computer)SelectComp.SelectedItem;
-                Distribution newDistribution = new Distribution();
-                newDistribution.Id = -1;
-                newDistribution.ComputerID = currentComp.Id;
-                newDistribution.NsName = currentComp.NsName;
-                newDistribution.UserFio = currentUser.UserFio;
-                newDistribution.UserID = currentUser.Id;
+            //if ((SelectComp.SelectedItem != null) && (SelectUser.SelectedItem != null))
+            //{
+            //    User currentUser = (User)SelectUser.SelectedItem;
+            //    Computer currentComp = (Computer)SelectComp.SelectedItem;
+            //    Distribution newDistribution = new Distribution();
+            //    newDistribution.Id = -1;
+            //    newDistribution.ComputerID = currentComp.Id;
+            //    newDistribution.NsName = currentComp.NsName;
+            //    newDistribution.UserFio = currentUser.UserFio;
+            //    newDistribution.UserID = currentUser.Id;
 
-                dvm.SourceDistr.Add(newDistribution);
+            //    dvm.SourceDistr.Add(newDistribution);
 
 
-                dvm.UserSource.Remove(currentUser);
-                dvm.CompSource.Remove(currentComp);
-            }
+            //    dvm.UserSource.Remove(currentUser);
+            //    dvm.CompSource.Remove(currentComp);
+            //}
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -88,28 +103,37 @@ namespace CompMgr
 
         private void DeleteItem_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            dvm.ExecuteDeleteCommand(sender, e);
+          //  dvm.ExecuteDeleteCommand(sender, e);
         }
 
         private void CanExecuteDeleteItem(object sender, CanExecuteRoutedEventArgs e)
         {
-            dvm.CanExecuteDeleteCommand(sender, e);
+            Control target = e.Source as Control;
+
+            if (target != null)
+            {
+                e.CanExecute = true;
+            }
+            else
+            {
+                e.CanExecute = false;
+            }
         }
 
         private void AddItem_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Distribution newDistribution = e.Parameter as Distribution;
-            if ((SelectComp.SelectedItem != null) && (SelectUser.SelectedItem != null))
-            {
-                User currentUser = (User)SelectUser.SelectedItem;
-                Computer currentComp = (Computer)SelectComp.SelectedItem;
+            //Distribution newDistribution = e.Parameter as Distribution;
+            //if ((SelectComp.SelectedItem != null) && (SelectUser.SelectedItem != null))
+            //{
+            //    User currentUser = (User)SelectUser.SelectedItem;
+            //    Computer currentComp = (Computer)SelectComp.SelectedItem;
 
-                dvm.SourceDistr.Add(newDistribution);
+            //    dvm.SourceDistr.Add(newDistribution);
 
 
-                dvm.UserSource.Remove(currentUser);
-                dvm.CompSource.Remove(currentComp);
-            }
+            //    dvm.UserSource.Remove(currentUser);
+            //    dvm.CompSource.Remove(currentComp);
+            //}
 
         }
 

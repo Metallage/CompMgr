@@ -4,8 +4,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using CompMgr.Model;
 
-namespace CompMgr
+namespace CompMgr.ViewModel
 {
     public class CompleteData:ObservableCollection<CompleteTableHelper>
     {

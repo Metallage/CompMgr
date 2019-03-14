@@ -8,11 +8,7 @@
         mc:Ignorable="d"
         Title="SelectSoftWindow" Height="200" Width="600"
         FontSize="18" FontWeight="Bold">
-    <Window.Resources>
-        <mv:ViewSoft x:Key="CurrentSoft"  
-                     SoftName="{Binding Path=CurrentSoftName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
-                     SoftVersion="{Binding Path=CurrentSoftVersion, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-    </Window.Resources>
+
 
         <UniformGrid Columns="2" Rows="4">
             <TextBlock Text="Выберите ПО для обновления: " 

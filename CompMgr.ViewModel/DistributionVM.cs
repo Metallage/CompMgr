@@ -5,18 +5,18 @@ using System.Text;
 using System.ComponentModel;
 using System.Windows;
 
-namespace CompMgr
+namespace CompMgr.ViewModel
 {
-    public class Distribution: DependencyObject, INotifyPropertyChanged
+    public class DistributionVM: DependencyObject, INotifyPropertyChanged
     {
         private string userFio = String.Empty;
         private string nsName = String.Empty;
         private long computerID;
         private long userID;
 
-        public static readonly DependencyProperty IDProperty = DependencyProperty.Register("Id", typeof(long), typeof(Distribution));
-        public static readonly DependencyProperty UserFioProperty = DependencyProperty.Register("UserFio", typeof(string), typeof(Distribution));
-        public static readonly DependencyProperty NsNameProperty = DependencyProperty.Register("NsName", typeof(string), typeof(Distribution));
+        public static readonly DependencyProperty IDProperty = DependencyProperty.Register("Id", typeof(long), typeof(DistributionVM));
+        public static readonly DependencyProperty UserFioProperty = DependencyProperty.Register("UserFio", typeof(string), typeof(DistributionVM));
+        public static readonly DependencyProperty NsNameProperty = DependencyProperty.Register("NsName", typeof(string), typeof(DistributionVM));
 
         public long Id { get; set; }
 

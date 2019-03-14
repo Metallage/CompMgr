@@ -170,7 +170,10 @@ namespace CompMgr.Model
             return software;
         }
 
-
+        /// <summary>
+        /// Формирует сводную информацию об установленном ПО
+        /// </summary>
+        /// <returns>Сводная информация о ПО</returns>
         public List<CompleteTableHelper> GetCompleteTable()
         {
             List<CompleteTableHelper> compData = new List<CompleteTableHelper>();
@@ -181,7 +184,7 @@ namespace CompMgr.Model
                 string currentversion = softdr.Field<string>("version");
 
                 CompleteTableHelper cth = new CompleteTableHelper(softName, currentversion);
-                cth.CompNames = GetCompIsUp(softName, currentversion);
+                cth.CompNames = GetCompIsUp(softName, currentversion);// Проверка на актуальность версий по компам
                 compData.Add(cth);
 
             }
@@ -224,29 +227,36 @@ namespace CompMgr.Model
         //    return inst;
         //}
 
-        //public ObservableCollection<Distribution> GetDistribution()
-        //{
-        //    ObservableCollection<Distribution> distrib = new ObservableCollection<Distribution>();
+        public List<Distribution> GetDistribution()
+        {
+            List<Distribution> distrib = new List<Distribution>();
 
-        //    var distribQuery = from dst in distribution.AsEnumerable()
-        //                       join usr in user.AsEnumerable() on dst.Field<long>("userID") equals usr.Field<long>("id")
-        //                       join cmp in computer.AsEnumerable() on dst.Field<long>("computerID") equals cmp.Field<long>("id")
-        //                       select new { Id = dst.Field<long>("id"), ComputerID = dst.Field<long>("computerID"), UserID = dst.Field<long>("userID"),
-        //                       NsName = cmp.Field<string>("nsName"), UserFio = usr.Field<string>("fio") };
+            var distribQuery = from dst in distribution.AsEnumerable()
+                               join usr in user.AsEnumerable() on dst.Field<long>("userID") equals usr.Field<long>("id")
+                               join cmp in computer.AsEnumerable() on dst.Field<long>("computerID") equals cmp.Field<long>("id")
+                               select new
+                               {
+                                   Id = dst.Field<long>("id"),
+                                   ComputerID = dst.Field<long>("computerID"),
+                                   UserID = dst.Field<long>("userID"),
+                                   NsName = cmp.Field<string>("nsName"),
+                                   UserFio = usr.Field<string>("fio")
+                               };
 
-        //    foreach (dynamic distribItem in distribQuery)
-        //    {
-        //        Distribution newDistrib = new Distribution();
-        //        newDistrib.Id = distribItem.Id;
-        //        newDistrib.NsName = distribItem.NsName;
-        //        newDistrib.ComputerID = distribItem.ComputerID;
-        //        newDistrib.UserFio = distribItem.UserFio;
-        //        newDistrib.UserID = distribItem.UserID;
-        //        distrib.Add(newDistrib);
-        //    }
+            foreach (dynamic distribItem in distribQuery)
+            {
 
-        //    return distrib;
-        //}
+                Distribution newDistrib = new Distribution();
+                newDistrib.Id = distribItem.Id;
+                newDistrib.NsName = distribItem.NsName;
+                newDistrib.ComputerID = distribItem.ComputerID;
+                newDistrib.UserFio = distribItem.UserFio;
+                newDistrib.UserID = distribItem.UserID;
+                distrib.Add(newDistrib);
+            }
+
+            return distrib;
+        }
 
         #endregion
 

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CompMgr"
         mc:Ignorable="d"
         Title="MainWindow" Height="768" Width="1024"
-        FontSize="18" FontWeight="DemiBold">
+        FontSize="17" FontWeight="DemiBold">
  
     <Grid x:Name="rootGrid">
         <Grid.RowDefinitions>
@@ -43,6 +43,6 @@
         <Button x:Name="UpdButton" Content="Обновление" Grid.Column="4" Grid.Row="2" Click="UpdButton_Click" IsEnabled="False"/>
         <Button x:Name="InstallButton" Content="Установка и удаление" Grid.Column="4" Grid.Row="4" Click="InstallButton_Click" />
         <Button x:Name="EditButton" Content="Редактирование таблиц" Grid.Column="4" Grid.Row="6" Click="EditButton_Click"/>
-        <Button x:Name="DistributeButon" Content="Распределение" Grid.Column="4" Grid.Row="8" Click="DistributeButon_Click"/>
+        <Button x:Name="DistributeButon" Content="Распределение" Grid.Column="4" Grid.Row="8" Click="DistributeButon_Click" IsEnabled="False"/>
     </Grid>
 </Window>

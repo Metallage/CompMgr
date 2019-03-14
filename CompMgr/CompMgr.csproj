@@ -71,11 +71,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DistributedView.cs" />
     <Compile Include="ItemCommand.cs" />
-    <Compile Include="Distribution.cs" />
-    <Compile Include="Computer.cs" />
-    <Compile Include="DistributionViewModel.cs" />
     <Compile Include="DistributionWindow.xaml.cs">
       <DependentUpon>DistributionWindow.xaml</DependentUpon>
     </Compile>
@@ -101,7 +97,6 @@
     <Compile Include="UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="User.cs" />
     <Page Include="DistributionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

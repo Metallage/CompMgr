@@ -55,6 +55,15 @@ namespace CompMgr.ViewModel
             return ssvm;
         }
 
+
+        public DistributionViewModel StartDistribute()
+        {
+            DistributionViewModel dvm = new DistributionViewModel(core);
+
+            return dvm;
+        }
+
+
         public void UpdateSoft(string softName, string version)
         {
             core.UpdateSoft(softName, version);

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
-using System.Windows;
 
-namespace CompMgr
+
+namespace CompMgr.Model
 {
     public class User
     {
