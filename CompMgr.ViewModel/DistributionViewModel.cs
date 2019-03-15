@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using System.Windows.Input;
+using System.Threading.Tasks;
 using CompMgr.Model;
 
 
@@ -20,6 +21,7 @@ namespace CompMgr.ViewModel
 
         public delegate void UpdateEventHandler();
         public event UpdateEventHandler UpdateData;
+        public event UpdateEventHandler AllSaved;
 
         public DistributionViewModel(ModelCore core)
         {
@@ -80,6 +82,27 @@ namespace CompMgr.ViewModel
 
             UserSource.Remove(cu);
             CompSource.Remove(cc);
+        }
+
+        public void SaveDistribution()
+        {
+            List<Distribution> saveDistr = new List<Distribution>();
+
+            foreach (DistributionVM dvm in sourceDistr)
+            {
+                Distribution dst = new Distribution(dvm.Id, dvm.ComputerID, dvm.NsName, dvm.UserID, dvm.UserFio);
+                saveDistr.Add(dst);
+            }
+
+            var saveThread = Task.Factory.StartNew(()=>
+                {
+
+
+
+                    core.SaveDistribution(saveDistr);
+                    AllSaved?.Invoke();
+                });
+          
         }
 
         public void ImportData()

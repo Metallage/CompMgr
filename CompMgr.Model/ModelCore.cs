@@ -374,33 +374,35 @@ namespace CompMgr.Model
 
         //}
 
-        //public void SaveDistribution(ObservableCollection<Distribution> distribs)
-        //{
-        //    foreach (DataRow drd in distribution.Rows) //Поиск удалённых распределений
-        //    {
-        //        bool found = false;
-        //        foreach(Distribution dst in distribs)
-        //            if(dst.Id == drd.Field<long>("id"))
-        //            {
-        //                found = true;
-        //                break;
-        //            }
-        //        if (!found)
-        //            drd.Delete();
-        //    }
+        public void SaveDistribution(List<Distribution> distribs)
+        {
+            foreach (DataRow drd in distribution.Rows) //Поиск удалённых распределений
+            {
+                bool found = false;
+                foreach (Distribution dst in distribs)
+                    if (dst.Id == drd.Field<long>("id"))
+                    {
+                        found = true;
+                        break;
+                    }
+                if (!found)
+                    drd.Delete();
+            }
 
-        //    foreach(Distribution newDistr in distribs)
-        //        if(newDistr.Id == -1)
-        //        {
-        //            DataRow newDistribution = distribution.NewRow();
-        //            newDistribution["computerID"] = newDistr.ComputerID;
-        //            newDistribution["userID"] = newDistr.UserID;
-        //            distribution.Rows.Add(newDistribution);
-        //        }
-        //    dbHelper.Save();
-        //}
+            foreach (Distribution newDistr in distribs)
+                if (newDistr.Id == -1)
+                {
+                    DataRow newDistribution = distribution.NewRow();
+                    newDistribution["computerID"] = newDistr.ComputerID;
+                    newDistribution["userID"] = newDistr.UserID;
+                    distribution.Rows.Add(newDistribution);
+                }
+            dbHelper.Save();
 
-      public void SaveUpdate(List<long> ids)
+            DataUpdate?.Invoke();
+        }
+
+        public void SaveUpdate(List<long> ids)
         {
             if (ids.Count > 0)
             {
@@ -412,6 +414,7 @@ namespace CompMgr.Model
                     upRow["version"] = version;
                 }
                 Save();
+                DataUpdate?.Invoke();
             }
 
         }

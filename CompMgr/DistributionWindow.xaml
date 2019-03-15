@@ -26,7 +26,7 @@
     <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Right" MinWidth="150">
             <Button x:Name="SaveAndExit" Content="Сохранить и выйти" Click="SaveAndExit_Click" />
-            <Button x:Name="ExitNoSave" Content="Выйти без сохранения" Click="ExitNoSave_Click"/>
+            <Button x:Name="ExitNoSave" Content="Выйти без сохранения" IsCancel="True"/>
         </StackPanel>
         <Grid>
             <Grid.RowDefinitions>

@@ -66,8 +66,17 @@ namespace CompMgr
 
         private void SaveAndExit_Click(object sender, RoutedEventArgs e)
         {
-           // core.SaveDistribution(dvm.SourceDistr);
-            Close();
+            dvm.AllSaved += Dvm_AllSaved;
+            dvm.SaveDistribution();
+
+        }
+
+        private void Dvm_AllSaved()
+        {
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate
+             {
+                 DialogResult = true;
+             });
         }
 
         private void ExitNoSave_Click(object sender, RoutedEventArgs e)
