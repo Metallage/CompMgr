@@ -19,8 +19,8 @@
 
     <Window.Resources>
         <vm:DistributionVM x:Key="NewDistribution" Id="-1" 
-                            NsName="{Binding ElementName=SelectComp, Path=Text}"
-                            UserFio="{Binding ElementName=SelectUser, Path=Text}"/>
+                            NsName="{Binding ElementName=SelectComp, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Path=Text}"
+                            UserFio="{Binding ElementName=SelectUser, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Path=Text}"/>
     </Window.Resources>
     
     <DockPanel LastChildFill="True">
@@ -50,7 +50,8 @@
                 </Grid.ColumnDefinitions>
                 <ComboBox x:Name="SelectComp" Grid.Column="0" 
                           ItemTemplate="{DynamicResource CompsTemplate}" 
-                          ItemsSource="{Binding CompSource}"/>
+                          ItemsSource="{Binding CompSource}"
+                          />
                 <ComboBox x:Name="SelectUser" Grid.Column="1" 
                           ItemTemplate="{DynamicResource UsersTemplate}"
                           ItemsSource="{Binding UserSource}"/>

@@ -122,44 +122,44 @@ namespace CompMgr.Model
         //    return computer;
         //}
 
-        //public ObservableCollection<User> GetUsersNoComp()
-        //{
-        //    ObservableCollection<User> users = new ObservableCollection<User>();
+        public ObservableCollection<User> GetUsersNoComp()
+        {
+            ObservableCollection<User> users = new ObservableCollection<User>();
 
-        //    foreach(DataRow dru in user.Rows)
-        //    {
-        //        if (distribution.Select($"userID = {dru.Field<long>("id")}").Count() == 0)
-        //        {
-        //            User newUser = new User();
-        //            newUser.Id = dru.Field<long>("id");
-        //            newUser.UserFio = dru.Field<string>("fio");
-        //            newUser.UserTel = dru.Field<string>("tel");
-        //            users.Add(newUser);
-        //        }
-        //    }
+            foreach (DataRow dru in user.Rows)
+            {
+                if (distribution.Select($"userID = {dru.Field<long>("id")}").Count() == 0)
+                {
+                    User newUser = new User();
+                    newUser.Id = dru.Field<long>("id");
+                    newUser.UserFio = dru.Field<string>("fio");
+                    newUser.UserTel = dru.Field<string>("tel");
+                    users.Add(newUser);
+                }
+            }
 
-        //    return users;
-        //}
+            return users;
+        }
 
-        //public ObservableCollection<Computer> GetComputersNoUser()
-        //{
-        //    ObservableCollection<Computer> computers = new ObservableCollection<Computer>();
+        public ObservableCollection<Computer> GetComputersNoUser()
+        {
+            ObservableCollection<Computer> computers = new ObservableCollection<Computer>();
 
-            
-        //    foreach (DataRow drc in computer.Rows)
-        //    {
-        //        if (distribution.Select($"computerID = {drc.Field<long>("id")}").Count()==0 )
-        //        {
-        //            Computer newComp = new Computer();
-        //            newComp.Id = drc.Field<long>("id");
-        //            newComp.NsName = drc.Field<string>("nsName");
-        //            newComp.Ip = drc.Field<string>("ip");
-        //            computers.Add(newComp);
-        //        }
-        //    }
 
-        //    return computers;
-        //}
+            foreach (DataRow drc in computer.Rows)
+            {
+                if (distribution.Select($"computerID = {drc.Field<long>("id")}").Count() == 0)
+                {
+                    Computer newComp = new Computer();
+                    newComp.Id = drc.Field<long>("id");
+                    newComp.NsName = drc.Field<string>("nsName");
+                    newComp.Ip = drc.Field<string>("ip");
+                    computers.Add(newComp);
+                }
+            }
+
+            return computers;
+        }
 
 
         /// <summary>

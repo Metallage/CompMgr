@@ -63,12 +63,32 @@ namespace CompMgr.ViewModel
         }
 
 
+        public void AddDistribution(DistributionVM newDistribution, object currentComp, object currentUser)
+        {
+
+            User cu = currentUser as User;
+            Computer cc = currentComp as Computer;
+
+            newDistribution.Id = -1;
+            newDistribution.ComputerID = cc.Id;
+            newDistribution.NsName = cc.NsName;
+            newDistribution.UserFio = cu.UserFio;
+            newDistribution.UserID = cu.Id;
+
+            SourceDistr.Add(newDistribution);
+
+
+            UserSource.Remove(cu);
+            CompSource.Remove(cc);
+        }
 
         public void ImportData()
         {
             List<Distribution> distributions = core.GetDistribution();
 
             sourceDistr = new DistributedView(distributions);
+            UserSource = core.GetUsersNoComp();
+            CompSource = core.GetComputersNoUser();
         }
 
         public void Save()

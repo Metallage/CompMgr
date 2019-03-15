@@ -77,23 +77,15 @@ namespace CompMgr
 
         private void AddBt_Click(object sender, RoutedEventArgs e)
         {
-            //if ((SelectComp.SelectedItem != null) && (SelectUser.SelectedItem != null))
-            //{
-            //    User currentUser = (User)SelectUser.SelectedItem;
-            //    Computer currentComp = (Computer)SelectComp.SelectedItem;
-            //    Distribution newDistribution = new Distribution();
-            //    newDistribution.Id = -1;
-            //    newDistribution.ComputerID = currentComp.Id;
-            //    newDistribution.NsName = currentComp.NsName;
-            //    newDistribution.UserFio = currentUser.UserFio;
-            //    newDistribution.UserID = currentUser.Id;
+            if ((SelectComp.SelectedItem != null) && (SelectUser.SelectedItem != null))
+            {
+                object currentUser = SelectUser.SelectedItem;
+                object currentComp = SelectComp.SelectedItem;
+                DistributionVM newDistribution = new DistributionVM();
+   
 
-            //    dvm.SourceDistr.Add(newDistribution);
-
-
-            //    dvm.UserSource.Remove(currentUser);
-            //    dvm.CompSource.Remove(currentComp);
-            //}
+                dvm.AddDistribution(newDistribution, currentComp, currentUser);
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -103,7 +95,7 @@ namespace CompMgr
 
         private void DeleteItem_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-          //  dvm.ExecuteDeleteCommand(sender, e);
+          dvm.ExecuteDeleteCommand(e.Parameter.ToString());
         }
 
         private void CanExecuteDeleteItem(object sender, CanExecuteRoutedEventArgs e)
@@ -122,18 +114,14 @@ namespace CompMgr
 
         private void AddItem_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            //Distribution newDistribution = e.Parameter as Distribution;
-            //if ((SelectComp.SelectedItem != null) && (SelectUser.SelectedItem != null))
-            //{
-            //    User currentUser = (User)SelectUser.SelectedItem;
-            //    Computer currentComp = (Computer)SelectComp.SelectedItem;
+            DistributionVM newDistribution = e.Parameter as DistributionVM;
+            if ((SelectComp.SelectedItem != null) && (SelectUser.SelectedItem != null))
+            {
+                object currentUser = (object)SelectUser.SelectedItem;
+                object currentComp = (object)SelectComp.SelectedItem;
 
-            //    dvm.SourceDistr.Add(newDistribution);
-
-
-            //    dvm.UserSource.Remove(currentUser);
-            //    dvm.CompSource.Remove(currentComp);
-            //}
+                dvm.AddDistribution(newDistribution, currentComp, currentUser);
+            }
 
         }
 
