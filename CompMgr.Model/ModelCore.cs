@@ -191,6 +191,52 @@ namespace CompMgr.Model
             return compData;
         }
 
+        /// <summary>
+        /// Получение списка компов с установелнными ПО
+        /// </summary>
+        /// <returns>Списко компов с установленным ПО</returns>
+        public List<Install> GetInstalled()
+        {
+            List<Install> installed = new List<Install>();
+
+            foreach (DataRow compDr in computer.Rows)
+            {
+                Install newInst = new Install();
+                newInst.NsName = compDr.Field<string>("nsName");
+
+                var userQuery = from usr in user.AsEnumerable()
+                                join dst in distribution.AsEnumerable() on usr.Field<long>("id") equals dst.Field<long>("userID")
+                                where (dst.Field<long>("computerID") == compDr.Field<long>("id"))
+                                select usr.Field<string>("userFio");
+
+                if (userQuery.Count() > 0)
+                {
+                    newInst.userFio = userQuery.First();
+                }
+
+
+                var softQuery = from inst in install.AsEnumerable()
+                                join sft in software.AsEnumerable() on inst.Field<long>("softID") equals sft.Field<long>("id")
+                                where (inst.Field<long>("computerID") == compDr.Field<long>("id"))
+                                select sft.Field<string>("softName");
+
+                List<string> installedSoft = new List<string>();
+
+                foreach (dynamic sft in softQuery)
+                {
+                    installedSoft.Add(sft);
+                }
+
+                newInst.InstalledSoft = installedSoft;
+
+                installed.Add(newInst);
+
+            }
+
+            return installed;
+        }
+
+
         //public ObservableCollection<Install> GetInstall()
         //{
         //    ObservableCollection<Install> inst = new ObservableCollection<Install>();

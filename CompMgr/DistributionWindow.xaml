@@ -53,8 +53,11 @@
                           ItemsSource="{Binding CompSource}"
                           />
                 <ComboBox x:Name="SelectUser" Grid.Column="1" 
-                          ItemTemplate="{DynamicResource UsersTemplate}"
-                          ItemsSource="{Binding UserSource}"/>
+                          ItemsSource="{Binding UserSource}"
+                          DisplayMemberPath="UserFio"/>
+                         <!-- ItemTemplate="{DynamicResource UsersTemplate}"-->
+
+
                 <Button x:Name="AddBt" Grid.Column="2" Content="Распределить" 
                         Click="AddBt_Click"/>
             </Grid>

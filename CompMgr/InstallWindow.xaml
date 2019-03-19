@@ -3,11 +3,23 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:scm ="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:local="clr-namespace:CompMgr"
         mc:Ignorable="d"
         Title="Установка ПО" Height="450" Width="800"
         Loaded="Window_Loaded">
-
+    <Window.Resources>
+        <CollectionViewSource x:Key="Installed" Source="{Binding Installed}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="NsName"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+        <CollectionViewSource x:Key="InstalledSoft" Source="{Binding InstalledSoft}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="SoftName"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </Window.Resources>
 
     <DockPanel LastChildFill="True">
         

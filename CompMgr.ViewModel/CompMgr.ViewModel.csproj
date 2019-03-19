@@ -47,6 +47,9 @@
     <Compile Include="DistributedView.cs" />
     <Compile Include="DistributionVM.cs" />
     <Compile Include="DistributionViewModel.cs" />
+    <Compile Include="InstallVM.cs" />
+    <Compile Include="InstallWindowVM.cs" />
+    <Compile Include="InstalledSoftVM.cs" />
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="SelectSoftViewModel.cs" />
     <Compile Include="UpdateFormViewModel.cs" />
