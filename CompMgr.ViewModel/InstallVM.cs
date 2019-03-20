@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using CompMgr.Model;
 
 namespace CompMgr.ViewModel
 {
@@ -13,7 +14,30 @@ namespace CompMgr.ViewModel
 
         public string NsName { get; set; }
         public string UserFio { get; set; }
+       
+        public InstallVM ()
+        {
+
+        }
         
+        public InstallVM(Install inst, List<string> allSoft)
+        {
+            this.NsName = inst.NsName;
+            this.UserFio = inst.UserFio;
+            foreach(string softName in allSoft)
+            {
+                InstalledSoftVM isvm = new InstalledSoftVM(softName);
+                string installedSoft = inst.InstalledSoft.Find(x => x == softName);
+                
+                if(installedSoft!=null)
+                {
+                    isvm.IsInstalled = true;
+                }
+            }
+
+
+        }
+
         public ObservableCollection<InstalledSoftVM> InstalledSoft
         {
             get
@@ -30,6 +54,8 @@ namespace CompMgr.ViewModel
             }
 
         }
+
+       
 
         public int CompareTo(object obj) // не факт , что надо...
         {

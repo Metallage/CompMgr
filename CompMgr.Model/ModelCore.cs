@@ -191,6 +191,16 @@ namespace CompMgr.Model
             return compData;
         }
 
+
+        public List<string> GetSoftNames()
+        {
+            List<string> softNames = new List<string>();
+
+            foreach (DataRow dr in software.Rows)
+                softNames.Add(dr.Field<string>("softName"));
+            return softNames;
+        }
+
         /// <summary>
         /// Получение списка компов с установелнными ПО
         /// </summary>
@@ -211,7 +221,7 @@ namespace CompMgr.Model
 
                 if (userQuery.Count() > 0)
                 {
-                    newInst.userFio = userQuery.First();
+                    newInst.UserFio = userQuery.First();
                 }
 
 

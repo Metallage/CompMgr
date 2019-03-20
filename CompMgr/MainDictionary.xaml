@@ -3,11 +3,7 @@
                     xmlns:local="clr-namespace:CompMgr"
                     xmlns:scm ="clr-namespace:System.ComponentModel;assembly=WindowsBase">
 
-    <CollectionViewSource x:Key="Users" Source="{Binding UserSource}">
-        <CollectionViewSource.SortDescriptions>
-            <scm:SortDescription PropertyName="UserFio"/>
-        </CollectionViewSource.SortDescriptions>
-    </CollectionViewSource>
+
     
 
     <Style x:Key="isUpTrigger" TargetType="TextBlock">

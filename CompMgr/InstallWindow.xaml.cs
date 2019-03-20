@@ -11,6 +11,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Collections.ObjectModel;
+using CompMgr.ViewModel;
+
 
 namespace CompMgr
 {
@@ -22,10 +24,19 @@ namespace CompMgr
         ObservableCollection<Install> source;
         Logic core;
 
-        public InstallWindow(Logic core)
+        InstallWindowVM iwvm;
+
+
+        public InstallWindow(InstallWindowVM iwvm)
         {
+            DataContext = this.iwvm;
             InitializeComponent();
-            this.core = core;
+            this.iwvm.DataUpdate += Iwvm_DataUpdate;
+        }
+
+        private void Iwvm_DataUpdate()
+        {
+            throw new NotImplementedException();
         }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)

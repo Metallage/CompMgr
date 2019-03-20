@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using CompMgr.Model;
 
 namespace CompMgr.ViewModel
 {
@@ -24,6 +25,23 @@ namespace CompMgr.ViewModel
                     OnPropertyChanged(this, "IsInstalled");
                 }
             }
+        }
+
+        public InstalledSoftVM()
+        {
+
+        }
+
+        public InstalledSoftVM(string softName)
+        {
+            SoftName = softName;
+            IsInstalled = false;
+        }
+
+        public InstalledSoftVM(InstalledSoft inss)
+        {
+            SoftName = inss.SoftName;
+            IsInstalled = true;
         }
 
         /// <summary>

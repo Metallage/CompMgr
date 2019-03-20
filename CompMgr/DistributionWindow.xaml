@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CompMgr"
         xmlns:vm="clr-namespace:CompMgr.ViewModel;assembly=CompMgr.ViewModel"
+        xmlns:scm ="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         mc:Ignorable="d"
         Title="DistributionWindow" Height="450" Width="800"
         Loaded="Window_Loaded">
@@ -21,6 +22,14 @@
         <vm:DistributionVM x:Key="NewDistribution" Id="-1" 
                             NsName="{Binding ElementName=SelectComp, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Path=Text}"
                             UserFio="{Binding ElementName=SelectUser, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Path=Text}"/>
+       
+        <CollectionViewSource x:Key="Users" Source="{Binding Path=UserSource}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="UserFio"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+
     </Window.Resources>
     
     <DockPanel LastChildFill="True">
@@ -53,7 +62,7 @@
                           ItemsSource="{Binding CompSource}"
                           />
                 <ComboBox x:Name="SelectUser" Grid.Column="1" 
-                          ItemsSource="{Binding UserSource}"
+                          ItemsSource="{Binding Source={StaticResource Users}}"
                           DisplayMemberPath="UserFio"/>
                          <!-- ItemTemplate="{DynamicResource UsersTemplate}"-->
 

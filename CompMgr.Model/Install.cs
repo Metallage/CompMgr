@@ -9,7 +9,7 @@ namespace CompMgr.Model
     {
 
         public string NsName { get; set; }
-        public string userFio { get; set; }
+        public string UserFio { get; set; }
 
         public List<string> InstalledSoft { get; set; }
     }

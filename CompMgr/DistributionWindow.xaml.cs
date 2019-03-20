@@ -35,9 +35,10 @@ namespace CompMgr
         public DistributionWindow(DistributionViewModel dvm)
         {
             this.dvm = dvm;
+            DataContext = this.dvm;
             InitializeComponent();
             this.dvm.UpdateData += Dvm_UpdateData;
-            DataContext = dvm;
+
 
             //DistributedView distributed = new DistributedView();
             //distributed.InputMe(core.GetDistribution());

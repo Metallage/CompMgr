@@ -16,6 +16,7 @@ namespace CompMgr.ViewModel
 
 
         private DistributedView sourceDistr = new DistributedView();
+        private ObservableCollection<User> userSource = new ObservableCollection<User>();
 
         private ModelCore core;
 
@@ -50,7 +51,19 @@ namespace CompMgr.ViewModel
                 }
             }
         }
-        public ObservableCollection<User> UserSource { get; set; }
+        public ObservableCollection<User> UserSource { get
+            {
+                return userSource;
+            }
+                set
+            {
+                if(value!=userSource)
+                {
+                    userSource = value;
+                    OnPropertyChanged(this, "UserSource");
+                }
+            }
+                }
         public ObservableCollection<Computer> CompSource { get; set; }
 
 
