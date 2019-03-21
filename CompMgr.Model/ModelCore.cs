@@ -34,11 +34,6 @@ namespace CompMgr.Model
         public void Start()
         {
 
-            //var loadAll = Task.Factory.StartNew(delegate()
-            //{
-
-            //    try
-            //    {
                     dbHelper.InitialDB();
 
                     mainDS = dbHelper.LogicDataSet;
@@ -48,37 +43,17 @@ namespace CompMgr.Model
                     computer = mainDS.Tables["Computer"];
                     install = mainDS.Tables["Install"];
                     distribution = mainDS.Tables["Distribution"];
-
-                   // onReady?.Invoke();
-                //}
-                //catch(Exception e)
-                //{
-                //    onError?.Invoke(new ErrorArgs("Инициализация", e.Message));
-                //}
-           // });
-
         }
 
 
         public void Save()
         {
-            //var saveAll = Task.Factory.StartNew(() =>
-            //    {
-            //        try
-            //        {
+
+            
                         dbHelper.Save();
                         dbHelper.Reload();
                         foreach (DataTable dt in mainDS.Tables)
                             dt.AcceptChanges();
-                     //   onReady?.Invoke();
-
-                //    }
-                //    catch(Exception e)
-                //    {
-                //        onError?.Invoke(new ErrorArgs("Сохранение", e.Message));
-                //    }
-                //});
-
         }
 
         /// <summary>
@@ -198,11 +173,12 @@ namespace CompMgr.Model
 
             foreach (DataRow dr in software.Rows)
                 softNames.Add(dr.Field<string>("softName"));
+            softNames.Sort();
             return softNames;
         }
 
         /// <summary>
-        /// Получение списка компов с установелнными ПО
+        /// Получение списка компов с установленными ПО
         /// </summary>
         /// <returns>Списко компов с установленным ПО</returns>
         public List<Install> GetInstalled()
@@ -217,7 +193,7 @@ namespace CompMgr.Model
                 var userQuery = from usr in user.AsEnumerable()
                                 join dst in distribution.AsEnumerable() on usr.Field<long>("id") equals dst.Field<long>("userID")
                                 where (dst.Field<long>("computerID") == compDr.Field<long>("id"))
-                                select usr.Field<string>("userFio");
+                                select usr.Field<string>("fio");
 
                 if (userQuery.Count() > 0)
                 {
@@ -486,6 +462,48 @@ namespace CompMgr.Model
             
         }
 
+        public void SaveInstall(List<Install> installs)
+        {
+            
+
+            foreach (Install inst in installs)
+            {
+                long compID = FindCompID(inst.NsName);
+                UnInstall(compID, inst.InstalledSoft);
+                foreach(string insSoft in  inst.InstalledSoft)
+                {
+
+                    long softId = FindSoftID(insSoft);
+
+                    DataRow idr = install.NewRow();
+                    idr["computerID"] = compID;
+                    idr["softID"] = softId;
+                    idr["version"] = software.Select($"id = {softId}").First().Field<string>("version");
+                    install.Rows.Add(idr);
+                }
+            }
+            dbHelper.UpdateInstall();
+            dbHelper.Reload();
+
+        }
+
+        private void UnInstall(long compId, List<string> install)
+        {
+            foreach (DataRow sdr in software.Rows )
+            {
+                
+                if (!install.Exists(x => x == sdr.Field<string>("softName")))
+                {
+                    long delID = FindInstallID(compId, sdr.Field<long>("id"));
+                    if (delID > 0)
+                    {
+                        this.install.Rows.Find(delID).Delete();
+                       
+                    }
+                }
+            }
+
+        }
 
         #region Поиск ID по таблицам
 
@@ -573,6 +591,15 @@ namespace CompMgr.Model
         private long FindInstallID(long compId, long softId)
         {
             DataRow[] ids = install.Select($"computerID = {compId} AND softID = {softId}");
+            if (ids.Count() == 1)
+                return ids[0].Field<long>("id");
+            else
+                return -1;
+        }
+
+        private long FindSoftID(string softName)
+        {
+            DataRow[] ids = software.Select($"softName = '{softName}'");
             if (ids.Count() == 1)
                 return ids[0].Field<long>("id");
             else

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CompMgr.Model
 {
-    public struct Install
+    public class Install
     {
 
         public string NsName { get; set; }

@@ -8,12 +8,12 @@ using CompMgr.Model;
 
 namespace CompMgr.ViewModel
 {
-    public class InstallVM: INotifyPropertyChanged, IComparable
+    public class InstallVM: Install, INotifyPropertyChanged, IComparable
     {
         private ObservableCollection<InstalledSoftVM> installedSoft = new ObservableCollection<InstalledSoftVM>();
 
-        public string NsName { get; set; }
-        public string UserFio { get; set; }
+        //public string NsName { get; set; }
+        //public string UserFio { get; set; }
        
         public InstallVM ()
         {
@@ -33,12 +33,25 @@ namespace CompMgr.ViewModel
                 {
                     isvm.IsInstalled = true;
                 }
+                InstalledSoft.Add(isvm);
             }
 
 
         }
 
-        public ObservableCollection<InstalledSoftVM> InstalledSoft
+        public void FlushNotInstalled()
+        {
+            base.InstalledSoft = new List<string>();
+
+            foreach (InstalledSoftVM isvm in InstalledSoft)
+                if (isvm.IsInstalled)
+                    base.InstalledSoft.Add(isvm.SoftName);
+
+            
+
+        }
+
+        new public ObservableCollection<InstalledSoftVM> InstalledSoft
         {
             get
             {

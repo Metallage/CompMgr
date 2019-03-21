@@ -7,10 +7,10 @@ using CompMgr.Model;
 
 namespace CompMgr.ViewModel
 {
-    public class InstalledSoftVM : IComparable, INotifyPropertyChanged
+    public class InstalledSoftVM : InstalledSoft, IComparable, INotifyPropertyChanged
     {
         private bool isInstalled;
-        public string SoftName { get; set; }
+        //public string SoftName { get; set; }
         public bool IsInstalled
         {
             get
@@ -44,6 +44,12 @@ namespace CompMgr.ViewModel
             IsInstalled = true;
         }
 
+        public InstalledSoftVM(string softName, string version)
+        {
+            SoftName = softName;
+            Version = version;
+        }
+
         /// <summary>
         /// Реализация метода сравнения для интерфейса IComparable
         /// </summary>
@@ -64,6 +70,12 @@ namespace CompMgr.ViewModel
         private void OnPropertyChanged(object sender, string propertyName)
         {
             PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(propertyName));
+        }
+
+
+        public override string ToString()
+        {
+            return SoftName;
         }
     }
 }

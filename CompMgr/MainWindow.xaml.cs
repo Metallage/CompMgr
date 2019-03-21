@@ -129,13 +129,10 @@ namespace CompMgr
 
         private void InstallButton_Click(object sender, RoutedEventArgs e)
         {
-            Logic core = new Logic();
-            ErrorMessageHelper start = core.Start();
-            if (start.HasErrors)
-            {
-                MessageBox.Show(start.ErrorText);
-            }
-            InstallWindow installWindow = new InstallWindow(core);
+
+            InstallWindowVM iwvm = mwvm.StartInstall();
+
+            InstallWindow installWindow = new InstallWindow(iwvm);
             installWindow.Show();
         }
 

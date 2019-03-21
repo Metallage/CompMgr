@@ -9,12 +9,12 @@
         Title="Установка ПО" Height="450" Width="800"
         Loaded="Window_Loaded">
     <Window.Resources>
-        <CollectionViewSource x:Key="Installed" Source="{Binding Installed}">
+        <CollectionViewSource x:Key="Installed" Source="{Binding Path=Installs}">
             <CollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="NsName"/>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
-        <CollectionViewSource x:Key="InstalledSoft" Source="{Binding InstalledSoft}">
+        <CollectionViewSource x:Key="InstalledSoftS" Source="{Binding Path=InstalledSoft}">
             <CollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="SoftName"/>
             </CollectionViewSource.SortDescriptions>
@@ -28,29 +28,32 @@
         </StackPanel>
         <ListView x:Name="MainInstallView" 
                   View="{DynamicResource InstallView}"
+                  ItemsSource="{Binding Source={StaticResource Installed}}"
                    >
 
             <ListView.Resources>
                 <DataTemplate x:Key="SoftTemplate">
                     <StackPanel>
                         <TextBlock  Text="{Binding Path=SoftName}" Margin="2 2 10 2" HorizontalAlignment="Center"/>
-                        <CheckBox  IsChecked="{Binding Path=Installed}" Margin="2 2 10 2" HorizontalAlignment="Center"/>
+                        <CheckBox  IsChecked="{Binding Path=IsInstalled}" Margin="2 2 10 2" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </DataTemplate>
 
+                <DataTemplate x:Key="CompTemplate">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Path=NsName}"/>
+                        <TextBlock Text="{Binding Path=UserFio}"/>
+                    </StackPanel>
+                </DataTemplate>
 
-                <GridView x:Key="InstallView">
-                    <GridViewColumn Header="Имя компьютера">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock x:Name="NsNameTB" Text="{Binding  Path=NsName}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
+                <GridView x:Key="InstallView" >
+                    <GridViewColumn Header="Имя компьютера" CellTemplate="{DynamicResource CompTemplate}">
+
                     </GridViewColumn>
                     <GridViewColumn Header="ПО">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <ListBox x:Name="SoftLW" ItemsSource="{Binding Path=IsInstalled}" ItemTemplate="{StaticResource SoftTemplate}" SelectionMode="Multiple">
+                                <ListBox x:Name="SoftLW" ItemsSource="{Binding InstalledSoft}" ItemTemplate="{StaticResource SoftTemplate}" SelectionMode="Multiple">
                                     <ListBox.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <WrapPanel/>

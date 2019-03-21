@@ -63,6 +63,12 @@ namespace CompMgr.ViewModel
             return dvm;
         }
 
+        public InstallWindowVM StartInstall()
+        {
+            InstallWindowVM iwvm = new InstallWindowVM(core);
+
+            return iwvm;
+        }
 
         public void UpdateSoft(string softName, string version)
         {

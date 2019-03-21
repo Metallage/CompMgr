@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CompMgr.Model
 {
-    public struct InstalledSoft
+    public class InstalledSoft
     {
         public string SoftName { get; set; }
         public string Version { get; set; }
@@ -15,5 +15,8 @@ namespace CompMgr.Model
             SoftName = softName;
             Version = version;
         }
+
+        public InstalledSoft()
+        { }
     }
 }

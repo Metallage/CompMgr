@@ -55,6 +55,26 @@ namespace CompMgr.ViewModel
 
         }
 
+        public void Save()
+        {
+            SetInstall();
+        }
+
+        private void SetInstall()
+        {
+
+            
+
+            foreach(InstallVM ivm in installs )
+            {
+                ivm.FlushNotInstalled();
+            }
+
+            List<Install> setInstalls = installs.ToList<Install>();
+            core.SaveInstall(setInstalls);
+
+        }
+
         private void GetInstall()
         {
             List<string> allsoft = core.GetSoftNames();
@@ -62,6 +82,7 @@ namespace CompMgr.ViewModel
             foreach(Install inst in modelList)
             {
                 InstallVM newComp = new InstallVM(inst, allsoft);
+                installs.Add(newComp);
             }
         }
 
