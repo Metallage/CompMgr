@@ -57,39 +57,15 @@ namespace CompMgr
                 {
                     UpdButton.IsEnabled = true;
                     DistributeButon.IsEnabled = true;
+                    InstallButton.IsEnabled = true;
                     mwvm.GetCompData();
                     DataContext = mwvm;
                     gridField.Items.Refresh();
                 });
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            
-            //RunOldCore();
 
-            
-        }
 
-        //private void RunOldCore()
-        //{
-        //    ErrorMessageHelper start = core.Start();
-        //    if (start.HasErrors)
-        //    {
-        //        MessageBox.Show(start.ErrorText);
-        //    }
-        //    completeData.GetData(core.GetCompleteTable());
-        //    gridField.ItemsSource = completeData;
-
-        //}
-
-        private void TestButton_Click(object sender, RoutedEventArgs e)
-        {
-
-            //UpdateFormViewModel uvm = new UpdateFormViewModel();
-            //UpdateWindow UPD = new UpdateWindow(uvm);
-            //UPD.Show();
-        }
 
         /// <summary>
         /// Обработчик нажатия кнопки "Обновление"
@@ -133,7 +109,7 @@ namespace CompMgr
             InstallWindowVM iwvm = mwvm.StartInstall();
 
             InstallWindow installWindow = new InstallWindow(iwvm);
-            installWindow.Show();
+            installWindow.ShowDialog();
         }
 
 
@@ -145,6 +121,11 @@ namespace CompMgr
             DistributionWindow distribute = new DistributionWindow(dvm);
             distribute.ShowDialog();
            
+        }
+
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

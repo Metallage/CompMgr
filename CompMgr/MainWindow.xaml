@@ -10,6 +10,7 @@
  
     <Grid x:Name="rootGrid">
         <Grid.RowDefinitions>
+            <RowDefinition MinHeight="5" MaxHeight="20"/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -23,8 +24,7 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition MinHeight="5" MaxHeight="20"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -39,9 +39,9 @@
 
 
         </ListView>
-        <Button x:Name="TestButton" Content="Проверка" Grid.Column="4" Grid.Row="0" Click="TestButton_Click"/>
+        <Button x:Name="ExitButton" Content="Выход" Grid.Column="4" Grid.Row="13" Click="ExitButton_Click"/>
         <Button x:Name="UpdButton" Content="Обновление" Grid.Column="4" Grid.Row="2" Click="UpdButton_Click" IsEnabled="False"/>
-        <Button x:Name="InstallButton" Content="Установка и удаление" Grid.Column="4" Grid.Row="4" Click="InstallButton_Click" />
+        <Button x:Name="InstallButton" Content="Установка и удаление" Grid.Column="4" Grid.Row="4" Click="InstallButton_Click" IsEnabled="False" />
         <Button x:Name="EditButton" Content="Редактирование таблиц" Grid.Column="4" Grid.Row="6" Click="EditButton_Click"/>
         <Button x:Name="DistributeButon" Content="Распределение" Grid.Column="4" Grid.Row="8" Click="DistributeButon_Click" IsEnabled="False"/>
     </Grid>

@@ -7,7 +7,8 @@
         xmlns:local="clr-namespace:CompMgr"
         mc:Ignorable="d"
         Title="Установка ПО" Height="450" Width="800"
-        Loaded="Window_Loaded">
+        FontSize="18"
+        FontWeight="DemiBold">
     <Window.Resources>
         <CollectionViewSource x:Key="Installed" Source="{Binding Path=Installs}">
             <CollectionViewSource.SortDescriptions>
@@ -24,6 +25,8 @@
     <DockPanel LastChildFill="True">
         
         <StackPanel DockPanel.Dock="Right" MaxWidth="200" MinWidth="100">
+            <Button x:Name="AcceptBut" Content="Применить" Click="AcceptBut_Click"/>
+            <Button x:Name="RollbackBut" Content="Откатить" Click="RollbackBut_Click"/>
             <Button x:Name="ExitButton" Content="Выход" Click="ExitButton_Click"/>
         </StackPanel>
         <ListView x:Name="MainInstallView" 

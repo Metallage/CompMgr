@@ -47,7 +47,7 @@ namespace CompMgr
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
-            iwvm.Save();
+            DialogResult = true;
             
             //core.SaveInstall(source);
             ////core.Save();
@@ -58,5 +58,17 @@ namespace CompMgr
         {
 
         }
+
+        private void AcceptBut_Click(object sender, RoutedEventArgs e)
+        {
+            iwvm.Save();
+        }
+
+        private void RollbackBut_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+
     }
 }
