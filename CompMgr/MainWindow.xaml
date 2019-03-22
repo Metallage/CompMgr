@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="768" Width="1024"
         FontSize="17" FontWeight="DemiBold">
- 
+
     <Grid x:Name="rootGrid">
         <Grid.RowDefinitions>
             <RowDefinition MinHeight="5" MaxHeight="20"/>
@@ -44,5 +44,6 @@
         <Button x:Name="InstallButton" Content="Установка и удаление" Grid.Column="4" Grid.Row="4" Click="InstallButton_Click" IsEnabled="False" />
         <Button x:Name="EditButton" Content="Редактирование таблиц" Grid.Column="4" Grid.Row="6" Click="EditButton_Click"/>
         <Button x:Name="DistributeButon" Content="Распределение" Grid.Column="4" Grid.Row="8" Click="DistributeButon_Click" IsEnabled="False"/>
+        <StatusBar Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="14" />
     </Grid>
 </Window>
