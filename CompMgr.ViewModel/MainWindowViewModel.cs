@@ -15,9 +15,11 @@ namespace CompMgr.ViewModel
 
         private CompleteData dataList = new CompleteData();
 
+        public delegate void ErrorEventHandler(string message);
         public delegate void RefreshEventHadnler();
         public event RefreshEventHadnler CoreStarted;
         public event RefreshEventHadnler DataUpdate;
+        public event ErrorEventHandler onError;
 
 
         public CompleteData DataList
@@ -38,7 +40,19 @@ namespace CompMgr.ViewModel
 
         public MainWindowViewModel()
         {
+            core.DataUpdate += Core_DataUpdate1;
+            core.onError += Core_onError;
             FirstLoad();
+        }
+
+        private void Core_DataUpdate1()
+        {
+            DataUpdate?.Invoke();
+        }
+
+        private void Core_onError(ErrorArgs e)
+        {
+            onError?.Invoke($"На этапе {e.Stage} возникла ошибка {e.Message}");
         }
 
         public UpdateFormViewModel StartUpdate(string softName)
@@ -79,6 +93,8 @@ namespace CompMgr.ViewModel
         public void GetCompData()
         {
             List<CompleteTableHelper> dataList = core.GetCompleteTable();
+            //List<CompleteTableHelperVM> nDataList = dataList.ToList<CompleteTableHelperVM>();
+
             CompleteData newData = new CompleteData(dataList);
             this.dataList = newData;
         }

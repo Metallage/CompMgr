@@ -33,27 +33,40 @@ namespace CompMgr.Model
 
         public void Start()
         {
+            try
+            {
+                dbHelper.InitialDB();
 
-                    dbHelper.InitialDB();
+                mainDS = dbHelper.LogicDataSet;
 
-                    mainDS = dbHelper.LogicDataSet;
-
-                    software = mainDS.Tables["Software"];
-                    user = mainDS.Tables["User"];
-                    computer = mainDS.Tables["Computer"];
-                    install = mainDS.Tables["Install"];
-                    distribution = mainDS.Tables["Distribution"];
+                software = mainDS.Tables["Software"];
+                user = mainDS.Tables["User"];
+                computer = mainDS.Tables["Computer"];
+                install = mainDS.Tables["Install"];
+                distribution = mainDS.Tables["Distribution"];
+            }
+            catch (Exception e)
+            {
+                onError?.Invoke(new ErrorArgs("Запуск БД", e.Message));
+            }
         }
 
 
         public void Save()
         {
+            try
+            {
 
-            
-                        dbHelper.Save();
-                        dbHelper.Reload();
-                        foreach (DataTable dt in mainDS.Tables)
-                            dt.AcceptChanges();
+                dbHelper.Save();
+                dbHelper.Reload();
+                foreach (DataTable dt in mainDS.Tables)
+                    dt.AcceptChanges();
+                DataUpdate?.Invoke();
+            }
+            catch (Exception e)
+            {
+                onError?.Invoke(new ErrorArgs("Сохранение в БД", e.Message));
+            }
         }
 
         /// <summary>
@@ -474,16 +487,19 @@ namespace CompMgr.Model
                 {
 
                     long softId = FindSoftID(insSoft);
-
-                    DataRow idr = install.NewRow();
-                    idr["computerID"] = compID;
-                    idr["softID"] = softId;
-                    idr["version"] = software.Select($"id = {softId}").First().Field<string>("version");
-                    install.Rows.Add(idr);
+                    if (FindInstallID(compID, softId) < 0)
+                    {
+                        DataRow idr = install.NewRow();
+                        idr["computerID"] = compID;
+                        idr["softID"] = softId;
+                        idr["version"] = software.Select($"id = {softId}").First().Field<string>("version");
+                        install.Rows.Add(idr);
+                    }
                 }
             }
             dbHelper.UpdateInstall();
             dbHelper.Reload();
+            DataUpdate?.Invoke();
 
         }
 

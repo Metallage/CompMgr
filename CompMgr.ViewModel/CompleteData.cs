@@ -8,7 +8,7 @@ using CompMgr.Model;
 
 namespace CompMgr.ViewModel
 {
-    public class CompleteData:ObservableCollection<CompleteTableHelper>
+    public class CompleteData:ObservableCollection<CompleteTableHelperVM>
     {
 
         public CompleteData()
@@ -17,18 +17,28 @@ namespace CompMgr.ViewModel
         public CompleteData(List<CompleteTableHelper> data)
         {
             foreach (CompleteTableHelper cth in data)
+            {
+            CompleteTableHelperVM cthvm =   new CompleteTableHelperVM()
+            {
+                SoftName = cth.SoftName,
+                SoftVersion = cth.SoftVersion,
+            };
+            foreach (KeyValuePair<string, bool> kvp in cth.CompNames)
+                cthvm.CompNames.Add(new CompListHelper(kvp.Key, kvp.Value));
+            this.Add(cthvm);
+
+            }
+        }
+
+        public CompleteData(ObservableCollection<CompleteTableHelperVM> data)
+        {
+            foreach (CompleteTableHelperVM cth in data)
                 this.Add(cth);
         }
 
-        public CompleteData(ObservableCollection<CompleteTableHelper> data)
+        public void InputData(List<CompleteTableHelperVM> data)
         {
-            foreach (CompleteTableHelper cth in data)
-                this.Add(cth);
-        }
-
-        public void InputData(List<CompleteTableHelper> data)
-        {
-            foreach (CompleteTableHelper cth in data)
+            foreach (CompleteTableHelperVM cth in data)
                 this.Add(cth);
         }
 

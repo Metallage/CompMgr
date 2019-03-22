@@ -37,7 +37,13 @@ namespace CompMgr
 
             mwvm.CoreStarted += Mwvm_CoreStarted;
             mwvm.DataUpdate += Mwvm_DataUpdate;
+            mwvm.onError += Mwvm_onError;
 
+        }
+
+        private void Mwvm_onError(string message)
+        {
+            MessageBox.Show(message);
         }
 
         private void Mwvm_DataUpdate()
@@ -55,6 +61,7 @@ namespace CompMgr
             //Перенаправления потока для исключения кросстрединга
             this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate() 
                 {
+                    DataContext = null;
                     UpdButton.IsEnabled = true;
                     DistributeButon.IsEnabled = true;
                     InstallButton.IsEnabled = true;
