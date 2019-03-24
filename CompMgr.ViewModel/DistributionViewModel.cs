@@ -67,6 +67,12 @@ namespace CompMgr.ViewModel
         public ObservableCollection<Computer> CompSource { get; set; }
 
 
+        public void DeleteDistribution(DistributionVM deletedItem)
+        {
+            UserSource.Add(new User(deletedItem.UserID, deletedItem.UserFio));
+            CompSource.Add(new Computer(deletedItem.ComputerID, deletedItem.NsName));
+            sourceDistr.Remove(deletedItem);
+        }
 
         public void ExecuteDeleteCommand(string nsName)
         {

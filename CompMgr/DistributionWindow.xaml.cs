@@ -149,5 +149,10 @@ namespace CompMgr
             }
         }
 
+        private void RemoveButton_Click(object sender, RoutedEventArgs e)
+        {
+            DistributionVM deletedItem = ((Button)sender).DataContext as DistributionVM;
+            dvm.DeleteDistribution(deletedItem);
+        }
     }
 }
