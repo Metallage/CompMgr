@@ -8,7 +8,9 @@
         xmlns:scm ="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         mc:Ignorable="d"
         Title="DistributionWindow" Height="450" Width="800"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        FontSize="18"
+        FontWeight="DemiBold">
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:DistributionWindow.DeleteItemCommand}"
                         Executed="DeleteItem_Executed"
@@ -23,12 +25,18 @@
                             NsName="{Binding ElementName=SelectComp, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Path=Text}"
                             UserFio="{Binding ElementName=SelectUser, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Path=Text}"/>
        
+        <!--Для сортировки списков копользователей и компьютеров-->
         <CollectionViewSource x:Key="Users" Source="{Binding Path=UserSource}">
             <CollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="UserFio"/>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
-
+        
+        <CollectionViewSource x:Key="Comps" Source="{Binding Path=CompSource}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="NsName"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
 
     </Window.Resources>
     
@@ -50,7 +58,7 @@
                       ItemsSource="{Binding  SourceDistr, UpdateSourceTrigger=PropertyChanged}">
                 <ListView.Resources>
                     <GridView x:Key="DistribView">
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=NsName}" Header="Имя клмпьютера"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=NsName}" Header="Имя компьютера"/>
                         <GridViewColumn DisplayMemberBinding="{Binding Path=UserFio}" Header="ФИО Пользователя"/>
                         <GridViewColumn >
                             <GridViewColumn.CellTemplate>
@@ -72,9 +80,8 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <ComboBox x:Name="SelectComp" Grid.Column="0" 
-                          ItemTemplate="{DynamicResource CompsTemplate}" 
-                          ItemsSource="{Binding CompSource}"
-                          />
+                          ItemsSource="{Binding Source={StaticResource Comps}}"
+                          DisplayMemberPath="NsName"/>
                 <ComboBox x:Name="SelectUser" Grid.Column="1" 
                           ItemsSource="{Binding Source={StaticResource Users}}"
                           DisplayMemberPath="UserFio"/>
