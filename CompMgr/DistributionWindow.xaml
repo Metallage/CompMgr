@@ -41,6 +41,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition MaxHeight="20" MinHeight="10"/>
                 <RowDefinition/>
+                <RowDefinition/>
                 <RowDefinition MaxHeight="50" MinHeight="20"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0"/>
@@ -51,7 +52,19 @@
                      >
 
             </ListBox>
-            <Grid Grid.Row="2">
+
+            <ListView View="{DynamicResource DistribView}"
+                      ItemsSource="{Binding  SourceDistr, UpdateSourceTrigger=PropertyChanged}">
+                <ListView.Resources>
+                    <GridView x:Key="DistribView">
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=NsName}" Header="Имя клмпьютера"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=UserFio}" Header="ФИО Пользователя"/>
+                        <GridViewColumn CellTemplate="{DynamicResource RemoveButtonDistribWin}"/> 
+                    </GridView>
+                </ListView.Resources>
+                
+            </ListView>
+            <Grid Grid.Row="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -64,7 +77,7 @@
                 <ComboBox x:Name="SelectUser" Grid.Column="1" 
                           ItemsSource="{Binding Source={StaticResource Users}}"
                           DisplayMemberPath="UserFio"/>
-                         <!-- ItemTemplate="{DynamicResource UsersTemplate}"-->
+
 
 
                 <Button x:Name="AddBt" Grid.Column="2" Content="Распределить" 

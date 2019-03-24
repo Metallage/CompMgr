@@ -4,7 +4,7 @@
                     xmlns:scm ="clr-namespace:System.ComponentModel;assembly=WindowsBase">
 
 
-    
+  <!--Ресурсы Main Window -->  
 
     <Style x:Key="isUpTrigger" TargetType="TextBlock">
         <Style.Triggers>
@@ -36,6 +36,7 @@
             <GridViewColumn CellTemplate="{StaticResource MwCompList}" Header="Установлено на:"/>
     </GridView>
 
+    <!-- Ресурсы Update Window-->
 
     <DataTemplate x:Key="UpdateItem">
         <Grid>
@@ -63,7 +64,15 @@
             </StackPanel>
         </Grid>
     </DataTemplate>
+    
+    
+    <!-- Ресурсы  Distribute Window-->
 
+    <DataTemplate x:Key="RemoveButtonDistribWin">
+        <Button x:Name="RemoveButton" Grid.Column="2" Content="Удалить" Command="{x:Static local:DistributionWindow.DeleteItemCommand}" 
+                    CommandParameter="{Binding ElementName=ComputerTB, Path=Text}"/>
+    </DataTemplate>
+    
     <DataTemplate x:Key="DistributedItems">
         <Grid>
             <Grid.ColumnDefinitions>
