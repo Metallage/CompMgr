@@ -68,9 +68,12 @@
     
     <!-- Ресурсы  Distribute Window-->
 
+    <DataTemplate x:Key="NsNameDT">
+        <TextBlock x:Name="NsNameTb" Text="{Binding Path=NsName}"/>
+    </DataTemplate>
     <DataTemplate x:Key="RemoveButtonDistribWin">
         <Button x:Name="RemoveButton" Grid.Column="2" Content="Удалить" Command="{x:Static local:DistributionWindow.DeleteItemCommand}" 
-                    CommandParameter="{Binding ElementName=ComputerTB, Path=Text}"/>
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBlock}}, Path=NsNameTb}"/>
     </DataTemplate>
     
     <DataTemplate x:Key="DistributedItems">

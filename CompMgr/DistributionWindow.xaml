@@ -45,7 +45,7 @@
                 <RowDefinition MaxHeight="50" MinHeight="20"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0"/>
-            <ListBox x:Name="DistributionView" Grid.Row="1" 
+            <ListBox x:Name="DistributionView" Grid.Row="2" 
                      ItemTemplate="{DynamicResource DistributedItems}"
                      ItemsSource="{Binding  SourceDistr, UpdateSourceTrigger=PropertyChanged}"
         
@@ -53,11 +53,11 @@
 
             </ListBox>
 
-            <ListView View="{DynamicResource DistribView}"
+            <ListView View="{DynamicResource DistribView}" Grid.Row="1"
                       ItemsSource="{Binding  SourceDistr, UpdateSourceTrigger=PropertyChanged}">
                 <ListView.Resources>
                     <GridView x:Key="DistribView">
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=NsName}" Header="Имя клмпьютера"/>
+                        <GridViewColumn CellTemplate="{DynamicResource NsNameDT}" Header="Имя клмпьютера"/>
                         <GridViewColumn DisplayMemberBinding="{Binding Path=UserFio}" Header="ФИО Пользователя"/>
                         <GridViewColumn CellTemplate="{DynamicResource RemoveButtonDistribWin}"/> 
                     </GridView>
