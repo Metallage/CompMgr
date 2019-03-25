@@ -68,9 +68,26 @@
     
     <!-- Ресурсы  Distribute Window-->
 
+    <!--Хранение ячейки компьютера-->
     <DataTemplate x:Key="NsNameDT">
-        <TextBlock x:Name="NsNameTb" Text="{Binding Path=NsName}"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Image Source="Images\PcImg.png" Height="15" Width="15" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" Margin="2 2 2 2"/>
+            <TextBlock x:Name="NsNameTb" Text="{Binding Path=NsName}" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Justify"  Grid.Column="1" Margin="2 2 2 2"/>
+        </Grid>
     </DataTemplate>
+    
+    <!--Хранение ячейки пользователя-->
+    <DataTemplate x:Key="FioDT">
+        <DockPanel LastChildFill="True">
+            <Image Source="Images\UserImg.png" DockPanel.Dock="Left" VerticalAlignment="Center" Height="15" Width="15"/>
+            <TextBlock Text="{Binding Path=UserFio}" VerticalAlignment="Center" TextAlignment="Justify" Margin="2 2 2 2"/>
+        </DockPanel>
+    </DataTemplate>
+    
     <DataTemplate x:Key="RemoveButtonDistribWin">
         <Button x:Name="RemoveButton" Grid.Column="2" Content="Удалить" Command="{x:Static local:DistributionWindow.DeleteItemCommand}" 
                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TextBlock}}, Path=Text}"/>

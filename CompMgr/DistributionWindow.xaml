@@ -58,8 +58,8 @@
                       ItemsSource="{Binding  SourceDistr, UpdateSourceTrigger=PropertyChanged}">
                 <ListView.Resources>
                     <GridView x:Key="DistribView">
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=NsName}" Header="Имя компьютера"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=UserFio}" Header="ФИО Пользователя"/>
+                        <GridViewColumn CellTemplate="{StaticResource NsNameDT}" Header="Имя компьютера"/>
+                        <GridViewColumn CellTemplate="{StaticResource FioDT}" Header="ФИО Пользователя"/>
                         <GridViewColumn >
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
