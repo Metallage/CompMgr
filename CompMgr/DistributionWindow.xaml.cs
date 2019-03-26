@@ -38,16 +38,6 @@ namespace CompMgr
             DataContext = this.dvm;
             InitializeComponent();
             this.dvm.UpdateData += Dvm_UpdateData;
-
-
-            //DistributedView distributed = new DistributedView();
-            //distributed.InputMe(core.GetDistribution());
-            //dvm.SourceDistr = distributed;
-            //dvm.UserSource = core.GetUsersNoComp();
-            //dvm.CompSource = core.GetComputersNoUser();
-            //DataContext = dvm;
-
-
         }
 
         private void Dvm_UpdateData()

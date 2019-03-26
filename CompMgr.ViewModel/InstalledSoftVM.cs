@@ -7,7 +7,7 @@ using CompMgr.Model;
 
 namespace CompMgr.ViewModel
 {
-    public class InstalledSoftVM : InstalledSoft, IComparable, INotifyPropertyChanged
+    public class InstalledSoftVM : Soft, IComparable, INotifyPropertyChanged
     {
         private bool isInstalled;
         //public string SoftName { get; set; }
@@ -38,7 +38,7 @@ namespace CompMgr.ViewModel
             IsInstalled = false;
         }
 
-        public InstalledSoftVM(InstalledSoft inss)
+        public InstalledSoftVM(Soft inss)
         {
             SoftName = inss.SoftName;
             IsInstalled = true;
@@ -47,7 +47,7 @@ namespace CompMgr.ViewModel
         public InstalledSoftVM(string softName, string version)
         {
             SoftName = softName;
-            Version = version;
+            SoftVersion = version;
         }
 
         /// <summary>

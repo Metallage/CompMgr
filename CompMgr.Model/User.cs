@@ -9,8 +9,23 @@ namespace CompMgr.Model
 {
     public class User:IComparable
     {
+        protected string userFio = String.Empty;
+        protected string userTel = String.Empty;
+
         public long Id { get; set; }
-        public string UserFio { get; set; }
+
+
+        public string UserFio {
+            get
+            {
+                return userFio;
+            }
+            set
+            {
+                userFio = value;
+            }
+        }
+
         public string UserTel { get; set; }
 
         public User()

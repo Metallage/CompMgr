@@ -8,9 +8,9 @@
         xmlns:scm ="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         mc:Ignorable="d"
         Title="DistributionWindow" Height="450" Width="800"
-        Loaded="Window_Loaded"
         FontSize="18"
-        FontWeight="DemiBold">
+        FontWeight="DemiBold"
+        Icon="Images\DistWindow.png">
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:DistributionWindow.DeleteItemCommand}"
                         Executed="DeleteItem_Executed"
@@ -21,9 +21,7 @@
     </Window.CommandBindings>
 
     <Window.Resources>
-        <vm:DistributionVM x:Key="NewDistribution" Id="-1" 
-                            NsName="{Binding ElementName=SelectComp, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Path=Text}"
-                            UserFio="{Binding ElementName=SelectUser, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Path=Text}"/>
+       
        
         <!--Для сортировки списков копользователей и компьютеров-->
         <CollectionViewSource x:Key="Users" Source="{Binding Path=UserSource}">
