@@ -10,8 +10,12 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using System.Threading;
 using System.Data;
 
+
+using CompMgr.ViewModel;
 
 
 namespace CompMgr
@@ -31,6 +35,7 @@ namespace CompMgr
 
         private bool changed = false;
 
+        private EditWindowVM ewvm;
 
         private Logic core;
 
@@ -41,7 +46,43 @@ namespace CompMgr
             software = core.GetSoftware();
             user = core.GetUserDT();
             computer = core.GetComputerDT();
+            EditDG.Visibility = Visibility.Visible;
 
+        }
+
+
+
+
+
+        public EditTableWindow(EditWindowVM ewvm)
+        {
+            this.ewvm = ewvm;
+            InitializeComponent();
+        }
+
+
+        private void Launch()
+        {
+            ewvm.DataUpdate += Ewvm_DataUpdate;
+            ewvm.Start();
+        }
+
+        private void Ewvm_DataUpdate()
+        {
+           Dispatcher.BeginInvoke(DispatcherPriority.Normal,(ThreadStart)delegate() 
+           {
+               DataContext = null;
+               DataContext = ewvm;
+               EditListView.Visibility = Visibility.Visible;
+           });
+        }
+
+        private void SetCompView()
+        {
+            GridView compView = EditListView.FindResource("CompView") as GridView;
+            Binding compBinding = new Binding("CompList");
+            EditListView.View = compView;
+            EditListView.SetBinding(ListView.ItemsSourceProperty, compBinding);
         }
 
 
@@ -161,7 +202,8 @@ namespace CompMgr
                         BindUsers();
                         break;
                     case 2:
-                        BindComp();
+                        //BindComp();
+                        SetCompView();
                         break;
 
                 }
@@ -368,6 +410,11 @@ namespace CompMgr
             }
             else
                 this.Close();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Launch();
         }
     }
 }

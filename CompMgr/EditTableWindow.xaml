@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CompMgr"
         mc:Ignorable="d"
-        Title="Редактирование таблиц" Height="450" Width="800">
+        Title="Редактирование таблиц" Height="450" Width="800"
+        Loaded="Window_Loaded"
+        >
     <Window.Resources>
         <ContextMenu x:Key="RowContextMenu">
             <MenuItem x:Name="Add" Header="Добавить"/>
@@ -54,7 +56,7 @@
                   BeginningEdit="EditDG_BeginningEdit_1"
                   CanUserSortColumns="False"
                   PreviewKeyDown="EditDG_KeyDown"
-                  >
+                  Visibility="Collapsed">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="NsName" Header="Имя компьютера" Binding="{Binding Path=nsName}" Visibility="Collapsed"/>
                 <DataGridTextColumn x:Name="Ip" Header="IP адрес" Binding="{Binding Path=ip}" Visibility="Collapsed"/>
@@ -65,6 +67,25 @@
             </DataGrid.Columns>
 
         </DataGrid>
+
+
+        <ListView x:Name="EditListView"
+                   Grid.Row="1" Grid.RowSpan="18" Grid.Column="1" Visibility="Collapsed">
+            <ListView.Resources>
+                <GridView x:Key="CompView">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=NsName}" Header="Имя Компьютера"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Ip}" Header="IP адрес"/>
+                </GridView>
+                <GridView x:Key="UserView">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=UserFio}" Header="ФИО Пользователя" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=UserTel}" Header="Телефон пользователя"/>
+                </GridView>
+                <GridView x:Key="SoftView">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=SoftName}" Header="Название ПО"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=SoftVersion}" Header="Версия ПО"/>
+                </GridView>
+            </ListView.Resources>
+        </ListView>
         <TextBlock x:Name="SelectDBTextBlock" Text="Выбор таблицы для редактирования" TextWrapping="Wrap" Grid.Row="1" Grid.RowSpan="2" Grid.Column="3" TextAlignment="Center" VerticalAlignment="Center"/>
         <ComboBox x:Name="BaseSelect" Grid.Row="3" Grid.Column="3" SelectionChanged="BaseSelect_SelectionChanged" DropDownOpened="BaseSelect_DropDownOpened">
             <ComboBoxItem x:Name="SoftItem" Content="ПО"/>

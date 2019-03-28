@@ -134,5 +134,13 @@ namespace CompMgr
         {
             Close();
         }
+
+        private void TestButon_Click(object sender, RoutedEventArgs e)
+        {
+            EditWindowVM ewvm = mwvm.StartEdit();
+            EditTableWindow editWin = new EditTableWindow(ewvm);
+            editWin.Show();
+
+        }
     }
 }

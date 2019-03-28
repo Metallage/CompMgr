@@ -4,12 +4,27 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using CompMgr.Model;
 
 namespace CompMgr.ViewModel
 {
-    class EditWindowVM:INotifyPropertyChanged
+    /// <summary>
+    /// ViewModel для EditWindow
+    /// </summary>
+    public class EditWindowVM:INotifyPropertyChanged
     {
         #region Поля и свойства
+        /// <summary>
+        /// Ядро модели
+        /// </summary>
+        private ModelCore core;
+
+        public delegate void DataUpdateHandler();
+
+        public event DataUpdateHandler DataUpdate;
+
+
         //Здесь хранится список ПО
         private ObservableCollection<SoftVM> softwareList = new ObservableCollection<SoftVM>();
 
@@ -135,6 +150,65 @@ namespace CompMgr.ViewModel
         #endregion
 
 
+
+        public EditWindowVM (ModelCore core)
+        {
+            this.core = core;
+
+        }
+
+        public void Start()
+        {
+            core.DataUpdate += Core_DataUpdate;
+            var firstLaunch = Task.Factory.StartNew(() =>
+            {
+                GetUsers();
+                GetSoftware();
+                GetComputers();
+                DataUpdate?.Invoke();
+            });
+        }
+
+        private void Core_DataUpdate()
+        {
+            DataUpdate?.Invoke();
+        }
+
+        private void GetComputers()
+        {
+            List<Computer> compList = core.GetComputers();
+
+            foreach (Computer comp in compList)
+                CompList.Add(new ComputerVM
+                {
+                    NsName = comp.NsName,
+                    Ip = comp.Ip
+                });
+        }
+
+        private void GetUsers()
+        {
+            List<User> userList = core.GetUsers();
+
+            foreach (User usr in userList)
+                UserList.Add(new UserVM
+                {
+                    UserFio = usr.UserFio,
+                    UserTel = usr.UserTel
+                });
+        }
+
+        private void GetSoftware()
+        {
+            List<Soft> softList = core.GetSoftware();
+
+            foreach (Soft sft in softList)
+                SoftwareList.Add(new SoftVM
+                {
+                    SoftName = sft.SoftName,
+                    SoftVersion = sft.SoftVersion
+                });
+        }
 
         #region реализация интерфейса INotifyPropertyChanged
 

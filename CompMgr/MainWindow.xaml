@@ -41,6 +41,8 @@
 
 
         </ListView>
+
+        <Button x:Name="TestButon" Content="Test" Grid.Column="4" Grid.Row="1" Click="TestButon_Click"/>
         <Button x:Name="ExitButton" Content="Выход" Grid.Column="4" Grid.Row="13" Click="ExitButton_Click"/>
         <Button x:Name="UpdButton" Content="Обновление" Grid.Column="4" Grid.Row="2" Click="UpdButton_Click" IsEnabled="False"/>
         <Button x:Name="InstallButton" Content="Установка и удаление" Grid.Column="4" Grid.Row="4" Click="InstallButton_Click" IsEnabled="False" />

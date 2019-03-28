@@ -150,13 +150,7 @@ namespace CompMgr.Model
         }
 
 
-        /// <summary>
-        /// Возвращает список всего софта с версиями в понятном интерфейсу виде
-        /// </summary>
-        public DataTable GetSoftware()
-        {
-            return software;
-        }
+
 
         /// <summary>
         /// Формирует сводную информацию об установленном ПО
@@ -179,6 +173,51 @@ namespace CompMgr.Model
             return compData;
         }
 
+        public List<Computer> GetComputers()
+        {
+            List<Computer> compList = new List<Computer>();
+
+            foreach (DataRow cdr in computer.Rows)
+                compList.Add(new Computer
+                {
+                    NsName = cdr.Field<string>("nsName"),
+                    Ip = cdr.Field<string>("ip")
+                });
+
+            return compList;
+        }
+
+
+        public DataTable GetSoftwareDT()
+        {
+            return software;
+        }
+
+        public List<Soft> GetSoftware()
+        {
+            List<Soft> softList = new List<Soft>();
+
+            foreach (DataRow sdr in software.Rows)
+                softList.Add(new Soft {
+                    SoftName = sdr.Field<string>("softName"),
+                    SoftVersion = sdr.Field<string>("version") });
+
+            return softList;
+        }
+
+        public List<User> GetUsers()
+        {
+            List<User> userList = new List<User>();
+
+            foreach (DataRow udr in user.Rows)
+                userList.Add(new User
+                {
+                    UserFio = udr.Field<string>("fio"),
+                    UserTel = udr.Field<string>("tel")
+                });
+
+            return userList;
+        }
 
         public List<string> GetSoftNames()
         {

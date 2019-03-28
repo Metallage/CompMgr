@@ -90,6 +90,13 @@ namespace CompMgr.ViewModel
         }
 
 
+        public EditWindowVM StartEdit()
+        {
+            EditWindowVM ewvm = new EditWindowVM(core);
+
+            return ewvm;
+        }
+
         public void GetCompData()
         {
             List<CompleteTableHelper> dataList = core.GetCompleteTable();

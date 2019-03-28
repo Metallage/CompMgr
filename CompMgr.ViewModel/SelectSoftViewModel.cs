@@ -18,7 +18,7 @@ namespace CompMgr.ViewModel
 
         public SelectSoftViewModel(ModelCore core)
         {
-            ParseSoft(core.GetSoftware());
+            ParseSoft(core.GetSoftwareDT());
         }
 
 
@@ -26,7 +26,7 @@ namespace CompMgr.ViewModel
         {
             ModelCore core = new ModelCore();
             core.Start();
-            ParseSoft(core.GetSoftware());
+            ParseSoft(core.GetSoftwareDT());
         }
 
         public string SelectedSoftName

@@ -26,7 +26,17 @@ namespace CompMgr.Model
             }
         }
 
-        public string UserTel { get; set; }
+        public string UserTel
+        {
+            get
+            {
+                return userTel;
+            }
+            set
+            {
+                userTel = value;
+            }
+        }
 
         public User()
         { }
