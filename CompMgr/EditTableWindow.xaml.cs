@@ -77,6 +77,9 @@ namespace CompMgr
            });
         }
 
+        /// <summary>
+        /// Устанавливает вид и источник данных для ListView и настравивает на просмотр компьютеров
+        /// </summary>
         private void SetCompView()
         {
             GridView compView = EditListView.FindResource("CompView") as GridView;
@@ -85,7 +88,28 @@ namespace CompMgr
             EditListView.SetBinding(ListView.ItemsSourceProperty, compBinding);
         }
 
+        /// <summary>
+        /// Устанавливает вид и источник данных для ListView и настравивает на просмотр пользователей
+        /// </summary>
+        private void SetUserView()
+        {
+            GridView userView = EditListView.FindResource("UserView") as GridView;
+            Binding userBinding = new Binding("UserList");
+            EditListView.View = userView;
+            EditListView.SetBinding(ListView.ItemsSourceProperty, userBinding);
+        }
 
+
+        /// <summary>
+        /// Устанавливает вид и источник данных для ListView и настравивает на просмотр ПО
+        /// </summary>
+        private void SetSoftView()
+        {
+            GridView softView = EditListView.FindResource("SoftView") as GridView;
+            Binding softBinding = new Binding("UserList");
+            EditListView.View = softView;
+            EditListView.SetBinding(ListView.ItemsSourceProperty, softBinding);
+        }
 
         #region Привязываем таблицы к DataGrid
 
