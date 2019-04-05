@@ -45,21 +45,21 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0">
-                <TextBlock x:Name="NsName" Text="{Binding Path=NsName}"/>
-                <TextBlock x:Name="Ip" Text="{Binding Path=Ip}"/>
-                <TextBlock x:Name="UserFio" Text="{Binding Path=UserFio}"/>
+                <TextBlock x:Name="NsName" Text="{Binding Path=NsName}" Margin="2 2 2 2"/>
+                <TextBlock x:Name="Ip" Text="{Binding Path=Ip}" Margin="2 2 2 2"/>
+                <TextBlock x:Name="UserFio" Text="{Binding Path=UserFio}" Margin="2 2 2 2"/>
             </StackPanel>
             <StackPanel Grid.Column="1">
-                <TextBlock x:Name="OldVersion" Text="{Binding StringFormat=Установленная версия: {0}, Path=OldVersion}"/>
-                <TextBlock x:Name="CurrentVersion" Text="{Binding StringFormat=Актуальная версия: {0}, Path=CurrentBersion}"/>
+                <TextBlock x:Name="OldVersion" Text="{Binding StringFormat=Установленная версия: {0}, Path=OldVersion}" Margin="2 2 2 2"/>
+                <TextBlock x:Name="CurrentVersion" Text="{Binding StringFormat=Актуальная версия: {0}, Path=CurrentBersion}" Margin="2 2 2 2"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock x:Name="UpdateText" Grid.Column="0" Text="Обновить: "/>
+                    <TextBlock x:Name="UpdateText" Grid.Column="0" Text="Обновить: " Margin="2 2 2 2"/>
                     <CheckBox x:Name="UpdateVersion" Grid.Column="1" IsChecked="{Binding Path=IsUp}" Command="{x:Static local:UpdateWindow.UpChanged}"
-                              CommandParameter="{Binding ElementName=NsName, Path=Text}"/>
+                              CommandParameter="{Binding ElementName=NsName, Path=Text}" Margin="2 2 2 2"/>
                 </Grid>
             </StackPanel>
         </Grid>
@@ -114,4 +114,17 @@
         <TextBlock Text="{Binding Path=NsName}"/>
     </DataTemplate>
 
+    
+    <!--Ресурсы EditWindow-->
+
+    <UserControl x:Key="CurrentSoftControl">
+        <UniformGrid Rows="2" Columns="2">
+            <TextBox x:Name="SoftNameTB" Grid.Row="0" Grid.Column="0" Margin="2 2 2 2"/>
+            <TextBlock x:Name="SoftVersionTB" Grid.Row="0" Grid.Column="1" Margin="2 2 2 2"/>
+            <Button x:Name="SaveButton" Content="Сохранить" Grid.Row="1" Grid.Column="0" Margin="2 2 2 2"/>
+            <Button x:Name="RemoveButton" Content="Удалить" Grid.Row="1" Grid.Column="1" Margin="2 2 2 2"/>
+        </UniformGrid>
+    </UserControl>
+
+    
 </ResourceDictionary>
