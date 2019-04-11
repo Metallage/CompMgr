@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:CompMgr"
         mc:Ignorable="d"
         Title="UpdateWindow" Height="450" Width="800"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        FontSize="17">
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:UpdateWindow.UpChanged}" Executed="ExecuteUpChange"
                         CanExecute="CanExecuteUpChange"/>

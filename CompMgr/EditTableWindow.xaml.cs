@@ -106,7 +106,7 @@ namespace CompMgr
         private void SetSoftView()
         {
             GridView softView = EditListView.FindResource("SoftView") as GridView;
-            Binding softBinding = new Binding("UserList");
+            Binding softBinding = new Binding("SoftwareList");
             EditListView.View = softView;
             EditListView.SetBinding(ListView.ItemsSourceProperty, softBinding);
         }
@@ -220,10 +220,12 @@ namespace CompMgr
                 switch (BaseSelect.SelectedIndex)
                 {
                     case 0:
-                        BindSoft();
+                       // BindSoft();
+                        SetSoftView();
                         break;
                     case 1:
-                        BindUsers();
+                        // BindUsers();
+                        SetUserView();
                         break;
                     case 2:
                         //BindComp();
