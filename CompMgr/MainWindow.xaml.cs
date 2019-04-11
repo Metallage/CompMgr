@@ -138,8 +138,12 @@ namespace CompMgr
         private void TestButon_Click(object sender, RoutedEventArgs e)
         {
             EditWindowVM ewvm = mwvm.StartEdit();
-            EditTableWindow editWin = new EditTableWindow(ewvm);
-            editWin.Show();
+            EditWindow edit = new EditWindow(ewvm);
+            edit.Show();
+            
+           // EditWindowVM ewvm = mwvm.StartEdit();
+            //EditTableWindow editWin = new EditTableWindow(ewvm);
+            //editWin.Show();
 
         }
     }
