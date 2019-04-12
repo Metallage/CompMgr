@@ -25,6 +25,9 @@ namespace CompMgr.ViewModel
         public event DataUpdateHandler DataUpdate;
 
 
+        public List<string> TableList { get; } = new List<string>() { "ПО", "Пользователи", "Компьютеры" };
+
+
         //Здесь хранится список ПО
         private ObservableCollection<SoftVM> softwareList = new ObservableCollection<SoftVM>();
 

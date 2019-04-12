@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:CompMgr"
         mc:Ignorable="d"
         Title="EditWindow" Height="600" Width="1000"
-        FontSize="18">
+        FontSize="18"
+        Loaded="Window_Loaded">
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Close" Executed="CommandBinding_CloseExecuted"/>
         <CommandBinding Command="ApplicationCommands.Save" Executed="CommandBinding_SaveExecuted"/>
@@ -30,16 +31,77 @@
                     BorderBrush="Black"
                     Background="LightGray">
                 <StackPanel>
-                    <ListView x:Name="SoftListBox"
-                         Visibility="Collapsed">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="ФИО Пользователя"/>
-                                <GridViewColumn Header="Контактный телефон"/>
-                                <GridViewColumn/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                    <ListBox x:Name="SoftListBox"
+                         Visibility="Collapsed"
+                             ItemsSource="{Binding Path=SoftwareList}">
+                        <ListBox.Resources>
+                           <!--Отображение не выделенных итемов-->
+                            <ControlTemplate x:Key="SoftUnselect">
+                                <Border BorderThickness="1" BorderBrush="Black"
+                                        Background="LightGreen">
+                                    <UniformGrid Columns="2">
+                                        <Border BorderThickness="1" BorderBrush="Black">
+                                            <TextBlock Text="{Binding Path=SoftName}"/>
+                                        </Border>
+                                        <Border BorderThickness="1" BorderBrush="Black">
+                                            <TextBlock Text="{Binding Path=SoftVersion}"/>
+                                        </Border>
+                                    </UniformGrid>
+                                </Border>
+                            </ControlTemplate>
+                            
+                            <!--Отображение выделенного итема-->
+                            <ControlTemplate x:Key="SoftSelected">
+                                <Border BorderThickness="1" BorderBrush="Black"
+                                        Background="AliceBlue">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition MaxWidth="80"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border BorderBrush="DarkCyan" BorderThickness="1" 
+                                                Grid.Row="0" Grid.Column="0">
+                                            <TextBlock Text="Название ПО" />
+                                        </Border>
+                                        <Border BorderBrush="DarkCyan" BorderThickness="1" 
+                                                Grid.Row="0" Grid.Column="1">
+                                            <TextBlock Text="Версия ПО"/>
+                                        </Border>
+                                        <TextBox Text="{Binding Path=SoftName, Mode=TwoWay}" Grid.Row="1" Grid.Column="0"/>
+                                        <TextBox Text="{Binding Path=SoftVersion, Mode=TwoWay}" Grid.Row="1" Grid.Column="1"/>
+                                        <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2"
+                                            Command="ApplicationCommands.Delete"
+                                           Content="Удалить" >
+                                            <Button.CommandBindings>
+                                                <CommandBinding Command="ApplicationCommands.Delete" 
+                                                            Executed="CommandBinding_SoftDelExecuted"
+                                                            CanExecute="CommandBinding_CanSoftDelExecute"/>
+                                            </Button.CommandBindings>
+
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </ControlTemplate>
+                        </ListBox.Resources>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Template" Value="{StaticResource SoftSelected}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter Property="Template" Value="{StaticResource SoftUnselect}"/>
+                                    </Trigger>
+
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
                     <ListView x:Name="UserListBox"
                          Visibility="Collapsed">
                         <ListView.View>
@@ -55,16 +117,43 @@
             <Border Grid.Row="1"
                     BorderThickness="1"
                     BorderBrush="Black">
-                
+                <StackPanel>
+                    <!--Новый софт-->
+                    <Grid x:Name="NewSOftGrid" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="80"/>
+                        </Grid.ColumnDefinitions>
+                        <Border BorderBrush="DarkGoldenrod" BorderThickness="1" 
+                                Grid.Row="0" Grid.Column="0">
+                            <TextBlock Text="Название ПО" />
+                        </Border>
+                        <Border BorderBrush="DarkSeaGreen" BorderThickness="1" 
+                                Grid.Row="0" Grid.Column="1">
+                            <TextBlock Text="Версия ПО"/>
+                        </Border>
+                        <TextBox  Grid.Row="1" Grid.Column="0"/>
+                        <TextBox  Grid.Row="1" Grid.Column="1"/>
+                        <Button Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
+                                Content="Добавить">
+                            <Button.CommandBindings>
+                                
+                            </Button.CommandBindings>
+                        </Button>
+                    </Grid>
+                </StackPanel>
             </Border>
         </Grid>
         <StackPanel Grid.Column="1">
-            <ComboBox Margin="2 15 2 20">
-                <ComboBox.Items>
-                    <ComboBoxItem Content="ПО"/>
-                    <ComboBoxItem Content="Пользователи"/>
-                    <ComboBoxItem Content="Компьютеры"/>
-                </ComboBox.Items>
+            <ComboBox Margin="2 15 2 20"
+                      SelectionChanged="ComboBox_SelectionChanged"
+                      ItemsSource="{Binding Path=TableList}">
+
             </ComboBox>
             <Button Content="Поточный ввод" Margin="2 2 2 20"/>
             <Button Content="Откатить" Margin="2 2 2 20"/>
