@@ -101,5 +101,33 @@ namespace CompMgr
         {
             GetStarted();
         }
+
+        private void CommandBinding_NewSoftExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
+
+        private void CommandBinding_CanNewSoftExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if ((sender != null) && (sender.GetType() == typeof(EditWindow)))
+            {
+                if ((NewSoftNameTB.Text.Count() > 0) && (NewSoftVerTB.Text.Count() > 0))
+                    e.CanExecute = true;
+                else
+                    e.CanExecute = false;
+            }
+            else
+                e.CanExecute = false;
+        }
+
+        private void NewSoftNameTB_TextChanged(object sender, TextChangedEventArgs e)
+        {
+          //  CommandManager.InvalidateRequerySuggested();
+        }
+
+        private void NewSoftVerTB_TextChanged(object sender, TextChangedEventArgs e)
+        {
+           // CommandManager.InvalidateRequerySuggested();
+        }
     }
 }

@@ -11,6 +11,7 @@
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Close" Executed="CommandBinding_CloseExecuted"/>
         <CommandBinding Command="ApplicationCommands.Save" Executed="CommandBinding_SaveExecuted"/>
+        <CommandBinding Command="ApplicationCommands.New" Executed="CommandBinding_NewSoftExecuted" CanExecute="CommandBinding_CanNewSoftExecute" />
     </Window.CommandBindings>
     
     <!--Делим окно на 2 части, справа управляющая слева рабочая -->
@@ -39,14 +40,19 @@
                             <ControlTemplate x:Key="SoftUnselect">
                                 <Border BorderThickness="1" BorderBrush="Black"
                                         Background="LightGreen">
-                                    <UniformGrid Columns="2">
-                                        <Border BorderThickness="1" BorderBrush="Black">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition MaxWidth="80"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border BorderThickness="1" BorderBrush="Black" Grid.Column="0">
                                             <TextBlock Text="{Binding Path=SoftName}"/>
                                         </Border>
-                                        <Border BorderThickness="1" BorderBrush="Black">
+                                        <Border BorderThickness="1" BorderBrush="Black" Grid.Column="1">
                                             <TextBlock Text="{Binding Path=SoftVersion}"/>
                                         </Border>
-                                    </UniformGrid>
+                                    </Grid>
                                 </Border>
                             </ControlTemplate>
                             
@@ -62,7 +68,7 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition/>
                                             <ColumnDefinition/>
-                                            <ColumnDefinition MaxWidth="80"/>
+                                            <ColumnDefinition x:Name="ButtonColumn" MaxWidth="80"/>
                                         </Grid.ColumnDefinitions>
                                         <Border BorderBrush="DarkCyan" BorderThickness="1" 
                                                 Grid.Row="0" Grid.Column="0">
@@ -127,7 +133,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
-                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="90"/>
                         </Grid.ColumnDefinitions>
                         <Border BorderBrush="DarkGoldenrod" BorderThickness="1" 
                                 Grid.Row="0" Grid.Column="0">
@@ -137,13 +143,11 @@
                                 Grid.Row="0" Grid.Column="1">
                             <TextBlock Text="Версия ПО"/>
                         </Border>
-                        <TextBox  Grid.Row="1" Grid.Column="0"/>
-                        <TextBox  Grid.Row="1" Grid.Column="1"/>
+                        <TextBox x:Name="NewSoftNameTB"  Grid.Row="1" Grid.Column="0"/>
+                        <TextBox x:Name="NewSoftVerTB" Grid.Row="1" Grid.Column="1" />
                         <Button Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
-                                Content="Добавить">
-                            <Button.CommandBindings>
-                                
-                            </Button.CommandBindings>
+                                Content="Добавить"
+                                Command="ApplicationCommands.New">
                         </Button>
                     </Grid>
                 </StackPanel>
