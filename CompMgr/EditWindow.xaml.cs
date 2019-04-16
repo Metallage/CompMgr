@@ -96,7 +96,7 @@ namespace CompMgr
 
 
 
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ComboBox_TableSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox tableSelector = sender as ComboBox;
             string selected = tableSelector.SelectedValue.ToString();
@@ -115,8 +115,6 @@ namespace CompMgr
                 default:
                     CollapseAll();
                     break;
-
-
             }
 
         }
@@ -268,8 +266,17 @@ namespace CompMgr
         }
 
 
+
         #endregion
 
+        private void ComboBox_FreeUserSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
 
+        }
+
+        private void ComboBox_FreeDivisionSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

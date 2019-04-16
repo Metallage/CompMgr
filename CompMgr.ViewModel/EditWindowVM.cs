@@ -28,6 +28,10 @@ namespace CompMgr.ViewModel
         public List<string> TableList { get; } = new List<string>() { "ПО", "Пользователи", "Компьютеры" };
 
 
+        private ObservableCollection<string> freeUsers = new ObservableCollection<string>() { "Не распределён" };
+
+        private ObservableCollection<string> freeDivisions = new ObservableCollection<string>() { "Не распределён" };
+
         //Здесь хранится список ПО
         private ObservableCollection<SoftVM> softwareList = new ObservableCollection<SoftVM>();
 
@@ -146,6 +150,39 @@ namespace CompMgr.ViewModel
                 {
                     selectedComp = value;
                     OnPropertyChanged(this, "SelectedComp");
+                }
+            }
+        }
+
+        public ObservableCollection<string> FreeUsers
+        {
+            get
+            {
+                return freeUsers;
+            }
+            set
+            {
+                if(freeUsers!=value)
+                {
+                    freeUsers = value;
+                    OnPropertyChanged(this, "FreeUsers");
+                }
+            }
+        }
+
+
+        public ObservableCollection<string> FreeDivisions
+        {
+            get
+            {
+                return freeDivisions;
+            }
+            set
+            {
+                if (freeDivisions != value)
+                {
+                    freeDivisions = value;
+                    OnPropertyChanged(this, "FreeDivisions");
                 }
             }
         }
