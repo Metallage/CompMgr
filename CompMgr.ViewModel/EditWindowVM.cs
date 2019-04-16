@@ -24,7 +24,7 @@ namespace CompMgr.ViewModel
 
         public event DataUpdateHandler DataUpdate;
 
-
+        //Список талиц для редактирования
         public List<string> TableList { get; } = new List<string>() { "ПО", "Пользователи", "Компьютеры" };
 
 
@@ -212,6 +212,35 @@ namespace CompMgr.ViewModel
                     SoftVersion = sft.SoftVersion
                 });
         }
+
+        public void RemoveSoft(SoftVM delSoft)
+        {
+            SoftwareList.Remove(delSoft);
+        }
+
+        public void AddSoft(string softName, string softVersion)
+        {
+            SoftwareList.Add(new SoftVM
+            {
+                SoftName = softName,
+                SoftVersion = softVersion
+            });
+        }
+
+        public void RemoveUser(UserVM delUser)
+        {
+            UserList.Remove(delUser);
+        }
+
+        public void AddUser(string userFio, string userTel)
+        {
+            UserList.Add(new UserVM
+            {
+                UserFio = userFio,
+                UserTel = userTel
+            });
+        }
+
 
         #region реализация интерфейса INotifyPropertyChanged
 

@@ -11,7 +11,7 @@
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Close" Executed="CommandBinding_CloseExecuted"/>
         <CommandBinding Command="ApplicationCommands.Save" Executed="CommandBinding_SaveExecuted"/>
-        <CommandBinding Command="ApplicationCommands.New" Executed="CommandBinding_NewSoftExecuted" CanExecute="CommandBinding_CanNewSoftExecute" />
+        
     </Window.CommandBindings>
     
     <!--Делим окно на 2 части, справа управляющая слева рабочая -->
@@ -108,18 +108,88 @@
                             </Style>
                         </ListBox.ItemContainerStyle>
                     </ListBox>
-                    <ListView x:Name="UserListBox"
-                         Visibility="Collapsed">
-                        <ListView.View>
-                            <GridView>
+                    <ListBox x:Name="UserListBox"
+                         Visibility="Collapsed"
+                             ItemsSource="{Binding Path=UserList}">
+                        <ListBox.Resources>
+                            <!--Отображение не выделенных итемов-->
+                            <ControlTemplate x:Key="UserUnselect">
+                                <Border BorderThickness="1" BorderBrush="Black"
+                                        Background="LightGreen">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition MaxWidth="80"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border BorderThickness="1" BorderBrush="Black" Grid.Column="0">
+                                            <TextBlock Text="{Binding Path=UserFio}"/>
+                                        </Border>
+                                        <Border BorderThickness="1" BorderBrush="Black" Grid.Column="1">
+                                            <TextBlock Text="{Binding Path=UserTel}"/>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </ControlTemplate>
 
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                            <!--Отображение выделенного итема-->
+                            <ControlTemplate x:Key="UserSelected">
+                                <Border BorderThickness="1" BorderBrush="Black"
+                                        Background="AliceBlue">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition x:Name="ButtonColumn" MaxWidth="80"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border BorderBrush="DarkCyan" BorderThickness="1" 
+                                                Grid.Row="0" Grid.Column="0">
+                                            <TextBlock Text="ФИО Пользователя" />
+                                        </Border>
+                                        <Border BorderBrush="DarkCyan" BorderThickness="1" 
+                                                Grid.Row="0" Grid.Column="1">
+                                            <TextBlock Text="Контактный телефон"/>
+                                        </Border>
+                                        <TextBox Text="{Binding Path=UserFio, Mode=TwoWay}" Grid.Row="1" Grid.Column="0"/>
+                                        <TextBox Text="{Binding Path=UserTel, Mode=TwoWay}" Grid.Row="1" Grid.Column="1"/>
+                                        <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2"
+                                            Command="ApplicationCommands.Delete"
+                                           Content="Удалить" >
+                                            <Button.CommandBindings>
+                                                <CommandBinding Command="ApplicationCommands.Delete" 
+                                                                CanExecute="CommandBinding_CanUserDelExecute"
+                                                                Executed="CommandBinding_UserDelExecuted"/>
+                                            </Button.CommandBindings>
+
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </ControlTemplate>
+                        </ListBox.Resources>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Template" Value="{StaticResource UserSelected}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter Property="Template" Value="{StaticResource UserUnselect}"/>
+                                    </Trigger>
+
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+
+
+                    </ListBox>
 
                 </StackPanel>
             </Border>
-            <!--Контейнер для нижней части-->
+            <!--Контейнер для нижней части, здесь храняться формы для создания новый записей-->
             <Border Grid.Row="1"
                     BorderThickness="1"
                     BorderBrush="Black">
@@ -148,6 +218,38 @@
                         <Button Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
                                 Content="Добавить"
                                 Command="ApplicationCommands.New">
+                            <Button.CommandBindings>
+                                <CommandBinding Command="ApplicationCommands.New" Executed="CommandBinding_NewSoftExecuted" CanExecute="CommandBinding_CanNewSoftExecute" />
+                            </Button.CommandBindings>
+                        </Button>
+                    </Grid>
+                    <!--Форма создания нового пользователя-->
+                    <Grid x:Name="NewUserGrid" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="90"/>
+                        </Grid.ColumnDefinitions>
+                        <Border BorderBrush="DarkGoldenrod" BorderThickness="1" 
+                                Grid.Row="0" Grid.Column="0">
+                            <TextBlock Text="ФИО пользователя" />
+                        </Border>
+                        <Border BorderBrush="DarkSeaGreen" BorderThickness="1" 
+                                Grid.Row="0" Grid.Column="1">
+                            <TextBlock Text="Контактный телефон"/>
+                        </Border>
+                        <TextBox x:Name="NewUserFioTB"  Grid.Row="1" Grid.Column="0"/>
+                        <TextBox x:Name="NewUserTelTB" Grid.Row="1" Grid.Column="1" />
+                        <Button Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
+                                Content="Добавить"
+                                Command="ApplicationCommands.New">
+                            <Button.CommandBindings>
+                                <CommandBinding Command="ApplicationCommands.New" CanExecute="CommandBinding_CanNewUserExecute" Executed="CommandBinding_NewUserExecuted" />
+                            </Button.CommandBindings>
                         </Button>
                     </Grid>
                 </StackPanel>
