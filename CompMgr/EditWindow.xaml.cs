@@ -26,7 +26,6 @@ namespace CompMgr
         {
             this.model = model;
             InitializeComponent();
-           // DataContext = this.model;
         }
 
         private void ClearNewTB()
@@ -42,6 +41,8 @@ namespace CompMgr
         {
             ClearNewTB();
 
+            ComputerListBox.Visibility = Visibility.Collapsed;
+            NewCompGrid.Visibility = Visibility.Collapsed;
 
             SoftListBox.Visibility = Visibility.Collapsed;
             NewSOftGrid.Visibility = Visibility.Collapsed;
@@ -50,9 +51,18 @@ namespace CompMgr
             NewUserGrid.Visibility = Visibility.Collapsed;
         }
 
+        private void SelectComp()
+        {
+            CollapseAll();
+
+            ComputerListBox.Visibility = Visibility.Visible;
+            NewCompGrid.Visibility = Visibility.Visible;
+        }
+
         private void SelectUser()
         {
             CollapseAll();
+
             NewUserGrid.Visibility = Visibility.Visible;
             UserListBox.Visibility = Visibility.Visible;
         }
@@ -98,6 +108,9 @@ namespace CompMgr
                     break;
                 case "Пользователи":
                     SelectUser();
+                    break;
+                case "Компьютеры":
+                    SelectComp();
                     break;
                 default:
                     CollapseAll();

@@ -16,6 +16,10 @@ namespace CompMgr.Model
         //Поле с ip-адресом
         protected string ip = String.Empty;
 
+        protected  string userFio = String.Empty;
+
+        protected string divisionName = String.Empty;
+
         public long Id { get; set; }
 
         /// <summary>
@@ -47,6 +51,30 @@ namespace CompMgr.Model
                 ip = value;
             }
          }
+
+        public virtual string UserFio
+        {
+            get
+            {
+                return userFio;
+            }
+            set
+            {
+                userFio = value;
+            }
+        }
+
+        public virtual string DivisionName
+        {
+            get
+            {
+                return divisionName;
+            }
+            set
+            {
+                divisionName = value;
+            }
+        }
 
         public Computer()
         { }

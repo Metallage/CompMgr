@@ -24,7 +24,7 @@
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition/>
-                <RowDefinition MinHeight="90" MaxHeight="120"/>
+                <RowDefinition MinHeight="60" MaxHeight="60"/>
             </Grid.RowDefinitions>
             <!--Контейнер для верхней части-->
             <Border Grid.Row="0"
@@ -187,6 +187,98 @@
 
                     </ListBox>
 
+                    <ListBox x:Name="ComputerListBox"
+                             Visibility="Collapsed"
+                             ItemsSource="{Binding Path=CompList}">
+
+                        <ListBox.Resources>
+                            <!--Невыделенный Итем компьютера-->
+                            <ControlTemplate x:Key="CompUnSelect">
+                                <Border BorderThickness="1" BorderBrush="Black"
+                                        Background="LightGreen">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition MaxWidth="80"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border BorderThickness="1" BorderBrush="Black" Grid.Column="0">
+                                            <TextBlock Text="{Binding Path=NsName}"/>
+                                        </Border>
+                                        <Border BorderThickness="1" BorderBrush="Black" Grid.Column="1">
+                                            <TextBlock Text="{Binding Path=Ip}"/>
+                                        </Border>
+                                        <Border BorderThickness="1" BorderBrush="Black" Grid.Column="2">
+                                            <TextBlock Text="{Binding Path=UserFio}"/>
+                                        </Border>
+                                        <Border BorderThickness="1" BorderBrush="Black" Grid.Column="3">
+                                            <TextBlock Text="{Binding Path=DivisionName}"/>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </ControlTemplate>
+                            
+                            <!--Выделенный элемент компьютера-->
+                            <ControlTemplate x:Key="CompSelected">
+                                <Border BorderThickness="1" BorderBrush="Black"
+                                        Background="AliceBlue">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition MaxWidth="80"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Border BorderThickness="1" BorderBrush="Black" Grid.Column="0" Grid.Row="0">
+                                            <TextBlock Text="Имя компьютера"/>
+                                        </Border>
+
+                                        <Border BorderThickness="1" BorderBrush="Black" Grid.Column="1" Grid.Row="0">
+                                            <TextBlock Text="IP адрес"/>
+                                        </Border>
+                                        <Border BorderThickness="1" BorderBrush="Black" Grid.Column="2" Grid.Row="0">
+                                            <TextBlock Text="ФИО Пользователя"/>
+                                        </Border>
+                                        <Border BorderThickness="1" BorderBrush="Black" Grid.Column="3" Grid.Row="0">
+                                            <TextBlock Text="Подразделение"/>
+                                        </Border>
+                                        <TextBox Grid.Column="0" Grid.Row="1" Text="{Binding Path=NsName}"/>
+                                        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=Ip}"/>
+                                        <ComboBox Grid.Column="2" Grid.Row="1" Text="{Binding Path=UserFio}"/>
+                                        <ComboBox Grid.Column="3" Grid.Row="1" Text="{Binding Path=DivisionName}"/>
+                                        <Button Grid.Column="4" Grid.Row="0" Grid.RowSpan="2" Content="Удалить" Command="ApplicationCommands.Delete">
+                                            <Button.CommandBindings>
+                                                <CommandBinding Command="ApplicationCommands.Delete"/>
+                                            </Button.CommandBindings>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </ControlTemplate>
+                        </ListBox.Resources>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Style.Triggers>
+
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Template" Value="{StaticResource CompSelected}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter Property="Template" Value="{StaticResource CompUnSelect}"/>
+                                    </Trigger>
+
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        
+                    </ListBox>
+
                 </StackPanel>
             </Border>
             <!--Контейнер для нижней части, здесь храняться формы для создания новый записей-->
@@ -252,6 +344,45 @@
                             </Button.CommandBindings>
                         </Button>
                     </Grid>
+                    
+                    <!--Форма создания нового компьютера-->
+                        <Grid x:Name="NewCompGrid" Visibility="Collapsed">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition MaxWidth="80"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Border BorderThickness="1" BorderBrush="Black" Grid.Column="0" Grid.Row="0">
+                                <TextBlock Text="Имя компьютера"/>
+                            </Border>
+
+                            <Border BorderThickness="1" BorderBrush="Black" Grid.Column="1" Grid.Row="0">
+                                <TextBlock Text="IP адрес"/>
+                            </Border>
+                            <Border BorderThickness="1" BorderBrush="Black" Grid.Column="2" Grid.Row="0">
+                                <TextBlock Text="ФИО Пользователя"/>
+                            </Border>
+                            <Border BorderThickness="1" BorderBrush="Black" Grid.Column="3" Grid.Row="0">
+                                <TextBlock Text="Подразделение"/>
+                            </Border>
+                            <TextBox Grid.Column="0" Grid.Row="1" Text="{Binding Path=NsName}"/>
+                            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=Ip}"/>
+                            <ComboBox Grid.Column="2" Grid.Row="1" Text="{Binding Path=UserFio}"/>
+                            <ComboBox Grid.Column="3" Grid.Row="1" Text="{Binding Path=DivisionName}"/>
+                            <Button Grid.Column="4" Grid.Row="0" Grid.RowSpan="2" Content="Удалить" Command="ApplicationCommands.Delete">
+                                <Button.CommandBindings>
+                                    <CommandBinding Command="ApplicationCommands.Delete"/>
+                                </Button.CommandBindings>
+                            </Button>
+                        </Grid>
+
+
                 </StackPanel>
             </Border>
         </Grid>

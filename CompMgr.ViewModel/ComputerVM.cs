@@ -9,6 +9,8 @@ namespace CompMgr.ViewModel
 {
     public class ComputerVM: Computer, INotifyPropertyChanged
     {
+       
+
         public new string NsName
         {
             get
@@ -41,6 +43,40 @@ namespace CompMgr.ViewModel
             }
         }
 
+
+        public override string DivisionName
+        {
+            get
+            {
+                return divisionName;
+            }
+            set
+            {
+                if (value != divisionName)
+                {
+                    userFio = value;
+                    OnPropertyChanged(this, "DivisionName");
+                }
+            }
+        }
+
+
+        public override string UserFio
+        {
+            get
+            {
+                return userFio;
+            }
+
+            set
+            {
+                if (value != userFio)
+                {
+                    userFio = value;
+                    OnPropertyChanged(this, "UserFio");
+                }
+            }
+        }
 
 
         public event PropertyChangedEventHandler PropertyChanged;
