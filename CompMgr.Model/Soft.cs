@@ -16,7 +16,7 @@ namespace CompMgr.Model
         protected string softVersion = String.Empty;
 
         //Название ПО
-        public string SoftName {
+        public virtual string SoftName {
             get
             {
                 return softName;
@@ -29,7 +29,7 @@ namespace CompMgr.Model
         }
 
         //Версия ПО
-        public string SoftVersion
+        public virtual string SoftVersion
         {
             get
             {

@@ -213,6 +213,7 @@ namespace CompMgr.ViewModel
         public void Save()
         {
             SaveUsers();
+            SaveSoft();
             core.Save();
         }
 
@@ -370,6 +371,15 @@ namespace CompMgr.ViewModel
 
             core.SaveUsers(saveUsers);
 
+        }
+
+        private void SaveSoft()
+        {
+            List<Soft> saveSoft = new List<Soft>();
+            foreach (SoftVM svm in SoftwareList)
+                saveSoft.Add(svm as Soft);
+
+            core.SaveSoft(saveSoft);
         }
 
         #endregion

@@ -358,25 +358,8 @@ namespace CompMgr
 
             #endregion
 
-            private void ComboBox_FreeUserSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
 
-        }
 
-        private void ComboBox_FreeDivisionSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
-        private void ComputerListBox_CompSelected(object sender, RoutedEventArgs e)
-        {
-            ComputerVM selected = ((ListBoxItem)sender).DataContext as ComputerVM;
-        }
-
-        private void ComputerListBox_CompUnselected(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void ComputerListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

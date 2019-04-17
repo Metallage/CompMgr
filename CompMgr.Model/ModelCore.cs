@@ -429,10 +429,10 @@ namespace CompMgr.Model
             //удаляем удалённых и редактируем изменённых
             foreach(DataRow userDR in user.Rows)
             {
-                User editetUser = null;
+                User editetUser = null; //после редактирования стоит удалить из списка для ускорения работы
                 bool found = false;
-                foreach (User usr in newUsers)
-                    if(usr.UserFio == userDR.Field<string>("fio"))
+                foreach (User usr in newUsers) //ищем совпадения
+                    if(usr.UserFio == userDR.Field<string>("fio")) //если нашли редактируем и помечаем на удаление
                     {
                         found = true;
                         userDR.BeginEdit();
@@ -443,17 +443,48 @@ namespace CompMgr.Model
                     }
                 if(editetUser!=null)
                 {
-                    newUsers.Remove(editetUser);
+                    newUsers.Remove(editetUser); //удаляем отредактированное
                 }
                 if (!found)
-                    userDR.Delete();
+                    userDR.Delete(); //удаляем из таблицы удалённое
             }
-            foreach(User usr in newUsers)
+            foreach(User usr in newUsers) //Создаём новые записи в таблице из тех что остались
             {
                 DataRow newUser = user.NewRow();
                 newUser["fio"] = usr.UserFio;
                 newUser["tel"] = usr.UserTel;
                 user.Rows.Add(newUser);
+            }
+        }
+
+        public void SaveSoft(List<Soft> saveSoft)
+        {
+            //удаляем удалённых и редактируем изменённых
+            foreach (DataRow softDR in software.Rows)
+            {
+                Soft editedSoft = null;
+                bool found = false;
+                foreach (Soft sft in saveSoft)//ищем совпадения
+                    if (sft.SoftName == softDR.Field<string>("softName"))//если нашли редактируем и помечаем на удаление
+                    {
+                        found = true;
+                        softDR.BeginEdit();
+                        softDR["version"] = sft.SoftVersion;
+                        softDR.EndEdit();
+                        editedSoft = sft;
+                        break;
+                    }
+                if (editedSoft != null)
+                    saveSoft.Remove(editedSoft); //удаляем отредактированное
+                if (!found)
+                    softDR.Delete();//удаляем из таблицы удалённое
+            }
+            foreach(Soft sft in saveSoft) //Создаём новые записи в таблице из тех что остались
+            {
+                DataRow newSoft = software.NewRow();
+                newSoft["softName"] = sft.SoftName;
+                newSoft["version"] = sft.SoftVersion;
+                software.Rows.Add(newSoft);
             }
         }
 

@@ -15,7 +15,7 @@ namespace CompMgr.ViewModel
         /// <summary>
         /// Свойство доступа к названию ПО
         /// </summary>
-        public new string SoftName
+        public override string SoftName
         {
             get
             {
@@ -34,7 +34,7 @@ namespace CompMgr.ViewModel
         /// <summary>
         /// Свойство доступа к версии ПО
         /// </summary>
-        public new string SoftVersion
+        public override string SoftVersion
         {
             get
             {
