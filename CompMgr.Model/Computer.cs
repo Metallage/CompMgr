@@ -25,7 +25,7 @@ namespace CompMgr.Model
         /// <summary>
         /// Свойство на доступ к доменному имени
         /// </summary>
-        public string NsName {
+        public virtual string NsName {
             get
             {
                 return nsName;
@@ -40,7 +40,7 @@ namespace CompMgr.Model
         /// <summary>
         /// Свойство на доступ к ip-адресу
         /// </summary>
-        public string Ip
+        public virtual string Ip
         {
             get
             {

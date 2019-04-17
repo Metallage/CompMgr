@@ -24,13 +24,13 @@ namespace CompMgr.ViewModel
 
         public event DataUpdateHandler DataUpdate;
 
-        //Список талиц для редактирования
+        //Список таблиц для редактирования
         public List<string> TableList { get; } = new List<string>() { "ПО", "Пользователи", "Компьютеры" };
 
 
-        private ObservableCollection<string> freeUsers = new ObservableCollection<string>() { "Не распределён" };
+        private ObservableCollection<string> freeUsers = new ObservableCollection<string>() { "-", "ФИО1" };
 
-        private ObservableCollection<string> freeDivisions = new ObservableCollection<string>() { "Не распределён" };
+        private ObservableCollection<string> freeDivisions = new ObservableCollection<string>() { "-", "Подразделение1" };
 
         //Здесь хранится список ПО
         private ObservableCollection<SoftVM> softwareList = new ObservableCollection<SoftVM>();
@@ -276,6 +276,53 @@ namespace CompMgr.ViewModel
                 UserFio = userFio,
                 UserTel = userTel
             });
+        }
+
+        public void RemoveComputer(ComputerVM delComp)
+        {
+            CompList.Remove(delComp);
+        }
+
+        public void AddComputer(string nsName, string ip)
+        {
+            CompList.Add(new ComputerVM
+            {
+                NsName = nsName,
+                Ip = ip
+            });
+        }
+
+        public void AddComputer(string nsName, string ip, string userFio)
+        {
+            CompList.Add(new ComputerVM
+            {
+                NsName = nsName,
+                Ip = ip,
+                UserFio = userFio
+            });
+        }
+
+        public void AddComputer(string nsName, string ip, string userFio, string division)
+        {
+            if ((userFio == "-") && (division == "-"))
+                AddComputer(nsName, ip);
+            else if ((userFio != "-") && (division == "-"))
+                AddComputer(nsName, ip, userFio);
+            else if ((userFio == "-") && (division != "-"))
+                CompList.Add(new ComputerVM
+                {
+                    NsName = nsName,
+                    Ip = ip,
+                    DivisionName = division
+                });
+            else if ((userFio != "-") && (division != "-"))
+                CompList.Add(new ComputerVM
+                {
+                    NsName = nsName,
+                    Ip = ip,
+                    UserFio = userFio,
+                    DivisionName = division
+                });
         }
 
 

@@ -11,7 +11,7 @@ namespace CompMgr.ViewModel
     {
        
 
-        public new string NsName
+        public override string NsName
         {
             get
             {
@@ -27,7 +27,7 @@ namespace CompMgr.ViewModel
             }
         }
 
-        public new string Ip
+        public override string Ip
         {
             get
             {
@@ -54,7 +54,7 @@ namespace CompMgr.ViewModel
             {
                 if (value != divisionName)
                 {
-                    userFio = value;
+                    divisionName = value;
                     OnPropertyChanged(this, "DivisionName");
                 }
             }
