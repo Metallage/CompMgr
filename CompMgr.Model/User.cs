@@ -15,7 +15,7 @@ namespace CompMgr.Model
         public long Id { get; set; }
 
 
-        public string UserFio {
+        public virtual string UserFio {
             get
             {
                 return userFio;
@@ -26,7 +26,7 @@ namespace CompMgr.Model
             }
         }
 
-        public string UserTel
+        public virtual string UserTel
         {
             get
             {

@@ -15,7 +15,7 @@ namespace CompMgr.ViewModel
         /// <summary>
         /// Устанавливает или возвращает ФИО пользователя
         /// </summary>
-        public new string UserFio
+        public override string UserFio
         {
             get
             {
@@ -34,7 +34,7 @@ namespace CompMgr.ViewModel
         /// <summary>
         /// Устанавливает или возвращает телефон пользователя
         /// </summary>
-        public new string UserTel
+        public override string UserTel
         {
             get
             {

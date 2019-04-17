@@ -126,11 +126,11 @@ namespace CompMgr.ViewModel
 
         public void ImportData()
         {
-            List<Distribution> distributions = core.GetDistribution();
+            //List<Distribution> distributions = core.GetDistribution();
 
-            sourceDistr = new DistributedView(distributions);
-            UserSource = core.GetUsersNoComp();
-            CompSource = core.GetComputersNoUser();
+            //sourceDistr = new DistributedView(distributions);
+            //UserSource = core.GetUsersNoComp();
+            //CompSource = core.GetComputersNoUser();
         }
 
         public void Save()

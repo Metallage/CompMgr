@@ -28,9 +28,9 @@ namespace CompMgr.ViewModel
         public List<string> TableList { get; } = new List<string>() { "ПО", "Пользователи", "Компьютеры" };
 
 
-        private ObservableCollection<string> freeUsers = new ObservableCollection<string>() { "-", "ФИО1" };
+        private ObservableCollection<string> freeUsers = new ObservableCollection<string>() { "-" };
 
-        private ObservableCollection<string> freeDivisions = new ObservableCollection<string>() { "-", "Подразделение1" };
+        private ObservableCollection<string> freeDivisions = new ObservableCollection<string>() { "-" };
 
         //Здесь хранится список ПО
         private ObservableCollection<SoftVM> softwareList = new ObservableCollection<SoftVM>();
@@ -205,13 +205,34 @@ namespace CompMgr.ViewModel
                 GetUsers();
                 GetSoftware();
                 GetComputers();
+                GetUserNoComp();
                 DataUpdate?.Invoke();
             });
+        }
+
+        public void Save()
+        {
+            SaveUsers();
+            core.Save();
         }
 
         private void Core_DataUpdate()
         {
             DataUpdate?.Invoke();
+        }
+
+                
+        #region загрузка данных
+
+
+        private void GetUserNoComp()
+        {
+            List<User> users = core.GetUsersNoComp();
+
+            foreach(User user in users)
+            {
+                FreeUsers.Add(user.UserFio);
+            }
         }
 
         private void GetComputers()
@@ -222,7 +243,9 @@ namespace CompMgr.ViewModel
                 CompList.Add(new ComputerVM
                 {
                     NsName = comp.NsName,
-                    Ip = comp.Ip
+                    Ip = comp.Ip,
+                    UserFio = comp.UserFio,
+                    DivisionName = comp.DivisionName
                 });
         }
 
@@ -231,11 +254,16 @@ namespace CompMgr.ViewModel
             List<User> userList = core.GetUsers();
 
             foreach (User usr in userList)
+            {
                 UserList.Add(new UserVM
                 {
                     UserFio = usr.UserFio,
                     UserTel = usr.UserTel
                 });
+
+               // FreeUsers.Add(usr.UserFio);
+
+            }
         }
 
         private void GetSoftware()
@@ -249,6 +277,10 @@ namespace CompMgr.ViewModel
                     SoftVersion = sft.SoftVersion
                 });
         }
+
+        #endregion
+
+        #region редактирование данных
 
         public void RemoveSoft(SoftVM delSoft)
         {
@@ -324,7 +356,23 @@ namespace CompMgr.ViewModel
                     DivisionName = division
                 });
         }
+        #endregion
 
+
+        #region Сохранение данных
+
+        private void SaveUsers()
+        {
+            List<User> saveUsers = new List<User>();
+
+            foreach (UserVM uvm in UserList)
+                saveUsers.Add(uvm as User);
+
+            core.SaveUsers(saveUsers);
+
+        }
+
+        #endregion
 
         #region реализация интерфейса INotifyPropertyChanged
 

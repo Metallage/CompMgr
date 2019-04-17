@@ -102,24 +102,26 @@ namespace CompMgr
         private void ComboBox_TableSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox tableSelector = sender as ComboBox;
-            string selected = tableSelector.SelectedValue.ToString();
-
-            switch(selected)
+            if (tableSelector.SelectedValue != null)
             {
-                case "ПО":
-                    SelectSoft();
-                    break;
-                case "Пользователи":
-                    SelectUser();
-                    break;
-                case "Компьютеры":
-                    SelectComp();
-                    break;
-                default:
-                    CollapseAll();
-                    break;
-            }
+                string selected = tableSelector.SelectedValue.ToString();
 
+                switch (selected)
+                {
+                    case "ПО":
+                        SelectSoft();
+                        break;
+                    case "Пользователи":
+                        SelectUser();
+                        break;
+                    case "Компьютеры":
+                        SelectComp();
+                        break;
+                    default:
+                        CollapseAll();
+                        break;
+                }
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -139,7 +141,7 @@ namespace CompMgr
 
         private void CommandBinding_SaveExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-
+            model.Save();
         }
 
 
@@ -366,6 +368,36 @@ namespace CompMgr
 
         }
 
+        private void ComputerListBox_CompSelected(object sender, RoutedEventArgs e)
+        {
+            ComputerVM selected = ((ListBoxItem)sender).DataContext as ComputerVM;
+        }
 
+        private void ComputerListBox_CompUnselected(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ComputerListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            
+            if (e.RemovedItems.Count>0)
+            {
+                if (e.RemovedItems[0].GetType() == typeof(ComputerVM))
+                {
+                    ComputerVM uselectedComp = e.RemovedItems[0] as ComputerVM;
+                    model.FreeUsers.Remove(uselectedComp.UserFio);
+                }
+            }
+            if(e.AddedItems.Count>0)
+            {
+                if (e.AddedItems[0].GetType() == typeof(ComputerVM))
+                {
+                    ComputerVM selectedComp = e.AddedItems[0] as ComputerVM;
+                    model.FreeUsers.Add(selectedComp.UserFio);
+                }
+            }
+
+        }
     }
 }
