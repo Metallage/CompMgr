@@ -28,6 +28,8 @@ namespace CompMgr
             InitializeComponent();
         }
 
+        #region Переключение и выбор таблиц
+
         private void ClearNewTB()
         {
             NewCompNsName.Text = String.Empty;
@@ -79,6 +81,11 @@ namespace CompMgr
             NewSOftGrid.Visibility = Visibility.Visible;
         }
 
+        #endregion
+
+
+
+
         private void GetStarted()
         {
             model.DataUpdate += Model_DataUpdate;
@@ -89,12 +96,17 @@ namespace CompMgr
         {
             Dispatcher.BeginInvoke((ThreadStart)delegate ()
             {
-                DataContext = null;
+                CollapseAll();
+                ClearNewTB();
+               // DataContext = null;
                 DataContext = model;
             });
         }
 
 
+        #region потоковое добавление
+        // будет здесь
+        #endregion
 
 
 

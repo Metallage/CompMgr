@@ -25,6 +25,8 @@ namespace CompMgr.Model
         private DataTable computer;
         private DataTable install;
         private DataTable distribution;
+        private DataTable division;
+        private DataTable location;
 
         public DataBaseHelper()
         {
@@ -48,6 +50,8 @@ namespace CompMgr.Model
                 enFk.ExecuteNonQuery();
             }
         }
+
+
 
         /// <summary>
         /// Создаёт таблички в БД
@@ -83,6 +87,12 @@ namespace CompMgr.Model
                 createDb.CommandText = createCompDB;
                 createDb.ExecuteNonQuery();
 
+                //Создаём тамблицу Division
+                string createDivisionTable = "CREATE TABLE IF NOT EXISTS Division (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "divisionName TEXT NOT NULL UNIQUE)";
+                createDb.CommandText = createDivisionTable;
+                createDb.ExecuteNonQuery();
+
                 //Создаём таблицу Install
                 string createInstDB = "CREATE TABLE IF NOT EXISTS Install (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                     "computerID INTEGER, softID INTEGER, version TEXT NOT NULL, " +
@@ -90,10 +100,19 @@ namespace CompMgr.Model
                 createDb.CommandText = createInstDB;
                 createDb.ExecuteNonQuery();
 
+                //Создаём тамблицу Distribution
                 string createDistribDB = "CREATE TABLE IF NOT EXISTS Distribution (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "computerID INTEGER NOT NULL, userID INTEGER NOT NULL, " +
+                    "computerID INTEGER NOT NULL UNIQUE, userID INTEGER NOT NULL UNIQUE, " +
                     "FOREIGN KEY (computerID) REFERENCES Computer(id), FOREIGN KEY (userID) REFERENCES user(id))";
                 createDb.CommandText = createDistribDB;
+                createDb.ExecuteNonQuery();
+
+
+                //Создаём тамблицу Location
+                string createLocationDB = "CREATE TABLE IF NOT EXISTS Location (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "computerID INTEGER NOT NULL UNIQUE, divisionID INTEGER NOT NULL UNIQUE, " +
+                    "FOREIGN KEY (computerID) REFERENCES Computer(id), FOREIGN KEY (divisionID) REFERENCES division(id))";
+                createDb.CommandText = createLocationDB;
                 createDb.ExecuteNonQuery();
 
                 transaction.CommandText = "COMMIT";
@@ -110,6 +129,7 @@ namespace CompMgr.Model
             computer.PrimaryKey = new DataColumn[] { computer.Columns["id"] };
             install.PrimaryKey = new DataColumn[] { install.Columns["id"] };
             distribution.PrimaryKey = new DataColumn[] { distribution.Columns["id"] };
+            division.PrimaryKey = new DataColumn[] { division.Columns["id"] };
 
         }
 
@@ -161,6 +181,31 @@ namespace CompMgr.Model
             distribution.Constraints.Add(userDistrib);
 
             LogicDataSet.Relations.Add("user-distribution", user.Columns["id"], distribution.Columns["userID"]);
+
+
+            ForeignKeyConstraint compLocation = new ForeignKeyConstraint(computer.Columns["id"], location.Columns["computerID"])
+            {
+                ConstraintName = "computer-location",
+                UpdateRule = Rule.Cascade,
+                DeleteRule = Rule.Cascade
+
+            };
+
+            location.Constraints.Add(compLocation);
+
+            LogicDataSet.Relations.Add("computer-location", computer.Columns["id"], location.Columns["computerID"]);
+
+            ForeignKeyConstraint divLocation = new ForeignKeyConstraint(division.Columns["id"], location.Columns["divisionID"])
+            {
+                ConstraintName = "division-location",
+                UpdateRule = Rule.Cascade,
+                DeleteRule = Rule.Cascade
+
+            };
+
+            location.Constraints.Add(divLocation);
+
+            LogicDataSet.Relations.Add("division-location", division.Columns["id"], location.Columns["divisionID"]);
 
             LogicDataSet.EnforceConstraints = true;
         }
@@ -226,8 +271,10 @@ namespace CompMgr.Model
                 SaveTable(saveConnect, "Software");
                 SaveTable(saveConnect, "User");
                 SaveTable(saveConnect, "Computer");
+                SaveTable(saveConnect, "Division");
                 SaveTable(saveConnect, "Install");
                 SaveTable(saveConnect, "Distribution");
+                SaveTable(saveConnect, "Location");
                 saveConnect.Close();
 
             }
@@ -254,7 +301,6 @@ namespace CompMgr.Model
                     adapter.UpdateCommand.Parameters.Add("@id", DbType.Int64, 8, "id").SourceVersion = DataRowVersion.Original;
                     adapter.UpdateCommand.Parameters.Add("@version", DbType.String, 16, "version").SourceVersion = DataRowVersion.Original;
 
-                    // DataTable instch = install.GetChanges(DataRowState.Deleted);
                     adapter.Update(install);
 
                 }
@@ -274,22 +320,6 @@ namespace CompMgr.Model
                 LogicDataSet.Clear();
 
                 Load(reLoadCon);
-                //foreach (DataTable dt in LogicDataSet.Tables)
-                //    dt.BeginLoadData();
-
-                //foreach (DataTable dt in LogicDataSet.Tables)
-                //{
-                //    string tablename = dt.TableName;
-                //    dt.Clear();
-                //    LoadTable(reLoadCon, tablename);
-
-                //}
-
-                //foreach (DataTable dt in LogicDataSet.Tables)
-                //{
-                //    dt.EndLoadData();
-                //    dt.AcceptChanges();
-                //}
 
                 reLoadCon.Close();
             }
@@ -305,8 +335,10 @@ namespace CompMgr.Model
             if (!File.Exists(dataBaseName))
             {
                 SQLiteConnection.CreateFile(dataBaseName);
-                CreateTables();
+
             }
+
+            CreateTables();
 
             //Загружаем таблицы из файла БД
             using (SQLiteConnection loadCon = new SQLiteConnection(connectionString))
@@ -344,8 +376,10 @@ namespace CompMgr.Model
                 LoadTable(loadCon, "Software");
                 LoadTable(loadCon, "User");
                 LoadTable(loadCon, "Computer");
+                LoadTable(loadCon, "Division");
                 LoadTable(loadCon, "Install");
                 LoadTable(loadCon, "Distribution");
+                LoadTable(loadCon, "Location");
 
                 //Инициализируем поля
                 software = LogicDataSet.Tables["Software"];
@@ -353,6 +387,8 @@ namespace CompMgr.Model
                 computer = LogicDataSet.Tables["Computer"];
                 install = LogicDataSet.Tables["Install"];
                 distribution = LogicDataSet.Tables["Distribution"];
+                division = LogicDataSet.Tables["Division"];
+                location = LogicDataSet.Tables["Location"];
 
                 CreatePK();
 
