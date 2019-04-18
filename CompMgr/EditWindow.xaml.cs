@@ -54,6 +54,9 @@ namespace CompMgr
 
             UserListBox.Visibility = Visibility.Collapsed;
             NewUserGrid.Visibility = Visibility.Collapsed;
+
+            DivisionListView.Visibility = Visibility.Collapsed;
+            AddDivisionControl.Visibility = Visibility.Collapsed;
         }
 
         private void SelectComp()
@@ -81,6 +84,14 @@ namespace CompMgr
             NewSOftGrid.Visibility = Visibility.Visible;
         }
 
+
+        private void SelectDivision()
+        {
+            CollapseAll();
+
+            DivisionListView.Visibility = Visibility.Visible;
+            AddDivisionControl.Visibility = Visibility.Visible;
+        }
         #endregion
 
 
@@ -128,6 +139,9 @@ namespace CompMgr
                         break;
                     case "Компьютеры":
                         SelectComp();
+                        break;
+                    case "Подразделения":
+                        SelectDivision();
                         break;
                     default:
                         CollapseAll();

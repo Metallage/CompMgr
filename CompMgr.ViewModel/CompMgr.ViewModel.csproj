@@ -50,6 +50,7 @@
     <Compile Include="DistributedView.cs" />
     <Compile Include="DistributionVM.cs" />
     <Compile Include="DistributionViewModel.cs" />
+    <Compile Include="DivisionVM.cs" />
     <Compile Include="EditWindowVM.cs" />
     <Compile Include="InstallVM.cs" />
     <Compile Include="InstallWindowVM.cs" />

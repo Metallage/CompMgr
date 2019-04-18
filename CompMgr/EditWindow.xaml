@@ -308,6 +308,36 @@
                         
                     </ListBox>
 
+                    <ListView x:Name="DivisionListView" 
+                              Visibility="Collapsed"
+                              ItemsSource="{Binding Path=DivisionList}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Название подразделения">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Path=DivisionName, Mode=TwoWay}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn >
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="Black" BorderThickness="1">
+                                                <Button Content="Удалить" Command="ApplicationCommands.Delete">
+                                                    <Button.CommandBindings>
+                                                        <CommandBinding Command="ApplicationCommands.Delete"/>
+                                                    </Button.CommandBindings>
+                                                </Button>
+                                            </Border>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                        
+                    </ListView>
+
                 </StackPanel>
             </Border>
             <!--Контейнер для нижней части, здесь храняться формы для создания новый записей-->
@@ -428,7 +458,7 @@
                             </Button>
                         </Grid>
 
-
+                    <local:AddDivisionUserControl x:Name="AddDivisionControl" Visibility="Collapsed"/>
                 </StackPanel>
             </Border>
         </Grid>

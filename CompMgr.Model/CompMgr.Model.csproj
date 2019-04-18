@@ -63,6 +63,7 @@
     <Compile Include="Computer.cs" />
     <Compile Include="DataBaseHelper.cs" />
     <Compile Include="Distribution.cs" />
+    <Compile Include="Division.cs" />
     <Compile Include="ErrorArgs.cs" />
     <Compile Include="Install.cs" />
     <Compile Include="ModelCore.cs" />

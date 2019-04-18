@@ -21,6 +21,9 @@ namespace CompMgr.Model
         private DataTable computer;
         private DataTable install;
         private DataTable distribution;
+        private DataTable division;
+        private DataTable location;
+
 
         private DataBaseHelper dbHelper = new DataBaseHelper();
 
@@ -44,6 +47,8 @@ namespace CompMgr.Model
                 computer = mainDS.Tables["Computer"];
                 install = mainDS.Tables["Install"];
                 distribution = mainDS.Tables["Distribution"];
+                division = mainDS.Tables["Division"];
+                location = mainDS.Tables["Location"];
             }
             catch (Exception e)
             {
@@ -122,6 +127,17 @@ namespace CompMgr.Model
         //}
 
 
+
+        public List<Division> GetDivisions()
+        {
+            List<Division> divisions = new List<Division>();
+
+            foreach (DataRow ddr in division.Rows)
+                divisions.Add(new Division(ddr.Field<string>("divisionName")));
+
+            return divisions;
+        }
+        
         public List<User> GetUsersNoComp()
         {
             List<User> users = new List<User>();

@@ -25,12 +25,14 @@ namespace CompMgr.ViewModel
         public event DataUpdateHandler DataUpdate;
 
         //Список таблиц для редактирования
-        public List<string> TableList { get; } = new List<string>() { "ПО", "Пользователи", "Компьютеры" };
+        public List<string> TableList { get; } = new List<string>() { "ПО", "Пользователи", "Компьютеры", "Подразделения" };
 
 
         private ObservableCollection<string> freeUsers = new ObservableCollection<string>() { "-" };
 
         private ObservableCollection<string> freeDivisions = new ObservableCollection<string>() { "-" };
+
+        private ObservableCollection<Division> divisionList = new ObservableCollection<Division>();
 
         //Здесь хранится список ПО
         private ObservableCollection<SoftVM> softwareList = new ObservableCollection<SoftVM>();
@@ -187,6 +189,23 @@ namespace CompMgr.ViewModel
             }
         }
 
+
+        public ObservableCollection<Division> DivisionList
+        {
+            get
+            {
+                return divisionList;
+            }
+            set
+            {
+                if(value!=divisionList)
+                {
+                    divisionList = value;
+                    OnPropertyChanged(this, "DivisionList");
+                }
+            }
+        }
+
         #endregion
 
 
@@ -205,6 +224,7 @@ namespace CompMgr.ViewModel
                 GetUsers();
                 GetSoftware();
                 GetComputers();
+                GetDivision();
                 GetUserNoComp();
                 DataUpdate?.Invoke();
             });
@@ -277,6 +297,14 @@ namespace CompMgr.ViewModel
                     SoftName = sft.SoftName,
                     SoftVersion = sft.SoftVersion
                 });
+        }
+
+        private void GetDivision()
+        {
+            List<Division> divList = core.GetDivisions();
+
+            foreach (Division div in divList)
+                DivisionList.Add(div as DivisionVM);
         }
 
         #endregion
