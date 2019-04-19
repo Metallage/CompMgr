@@ -14,7 +14,7 @@
         <TextBox Grid.Column="0" x:Name="NewDivisionTB"/>
         <Button Grid.Column="1" Content="Добавить" Command="ApplicationCommands.New">
             <Button.CommandBindings>
-                <CommandBinding Command="ApplicationCommands.New" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+                <CommandBinding Command="ApplicationCommands.New" CanExecute="CommandBinding_CanAddExecute" Executed="CommandBinding_AddExecuted"/>
             </Button.CommandBindings>
         </Button>
     </Grid>

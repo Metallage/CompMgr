@@ -35,7 +35,9 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-
+        <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        </Style>
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Close" Executed="CommandBinding_CloseExecuted"/>
@@ -313,10 +315,14 @@
                               ItemsSource="{Binding Path=DivisionList}">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Название подразделения">
+                                <GridViewColumn Header="Название подразделения" Width="400">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBox Text="{Binding Path=DivisionName, Mode=TwoWay}"/>
+
+                                            <Border BorderBrush="Black" BorderThickness="1" >
+                                                <TextBox Text="{Binding Path=DivisionName, Mode=TwoWay}" />
+                                            </Border>
+
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -326,7 +332,7 @@
                                             <Border BorderBrush="Black" BorderThickness="1">
                                                 <Button Content="Удалить" Command="ApplicationCommands.Delete">
                                                     <Button.CommandBindings>
-                                                        <CommandBinding Command="ApplicationCommands.Delete"/>
+                                                        <CommandBinding Command="ApplicationCommands.Delete" Executed="CommandBinding_DelDivisionExecuted" CanExecute="CommandBinding_CanDelDivisionExecute"/>
                                                     </Button.CommandBindings>
                                                 </Button>
                                             </Border>
@@ -335,7 +341,6 @@
                                 </GridViewColumn>
                             </GridView>
                         </ListView.View>
-                        
                     </ListView>
 
                 </StackPanel>

@@ -505,6 +505,33 @@ namespace CompMgr.Model
         }
 
 
+        public void SaveDivisions(List<Division> divisions)
+        {
+     
+            foreach(DataRow ddr in division.Rows)
+            {
+                Division delDiv = null;
+                bool found = false;
+                foreach(Division div in divisions)
+                    if(div.DivisionName == ddr.Field<string>("divisionName"))
+                    {
+                        found = true;
+                        delDiv = div;
+                    }
+                if (delDiv != null)
+                    divisions.Remove(delDiv);
+                if (!found)
+                    ddr.Delete();
+            }
+
+            foreach(Division div in divisions)
+            {
+                DataRow divRow = division.NewRow();
+                divRow["divisionName"] = div.DivisionName;
+                division.Rows.Add(divRow);
+            }
+        }
+
         #endregion
 
 

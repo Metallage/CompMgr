@@ -39,14 +39,29 @@ namespace CompMgr
             InitializeComponent();
         }
 
-        private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        private void CommandBinding_CanAddExecute(object sender, CanExecuteRoutedEventArgs e)
         {
+            if ((sender != null) && (sender.GetType() == typeof(Button)))
+            {
+                if (NewDivisionTB.Text.Count() > 0)
+                {
+                    string newDivisionName = NewDivisionTB.Text;
+                    e.CanExecute = model.IsDivisionUniq(newDivisionName);
+                }
+                else
+                    e.CanExecute = false;
+                
+            }
+            else
+                e.CanExecute = false;
 
+            
         }
 
-        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        private void CommandBinding_AddExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-
+            string divisionName = NewDivisionTB.Text;
+            model.AddDivision(divisionName);
         }
     }
 }

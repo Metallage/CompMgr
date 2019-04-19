@@ -234,6 +234,7 @@ namespace CompMgr.ViewModel
         {
             SaveUsers();
             SaveSoft();
+            SaveDivision();
             core.Save();
         }
 
@@ -303,8 +304,8 @@ namespace CompMgr.ViewModel
         {
             List<Division> divList = core.GetDivisions();
 
-            foreach (Division div in divList)
-                DivisionList.Add(div as DivisionVM);
+            DivisionList = new ObservableCollection<Division>( divList.Select(x => new DivisionVM { DivisionName = x.DivisionName }).ToList());
+
         }
 
         #endregion
@@ -385,6 +386,39 @@ namespace CompMgr.ViewModel
                     DivisionName = division
                 });
         }
+
+        public void AddDivision(string divisionName)
+        {
+            DivisionList.Add(new DivisionVM(divisionName));
+        }
+
+
+        public void RemoveDivision(DivisionVM delDivision)
+        {
+            DivisionList.Remove(delDivision);
+        }
+        #endregion
+
+        #region Проверка условий
+
+        /// <summary>
+        /// Проверка названия нового подразделения на уникальность
+        /// </summary>
+        /// <param name="divisionName">Название нового подразделения</param>
+        /// <returns>Если true, то уникально</returns>
+        public bool IsDivisionUniq(string divisionName)
+        {
+            //Вычленение названий всех подразделений и сведение их в List для удобства последующего поиска
+            List<string> divisionNames = divisionList.Select(x => new string(x.DivisionName.ToCharArray())).ToList<string>();
+
+            //Проверка на существование подразделений с таким же названием
+            if (divisionNames.Exists(x => x.ToLower() == divisionName.ToLower()))
+                return false;
+            else
+                return true;
+
+        }
+
         #endregion
 
 
@@ -408,6 +442,12 @@ namespace CompMgr.ViewModel
                 saveSoft.Add(svm as Soft);
 
             core.SaveSoft(saveSoft);
+        }
+
+        private void SaveDivision()
+        {
+            List<Division> saveDiv = divisionList.Select(x => new Division(x.DivisionName)).ToList();
+            core.SaveDivisions(saveDiv);
         }
 
         #endregion

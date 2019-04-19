@@ -26,6 +26,7 @@ namespace CompMgr
         {
             this.model = model;
             InitializeComponent();
+            AddDivisionControl.Model = model;
         }
 
         #region Переключение и выбор таблиц
@@ -234,6 +235,13 @@ namespace CompMgr
             model.RemoveComputer(delComp);
         }
 
+        private void CommandBinding_DelDivisionExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            DivisionVM delDivision = ((Button)sender).DataContext as DivisionVM;
+            model.RemoveDivision(delDivision);
+        }
+
+
         #endregion
 
 
@@ -382,7 +390,20 @@ namespace CompMgr
                 e.CanExecute = false;   //команду нельзя выполнить  
         }
 
-            #endregion
+
+        private void CommandBinding_CanDelDivisionExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if((sender!=null)&&(sender.GetType()==typeof(Button)))
+                if((((Button)sender).DataContext != null) && (((Button)sender).DataContext.GetType()==typeof(DivisionVM)))
+                    e.CanExecute = true;
+                else
+                    e.CanExecute = false;
+            else
+                e.CanExecute = false;
+        }
+
+
+        #endregion
 
 
 
@@ -408,5 +429,9 @@ namespace CompMgr
             }
 
         }
+
+
+
+
     }
 }

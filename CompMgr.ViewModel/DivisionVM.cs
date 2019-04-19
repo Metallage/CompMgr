@@ -9,6 +9,16 @@ namespace CompMgr.ViewModel
 {
     public class DivisionVM:Division, INotifyPropertyChanged
     {
+
+       public DivisionVM()
+        {
+
+        }
+
+        public DivisionVM(string divisionName)
+        {
+            this.divisionName = divisionName;
+        }
         public override string DivisionName
         {
             get
@@ -24,8 +34,11 @@ namespace CompMgr.ViewModel
                 }
             }
         }
-                
 
+        public override string ToString()
+        {
+            return divisionName;
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
