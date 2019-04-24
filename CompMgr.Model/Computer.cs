@@ -16,6 +16,12 @@ namespace CompMgr.Model
         //Поле с ip-адресом
         protected string ip = String.Empty;
 
+        protected Division division;
+
+        protected User user;
+
+
+
         protected  string userFio = String.Empty;
 
         protected string divisionName = String.Empty;
@@ -51,6 +57,31 @@ namespace CompMgr.Model
                 ip = value;
             }
          }
+
+        public virtual User CurrentUser
+        {
+            get
+            {
+                return user;
+            }
+            set
+            {
+                user = value;
+            }
+        }
+
+        public virtual Division CurrentDivision
+        {
+            get
+            {
+                return division;
+            }
+            set
+            {
+                division = value;
+            }
+        }
+
 
         public virtual string UserFio
         {

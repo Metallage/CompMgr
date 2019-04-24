@@ -50,6 +50,11 @@ namespace CompMgr.ViewModel
             }
         }
 
+        public override string ToString()
+        {
+            return userFio;
+        }
+
         //Реализация интерфейса INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -48,15 +48,10 @@ namespace CompMgr.ViewModel
         {
             get
             {
-                return divisionName;
-            }
-            set
-            {
-                if (value != divisionName)
-                {
-                    divisionName = value;
-                    OnPropertyChanged(this, "DivisionName");
-                }
+                if (division == null)
+                    return "Не распределён";
+                else
+                    return division.DivisionName;
             }
         }
 
@@ -65,19 +60,45 @@ namespace CompMgr.ViewModel
         {
             get
             {
-                return userFio;
+                if (user == null)
+                    return "Не распределён";
+                else
+                    return user.UserFio;
             }
+        }
 
+
+        public override Division CurrentDivision
+        {
+            get
+            {
+                return division;
+            }
             set
             {
-                if (value != userFio)
+                if(value != division)
                 {
-                    userFio = value;
-                    OnPropertyChanged(this, "UserFio");
+                    division = value;
+                    OnPropertyChanged(this, "CurrentDivision");
                 }
             }
         }
 
+        public override User CurrentUser
+        {
+            get
+            {
+                return user;
+            }
+            set
+            {
+                if(value!=user)
+                {
+                    user = value;
+                    OnPropertyChanged(this, "CurrentUser");
+                }
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

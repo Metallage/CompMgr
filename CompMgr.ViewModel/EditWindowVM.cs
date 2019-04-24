@@ -261,14 +261,9 @@ namespace CompMgr.ViewModel
         {
             List<Computer> compList = core.GetComputers();
 
-            foreach (Computer comp in compList)
-                CompList.Add(new ComputerVM
-                {
-                    NsName = comp.NsName,
-                    Ip = comp.Ip,
-                    UserFio = comp.UserFio,
-                    DivisionName = comp.DivisionName
-                });
+            CompList = new ObservableCollection<ComputerVM>(compList.Select(x => new ComputerVM
+            { NsName = x.NsName, Ip = x.Ip, CurrentUser = x.CurrentUser, CurrentDivision = x.CurrentDivision }).ToList());
+
         }
 
         private void GetUsers()
@@ -305,6 +300,9 @@ namespace CompMgr.ViewModel
             List<Division> divList = core.GetDivisions();
 
             DivisionList = new ObservableCollection<Division>( divList.Select(x => new DivisionVM { DivisionName = x.DivisionName }).ToList());
+
+            FreeDivisions = new ObservableCollection<string>(divList.Select(x => new StringBuilder(x.DivisionName).ToString()).ToList());
+            FreeDivisions.Add("-");
 
         }
 

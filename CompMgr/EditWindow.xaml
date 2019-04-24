@@ -4,15 +4,32 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CompMgr"
+        xmlns:scm ="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         mc:Ignorable="d"
         Title="EditWindow" Height="600" Width="1000"
         FontSize="18"
         Loaded="Window_Loaded">
     <Window.Resources>
-        <CollectionViewSource x:Key="FreeUsersEdit" Source="{Binding Path=FreeUsers}"/>
-        <CollectionViewSource x:Key="FreeDivisionsEdit" Source="{Binding Path=FreeDivisions}"/>
-        <CollectionViewSource x:Key="FreeUsersNew" Source="{Binding Path=FreeUsers}"/>
-        <CollectionViewSource x:Key="FreeDivisionsNew" Source="{Binding Path=FreeDivisions}"/>
+        <CollectionViewSource x:Key="FreeUsersEdit" Source="{Binding Path=UserList}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="UserFio"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+        <CollectionViewSource x:Key="FreeDivisionsEdit" Source="{Binding Path=DivisionList}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="DivisionName"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+        <CollectionViewSource x:Key="FreeUsersNew" Source="{Binding Path=UserList}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="UserFio"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+        <CollectionViewSource x:Key="FreeDivisionsNew" Source="{Binding Path=DivisionList}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="DivisionName"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
 
         <Style TargetType="ComboBox" x:Key="SetUserStyle">
             <Style.Triggers>
@@ -242,10 +259,10 @@
                                             <TextBlock Text="{Binding Path=Ip}"/>
                                         </Border>
                                         <Border BorderThickness="1" BorderBrush="Black" Grid.Column="2">
-                                            <TextBlock Text="{Binding Path=UserFio}"/>
+                                            <TextBlock Text="{Binding Path=UserFio, Mode=OneWay}"/>
                                         </Border>
                                         <Border BorderThickness="1" BorderBrush="Black" Grid.Column="3">
-                                            <TextBlock Text="{Binding Path=DivisionName}"/>
+                                            <TextBlock Text="{Binding Path=DivisionName, Mode=OneWay}"/>
                                         </Border>
                                     </Grid>
                                 </Border>
@@ -282,8 +299,8 @@
                                         </Border>
                                         <TextBox Grid.Column="0" Grid.Row="1" Text="{Binding Path=NsName}"/>
                                         <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=Ip}"/>
-                                        <ComboBox Grid.Column="2" Grid.Row="1"  SelectedItem="{Binding Path=UserFio}" ItemsSource="{Binding Source={StaticResource FreeUsersEdit}}" />
-                                        <ComboBox Grid.Column="3" Grid.Row="1" SelectedItem="{Binding Path=DivisionName}" ItemsSource="{Binding Source={StaticResource FreeDivisionsEdit}}" />
+                                        <ComboBox Grid.Column="2" Grid.Row="1"  SelectedItem="{Binding Path=CurrentUser}" ItemsSource="{Binding Source={StaticResource FreeUsersEdit}}" />
+                                        <ComboBox Grid.Column="3" Grid.Row="1" SelectedItem="{Binding Path=CurrentDivision}" ItemsSource="{Binding Source={StaticResource FreeDivisionsEdit}}"/>
                                         <Button Grid.Column="4" Grid.Row="0" Grid.RowSpan="2" Content="Удалить" Command="ApplicationCommands.Delete">
                                             <Button.CommandBindings>
                                                 <CommandBinding Command="ApplicationCommands.Delete" Executed="CommandBinding_DelCompExecuted" CanExecute="CommandBinding_CanDelCompExecute"/>

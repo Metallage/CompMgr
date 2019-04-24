@@ -8,6 +8,7 @@ namespace CompMgr.Model
     public class Division
     {
         protected string divisionName = String.Empty;
+       
 
         public Division()
         {

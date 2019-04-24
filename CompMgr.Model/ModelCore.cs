@@ -212,8 +212,8 @@ namespace CompMgr.Model
                 {
                     NsName = cdr.Field<string>("nsName"),
                     Ip = cdr.Field<string>("ip"),
-                    UserFio = GetUserFiobyCompID(compId),
-                    DivisionName = GetDivisionByCompID(compId)
+                    CurrentUser = FindDistributedUser(compId),
+                    CurrentDivision = FindLocationedDivision(compId)
 
                 });
             }
@@ -736,6 +736,73 @@ namespace CompMgr.Model
                 return ids[0].Field<long>("id");
             else
                 return -1;
+        }
+
+        /// <summary>
+        /// Поиск подразделения в котором находится компьютер
+        /// </summary>
+        /// <param name="compID">ID компьютера</param>
+        /// <returns>Подразделение</returns>
+        private Division FindLocationedDivision(long compID)
+        {
+            DataRow[] division = location.Select($"computerID = {compID}"); //ищем в таблице локаций запись с нужным computerID
+            if (division.Count() > 0)
+                return FindDivision(division.First().Field<long>("divisionID")); //Если нашли, то ищем нужное подразделение
+            else
+                return null; //Если не нашли
+        }
+        
+        
+        /// <summary>
+        /// Поиск пользователя в распределнии по ID компьютера
+        /// </summary>
+        /// <param name="compID">ID компьютера</param>
+        /// <returns>Пользователь компьютера</returns>
+        private User FindDistributedUser(long compID)
+        {
+            DataRow[] user = distribution.Select($"computerID = {compID}"); //Ищем в таблице распределений запись с нужным computerID
+
+            if (user.Count() > 0)
+                return FindUser(user.First().Field<long>("userID")); //Если нашли, то ищем нужного пользователя 
+            else
+                return null; //Если нет, то null
+        }
+
+        /// <summary>
+        /// Поиск пользователя по его ID
+        /// </summary>
+        /// <param name="id">ID пользователя</param>
+        /// <returns>Объект типа User найденого пользователя, если таких нет то null</returns>
+        private User FindUser(long id)
+        {
+            DataRow gotUser = user.Rows.Find(id); //ищем строку в таблице
+
+            if (gotUser!=null)
+                return new User //если нашли возвращаем нового User
+                {
+                    UserFio = gotUser.Field<string>("fio"),
+                    UserTel = gotUser.Field<string>("tel")
+                };
+            else
+                return null; //Если не нашли то null
+        }
+
+        /// <summary>
+        /// Поиск подразделений по ID
+        /// </summary>
+        /// <param name="id">ID подразделения</param>
+        /// <returns>подразделения типа Division, null если не найдено </returns>
+        private Division FindDivision(long id)
+        {
+            DataRow gotDivision = division.Rows.Find(id); //ищем строку в таблице
+
+            if (gotDivision != null)
+                return new Division //если нашли возвращаем нового Division
+                {
+                    DivisionName = gotDivision.Field<string>("divisionName")
+                };
+            else
+                return null; //Если не нашли то null
         }
 
         #endregion
