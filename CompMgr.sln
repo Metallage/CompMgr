@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompMgr", "CompMgr\CompMgr.csproj", "{0BE21542-04E7-4A8A-B06B-7CEC9B846759}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompMgr.ViewModel", "CompMgr.ViewModel\CompMgr.ViewModel.csproj", "{CFB965E6-E6BF-46E9-ACF1-970493FD6BD6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompMgr.Model", "CompMgr.Model\CompMgr.Model.csproj", "{1669D1AE-B966-42E5-8CD7-462CA999A0FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model_Testing", "Model_Testing\Model_Testing.csproj", "{EBC2575A-0125-4AA5-AE1F-E3AC4823A338}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{1669D1AE-B966-42E5-8CD7-462CA999A0FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1669D1AE-B966-42E5-8CD7-462CA999A0FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1669D1AE-B966-42E5-8CD7-462CA999A0FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBC2575A-0125-4AA5-AE1F-E3AC4823A338}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBC2575A-0125-4AA5-AE1F-E3AC4823A338}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBC2575A-0125-4AA5-AE1F-E3AC4823A338}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBC2575A-0125-4AA5-AE1F-E3AC4823A338}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

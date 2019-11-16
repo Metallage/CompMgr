@@ -60,11 +60,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompleteTableHelper.cs" />
-    <Compile Include="DBUtils\ICheckDataBase.cs" />
-    <Compile Include="DBUtils\IDataBaseCreator.cs" />
+    <Compile Include="DBUtils\Abstractions\ICheckDataBase.cs" />
+    <Compile Include="DBUtils\Abstractions\IDataBaseCreator.cs" />
     <Compile Include="DBUtils\SQLiteDataBaseCreator.cs" />
     <Compile Include="DBUtils\SQLiteDBChecker.cs" />
     <Compile Include="Entities\Abstract\IComputer.cs" />
+    <Compile Include="Entities\Abstract\IDivision.cs" />
     <Compile Include="Entities\Abstract\IInstall.cs" />
     <Compile Include="Entities\Abstract\ISoftware.cs" />
     <Compile Include="Entities\Abstract\IUser.cs" />

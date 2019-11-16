@@ -5,12 +5,9 @@ using System.Text;
 
 namespace CompMgr.Model.Entities.Abstract
 {
-    interface IComputer
+    interface IDivision
     {
         int Id { get; set; }
-        string NsName { get; set; }
-        string Ip { get; set; }
-        int UserId { get; set; }
-        int DivisionId { get; set; }
+        string DivisionName { get; set; }
     }
 }

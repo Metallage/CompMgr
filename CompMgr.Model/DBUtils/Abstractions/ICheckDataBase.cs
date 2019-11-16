@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CompMgr.Model.DBUtils
+namespace CompMgr.Model.DBUtils.Abstractions
 {
     /// <summary>
     /// Check database file
