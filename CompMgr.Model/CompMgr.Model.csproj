@@ -64,6 +64,10 @@
     <Compile Include="DBUtils\IDataBaseCreator.cs" />
     <Compile Include="DBUtils\SQLiteDataBaseCreator.cs" />
     <Compile Include="DBUtils\SQLiteDBChecker.cs" />
+    <Compile Include="Entities\Abstract\IComputer.cs" />
+    <Compile Include="Entities\Abstract\IInstall.cs" />
+    <Compile Include="Entities\Abstract\ISoftware.cs" />
+    <Compile Include="Entities\Abstract\IUser.cs" />
     <Compile Include="Entities\Computer.cs" />
     <Compile Include="DataBaseHelper.cs" />
     <Compile Include="Entities\Distribution.cs" />
