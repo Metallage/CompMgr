@@ -64,7 +64,7 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Images\Icon.ico</ApplicationIcon>
+    <ApplicationIcon>Resourses\Images\Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -104,71 +104,66 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AddDivisionUserControl.xaml.cs">
+    <Compile Include="UserControls\AddDivisionUserControl.xaml.cs">
       <DependentUpon>AddDivisionUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CurrentSoftUserControl.xaml.cs">
+    <Compile Include="UserControls\CurrentSoftUserControl.xaml.cs">
       <DependentUpon>CurrentSoftUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="EditWindow.xaml.cs">
+    <Compile Include="Forms\EditWindow.xaml.cs">
       <DependentUpon>EditWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Icons.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Icons.resx</DependentUpon>
-    </Compile>
     <Compile Include="ItemCommand.cs" />
-    <Compile Include="DistributionWindow.xaml.cs">
+    <Compile Include="Forms\DistributionWindow.xaml.cs">
       <DependentUpon>DistributionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ErrorMessageHelper.cs" />
     <Compile Include="DataBaseHelper.cs" />
     <Compile Include="Install.cs" />
     <Compile Include="InstallSoft.cs" />
-    <Compile Include="InstallWindow.xaml.cs">
+    <Compile Include="Forms\InstallWindow.xaml.cs">
       <DependentUpon>InstallWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ListBoxCommands.cs" />
     <Compile Include="Logic.cs" />
-    <Compile Include="EditTableWindow.xaml.cs">
+    <Compile Include="Forms\EditTableWindow.xaml.cs">
       <DependentUpon>EditTableWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SelectSoftWindow.xaml.cs">
+    <Compile Include="Forms\SelectSoftWindow.xaml.cs">
       <DependentUpon>SelectSoftWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Software.cs" />
-    <Compile Include="StreamAddWindow.xaml.cs">
+    <Compile Include="Forms\StreamAddWindow.xaml.cs">
       <DependentUpon>StreamAddWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UpdateWindow.xaml.cs">
+    <Compile Include="Forms\UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="AddDivisionUserControl.xaml">
+    <Page Include="UserControls\AddDivisionUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CurrentSoftUserControl.xaml">
+    <Page Include="UserControls\CurrentSoftUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DistributionWindow.xaml">
+    <Page Include="Forms\DistributionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="EditWindow.xaml">
+    <Page Include="Forms\EditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="InstallWindow.xaml">
+    <Page Include="Forms\InstallWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainDictionary.xaml">
+    <Page Include="Resourses\MainDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Forms\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -176,23 +171,23 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Forms\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="EditTableWindow.xaml">
+    <Page Include="Forms\EditTableWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SelectSoftWindow.xaml">
+    <Page Include="Forms\SelectSoftWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="StreamAddWindow.xaml">
+    <Page Include="Forms\StreamAddWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UpdateWindow.xaml">
+    <Page Include="Forms\UpdateWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -211,10 +206,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Icons.resx">
+    <EmbeddedResource Include="Resourses\Icons.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
-      <LastGenOutput>Icons.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -242,20 +236,21 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\PcImg.png" />
+    <Resource Include="Resourses\Images\PcImg.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\UserImg.png" />
+    <Resource Include="Resourses\Images\UserImg.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Icon.ico" />
+    <Resource Include="Resourses\Images\Icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Icon.png" />
+    <Resource Include="Resourses\Images\Icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\DistWindow.png" />
+    <Resource Include="Resourses\Images\DistWindow.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.110.0\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.110.0\build\net40\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
