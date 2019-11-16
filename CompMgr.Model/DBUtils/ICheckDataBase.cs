@@ -14,6 +14,6 @@ namespace CompMgr.Model.DBUtils
         /// Check if the database correct
         /// </summary>
         /// <returns>Is DB file correct</returns>
-        bool CheckDataBase();
+        bool CheckDataBase(string connection);
     }
 }
