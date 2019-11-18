@@ -9,6 +9,6 @@ namespace CompMgr.Model.Entities.Abstract
     {
         int Id { get; set; }
         string Fio { get; set; }
-        int PhoneNumber { get; set; }
+        int? PhoneNumber { get; set; }
     }
 }

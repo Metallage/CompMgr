@@ -10,7 +10,7 @@ namespace CompMgr.Model.Entities.Abstract
         int Id { get; set; }
         string NsName { get; set; }
         string Ip { get; set; }
-        int UserId { get; set; }
-        int DivisionId { get; set; }
+        int? UserId { get; set; }
+        int? DivisionId { get; set; }
     }
 }

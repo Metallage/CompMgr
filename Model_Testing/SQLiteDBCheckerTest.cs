@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using CompMgr.Model.DBUtils;
+using System.Data.SQLite;
 
 
 namespace Model_Testing
