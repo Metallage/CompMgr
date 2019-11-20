@@ -72,10 +72,12 @@
     <Compile Include="Entities\Abstract\IUser.cs" />
     <Compile Include="Entities\Computer.cs" />
     <Compile Include="Entities\Division.cs" />
+    <Compile Include="Entities\Install.cs" />
     <Compile Include="Entities\old\Computer.cs" />
     <Compile Include="DataBaseHelper.cs" />
     <Compile Include="Entities\old\Distribution.cs" />
     <Compile Include="Entities\old\Division.cs" />
+    <Compile Include="Entities\Software.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="ErrorArgs.cs" />
     <Compile Include="Entities\old\Install.cs" />

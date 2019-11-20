@@ -11,38 +11,14 @@ namespace CompMgr.Model.Entities
     /// </summary>
     public class Software : ISoftware
     {
-        //Название ПО
-        protected string softName = String.Empty;
-        //Версия ПО
-        protected string softVersion = String.Empty;
 
         public int Id { get; set; }
 
         //Название ПО
-        public virtual string Name {
-            get
-            {
-                return softName;
-            }
-
-            set
-            {
-                softName = value;
-            }
-        }
+        public virtual string Name { get; set;}
 
         //Версия ПО
-        public virtual string ActualVersion
-        {
-            get
-            {
-                return softVersion;
-            }
-            set
-            {
-                softVersion = value;
-            }
-        }
+        public virtual string ActualVersion { get; set; }
 
         /// <summary>
         /// Конструктор описания ПО
