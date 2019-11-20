@@ -2,118 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CompMgr.Model.Entities.Abstract;
 
-namespace CompMgr.Model
+namespace CompMgr.Model.Entities
 {
-    /// <summary>
-    /// Класс описания компьютера
-    /// </summary>
-    public class Computer
+    class Computer:IComputer
     {
-
-        //Поле с доменным именем
-        protected string nsName = String.Empty;
-        //Поле с ip-адресом
-        protected string ip = String.Empty;
-
-        protected Division division;
-
-        protected User user;
-
-
-
-        protected  string userFio = String.Empty;
-
-        protected string divisionName = String.Empty;
-
-        public long Id { get; set; }
-
-        /// <summary>
-        /// Свойство на доступ к доменному имени
-        /// </summary>
-        public virtual string NsName {
-            get
-            {
-                return nsName;
-            }
-
-            set
-            {
-                nsName = value;
-            }
-        }
-
-        /// <summary>
-        /// Свойство на доступ к ip-адресу
-        /// </summary>
-        public virtual string Ip
-        {
-            get
-            {
-                return ip;
-            }
-            set
-            {
-                ip = value;
-            }
-         }
-
-        public virtual User CurrentUser
-        {
-            get
-            {
-                return user;
-            }
-            set
-            {
-                user = value;
-            }
-        }
-
-        public virtual Division CurrentDivision
-        {
-            get
-            {
-                return division;
-            }
-            set
-            {
-                division = value;
-            }
-        }
-
-
-        public virtual string UserFio
-        {
-            get
-            {
-                return userFio;
-            }
-            set
-            {
-                userFio = value;
-            }
-        }
-
-        public virtual string DivisionName
-        {
-            get
-            {
-                return divisionName;
-            }
-            set
-            {
-                divisionName = value;
-            }
-        }
-
-        public Computer()
-        { }
-
-        public Computer(long id, string nsName)
-        {
-            Id = id;
-            NsName = nsName;
-        }
+        public int Id { get; set; }
+        public string NsName { get; set; }
+        public string Ip { get; set; }
+        public int? UserId { get; set; }
+        public int? DivisionId { get; set; }
     }
 }

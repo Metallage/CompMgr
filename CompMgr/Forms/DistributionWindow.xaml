@@ -10,7 +10,7 @@
         Title="DistributionWindow" Height="450" Width="800"
         FontSize="18"
         FontWeight="DemiBold"
-        Icon="Images\DistWindow.png">
+        Icon="Resourses\Images\DistWindow.png">
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:DistributionWindow.DeleteItemCommand}"
                         Executed="DeleteItem_Executed"

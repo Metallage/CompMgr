@@ -2,35 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CompMgr.Model.Entities.Abstract;
 
-namespace CompMgr.Model
+namespace CompMgr.Model.Entities
 {
-    public class Division
+    class Division : IDivision
     {
-        protected string divisionName = String.Empty;
-       
+        public int Id { get; set; }
 
-        public Division()
-        {
-
-        }
-
-        public Division(string divisionName)
-        {
-            this.divisionName = divisionName;
-        }
-
-        public virtual string DivisionName
-        {
-            get
-            {
-                return divisionName;
-            }
-            set
-            {
-                divisionName = value;
-            }
-        }
-
+        public string DivisionName { get; set; }
     }
 }

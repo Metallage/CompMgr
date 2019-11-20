@@ -71,16 +71,19 @@
     <Compile Include="Entities\Abstract\ISoftware.cs" />
     <Compile Include="Entities\Abstract\IUser.cs" />
     <Compile Include="Entities\Computer.cs" />
-    <Compile Include="DataBaseHelper.cs" />
-    <Compile Include="Entities\Distribution.cs" />
     <Compile Include="Entities\Division.cs" />
+    <Compile Include="Entities\old\Computer.cs" />
+    <Compile Include="DataBaseHelper.cs" />
+    <Compile Include="Entities\old\Distribution.cs" />
+    <Compile Include="Entities\old\Division.cs" />
+    <Compile Include="Entities\User.cs" />
     <Compile Include="ErrorArgs.cs" />
-    <Compile Include="Entities\Install.cs" />
+    <Compile Include="Entities\old\Install.cs" />
     <Compile Include="ModelCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Entities\Soft.cs" />
-    <Compile Include="Entities\Update.cs" />
-    <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\old\Soft.cs" />
+    <Compile Include="Entities\old\Update.cs" />
+    <Compile Include="Entities\old\User.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
