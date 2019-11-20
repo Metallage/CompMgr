@@ -61,6 +61,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompleteTableHelper.cs" />
+    <Compile Include="DBContext\IDBContext.cs" />
+    <Compile Include="DBContext\SQLiteDBContext.cs" />
     <Compile Include="DBUtils\Abstractions\ICheckDataBase.cs" />
     <Compile Include="DBUtils\Abstractions\IDataBaseCreator.cs" />
     <Compile Include="DBUtils\SQLiteDataBaseCreator.cs" />
@@ -92,7 +94,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DBContext\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
